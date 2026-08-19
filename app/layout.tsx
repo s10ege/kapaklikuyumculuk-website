@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { categoryLinks, PAGE_LINKS } from "@/lib/nav";
+
 /* §3 — Display: Cormorant Garamond. Body: Inter.
  *
  * `latin-ext` is mandatory, not optional. Without it the Turkish glyphs
@@ -39,7 +44,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="tr"
       className={`${cormorant.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <a
+          href="#icerik"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-gold focus:px-4 focus:py-2 focus:text-charcoal-deep"
+        >
+          İçeriğe geç
+        </a>
+        <Header categories={categoryLinks()} pages={PAGE_LINKS} />
+        <div id="icerik" className="flex flex-1 flex-col">
+          {children}
+        </div>
+        <Footer />
+        <WhatsAppFab />
+      </body>
     </html>
   );
 }
