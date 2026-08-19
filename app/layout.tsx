@@ -5,7 +5,10 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { JsonLd } from "@/components/JsonLd";
 import { categoryLinks, PAGE_LINKS } from "@/lib/nav";
+import { shop } from "@/lib/config";
+import { jewelryStoreSchema } from "@/lib/schema";
 
 /* Display: Bodoni Moda. Body: Jost.
  *
@@ -50,10 +53,22 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
+  /* Required for the per-page `alternates.canonical: "/urunler"` values to
+     resolve to absolute URLs. Without it Next emits relative canonicals, which
+     Google largely ignores. */
+  metadataBase: new URL(shop.url),
   title: "Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı Kuyumcu",
   description:
     "2000 yılından beri Kapaklı'da. Altın, pırlanta ve özel tasarım takılar. " +
     "Cumhuriyet Mah. Pınar Bulvarı No: 56/A, Kapaklı / Tekirdağ.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    siteName: shop.name,
+    url: shop.url,
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -78,6 +93,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer />
         <WhatsAppFab />
+        {/* Site-wide JewelryStore, generated from lib/config.ts (§10). */}
+        <JsonLd data={jewelryStoreSchema()} />
       </body>
     </html>
   );

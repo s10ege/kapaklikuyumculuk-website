@@ -5,8 +5,10 @@ import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactBand } from "@/components/ContactBand";
 import { EmptyState } from "@/components/EmptyState";
+import { JsonLd } from "@/components/JsonLd";
 import { ProductGallery } from "@/components/ProductGallery";
 import { getCategories, getCategory, getCategorySlugs, getProducts } from "@/lib/content";
+import { breadcrumbSchema, categoryItemListSchema } from "@/lib/schema";
 
 /* The category template (§6.2) — the piece that has to look right with three
  * products, forty, or none. Built before the homepage for exactly that reason.
@@ -51,9 +53,21 @@ export default async function CategoryPage({
 
   const products = getProducts(category.slug);
   const siblings = getCategories().filter((c) => c.slug !== category.slug);
+  const itemList = categoryItemListSchema(category, products);
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: "Anasayfa", url: "/" },
+          { name: "Ürünlerimiz", url: "/urunler" },
+          { name: category.name, url: `/urunler/${category.slug}` },
+        ])}
+      />
+      {/* Null while the category is empty — an ItemList claiming to list
+          products that do not exist is worse than none (§10). */}
+      {itemList && <JsonLd data={itemList} />}
+
       <Breadcrumb
         trail={[
           { label: "Anasayfa", href: "/" },
