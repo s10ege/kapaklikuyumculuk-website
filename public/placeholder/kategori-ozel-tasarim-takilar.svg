@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Özel Tasarım Takılar">
+  <rect width="400" height="400" fill="#2A2724"/>
+  <g fill="none" stroke="#CBAE72" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- filigree rosette: four petals worked around a centre stone -->
+    <path d="M200 96 C 232 140, 232 168, 200 196 C 168 168, 168 140, 200 96 Z"/>
+    <path d="M200 304 C 232 260, 232 232, 200 204 C 168 232, 168 260, 200 304 Z"/>
+    <path d="M96 200 C 140 168, 168 168, 196 200 C 168 232, 140 232, 96 200 Z"/>
+    <path d="M304 200 C 260 168, 232 168, 204 200 C 232 232, 260 232, 304 200 Z"/>
+    <!-- centre stone -->
+    <path d="M200 176 L224 200 L200 224 L176 200 Z"/>
+    <!-- fine connecting scrollwork on the diagonals -->
+    <path d="M139 139 C 160 160, 168 176, 168 188"/>
+    <path d="M261 139 C 240 160, 232 176, 232 188"/>
+    <path d="M139 261 C 160 240, 168 224, 168 212"/>
+    <path d="M261 261 C 240 240, 232 224, 232 212"/>
+  </g>
+  <g fill="none" stroke="#B8964F" stroke-width="1" opacity="0.55">
+    <path d="M60 60 H130 M60 60 V130"/>
+    <path d="M340 340 H270 M340 340 V270"/>
+  </g>
+</svg>

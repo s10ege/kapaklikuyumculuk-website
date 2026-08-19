@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Altın Seti">
+  <rect width="400" height="400" fill="#2A2724"/>
+  <g fill="none" stroke="#CBAE72" stroke-width="1.6">
+    <!-- stacked bangles: a set, read as concentric bands -->
+    <circle cx="200" cy="200" r="112"/>
+    <circle cx="200" cy="200" r="101"/>
+    <circle cx="200" cy="200" r="76"/>
+    <circle cx="200" cy="200" r="65"/>
+    <circle cx="200" cy="200" r="40"/>
+    <circle cx="200" cy="200" r="29"/>
+  </g>
+  <g fill="none" stroke="#B8964F" stroke-width="1" opacity="0.55">
+    <path d="M60 60 H130 M60 60 V130"/>
+    <path d="M340 340 H270 M340 340 V270"/>
+  </g>
+</svg>

@@ -9,7 +9,7 @@ const WIDTHS = [360, 390, 768, 1440] as const;
 
 /* Routes are listed explicitly rather than crawled so a page that fails to
  * render at all shows up as a failure instead of silently not being tested. */
-const ROUTES = ["/", "/dev/tokens"] as const;
+const ROUTES = ["/", "/dev/tokens", "/dev/placeholders"] as const;
 
 async function horizontalOverflow(page: Page) {
   return page.evaluate(() => {

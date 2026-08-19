@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Tek Taş Modelleri">
+  <rect width="400" height="400" fill="#2A2724"/>
+  <g fill="none" stroke="#CBAE72" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- solitaire: a single stone raised on a plain band -->
+    <circle cx="200" cy="258" r="86"/>
+    <circle cx="200" cy="258" r="73"/>
+    <!-- the stone -->
+    <path d="M160 148 L178 118 L222 118 L240 148 L200 196 Z"/>
+    <path d="M160 148 H240"/>
+    <path d="M178 118 L186 148"/>
+    <path d="M222 118 L214 148"/>
+    <path d="M200 148 V196"/>
+    <!-- claws down to the shoulders -->
+    <path d="M163 155 L150 186"/>
+    <path d="M237 155 L250 186"/>
+  </g>
+  <g fill="none" stroke="#B8964F" stroke-width="1" opacity="0.55">
+    <path d="M60 60 H130 M60 60 V130"/>
+    <path d="M340 340 H270 M340 340 V270"/>
+  </g>
+</svg>

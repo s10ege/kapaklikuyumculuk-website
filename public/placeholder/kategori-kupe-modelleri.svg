@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Küpe Modelleri">
+  <rect width="400" height="400" fill="#2A2724"/>
+  <g fill="none" stroke="#CBAE72" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+    <!-- a pair of drop earrings, mirrored about the centre -->
+    <circle cx="148" cy="122" r="13"/>
+    <path d="M148 135 V152"/>
+    <path d="M148 152 C 112 196, 112 240, 148 272 C 184 240, 184 196, 148 152 Z"/>
+    <path d="M148 190 C 133 210, 133 232, 148 248 C 163 232, 163 210, 148 190 Z"/>
+
+    <circle cx="252" cy="122" r="13"/>
+    <path d="M252 135 V152"/>
+    <path d="M252 152 C 216 196, 216 240, 252 272 C 288 240, 288 196, 252 152 Z"/>
+    <path d="M252 190 C 237 210, 237 232, 252 248 C 267 232, 267 210, 252 190 Z"/>
+  </g>
+  <g fill="none" stroke="#B8964F" stroke-width="1" opacity="0.55">
+    <path d="M60 60 H130 M60 60 V130"/>
+    <path d="M340 340 H270 M340 340 V270"/>
+  </g>
+</svg>
