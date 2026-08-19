@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# build output
+.next/
+out/
+dist/
+build/
+
+# env — never commit these
+.env
+.env*.local
+
+# vercel
+.vercel
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# scratch — raw downloads, unsorted photos, exports
+scratch/
+
+# agent skills installed from the registry — restore with `npx skills install`.
+# skills-lock.json is committed and pins the exact source + hash of each one.
+# ui-ux-pro-max and find-skills are NOT in the lockfile (copied in by hand),
+# so they live in .claude/skills/ and are committed as real content.
+.agents/
+.claude/skills/frontend-design
+.claude/skills/webapp-testing
+.claude/skills/vercel-react-best-practices
+.claude/skills/vercel-composition-patterns
+.claude/skills/web-design-guidelines

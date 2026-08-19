@@ -1,0 +1,95 @@
+# kapaklikuyumculuk.com — Archive.org'dan cikarilan eski adresler
+# Kaynak: web.archive.org CDX API, sorgu 2026-08-19. Toplam 309 benzersiz yol.
+# Sutunlar: yol <TAB> son arsivlenme (YYYYMMDDhhmmss) <TAB> o andaki HTTP kodu
+#
+# ---- ICERIK SAYFALARI (69 adet) ----
+# Bunlarin tamami holding-page/vercel.json icinde 301 ile / adresine yonlendiriliyor,
+# WordPress ic adresleri (wp-admin, wp-login, author, category, ?p=) haric — onlar 404 kaliyor.
+
+/	20130801033819	200
+/?p=138	20160213235602	301
+/?p=148	20160615025410	301
+/?p=23	20160615035711	301
+/?p=82	20160612112208	301
+/URL%20ADRES%C4%B0	20130807012209	404
+/altin-fiyatlari	20130801033822	301
+/anasayfa2	20230930050956	200
+/author/adminkapakli/	20160612112032	200
+/author/kapaklikuyumculuk	20250621104659	200
+/author/multifikiradmin	20200929042412	200
+/calistigimiz-firmalar/	20130802212921	200
+/calistigimiz-firmalar/altin-firmalari/	20130803060509	200
+/calistigimiz-firmalar/altin-firmalari/82-2/	20130803060514	200
+/calistigimiz-firmalar/altin-firmalari/cici-gold/	20130803061936	200
+/calistigimiz-firmalar/altin-firmalari/gizil-inci/	20130803061941	200
+/calistigimiz-firmalar/altin-firmalari/kilic-alyans/	20130802212935	200
+/calistigimiz-firmalar/altin-firmalari/tekbir-gumus/	20130803061946	200
+/calistigimiz-firmalar/saat-firmalari/	20130803060519	200
+/calistigimiz-firmalar/saat-firmalari/enox-saat/	20130803061952	200
+/calistigimiz-firmalar/saat-firmalari/essence-saat/	20130803060524	200
+/calistigimiz-firmalar/saat-firmalari/romanson-saat/	20130803061957	200
+/category/uncategorized	20230930061256	200
+/doviz-kurlari/	20130802154341	200
+/favicon.ico	20220219012816	404
+/fotograf-galerisi/	20130802154345	200
+/fotograf-galerisi/kapakli-kuyumculuk-merkez/	20130803060529	200
+/fotograf-galerisi/kapakli-kuyumculuk-sube/	20130803060535	200
+/galeri	20171006034647	200
+/gallery_plus/haskale/	20160612111621	200
+/gallery_plus/kahraman-atay	20160610145627	301
+/gallery_plus/kilic-alyans/	20160612111600	200
+/hakkimizda/	20130803061857	200
+/iletisim/	20130803062411	200
+/iletisim/wp-content/themes/dt-chocolate/images/ddmenu_b.png	20160615063911	404
+/iletisim/wp-content/themes/dt-chocolate/images/ddmenu_bg.png	20160615062113	404
+/kurumsal	20171006035631	200
+/markalar-2/	20160123043137	200
+/markalar-2/wp-content/themes/dt-chocolate/images/ddmenu_b.png	20160615045505	404
+/markalar-2/wp-content/themes/dt-chocolate/images/ddmenu_bg.png	20160615063931	404
+/misyonvizyon/	20160122075905	200
+/misyonvizyon/wp-content/themes/dt-chocolate/images/ddmenu_b.png	20160615015321	404
+/misyonvizyon/wp-content/themes/dt-chocolate/images/ddmenu_bg.png	20160615032725	404
+/robots.txt	20220918101153	500
+/slide-types/referanslar	20230930063639	200
+/uncategorized/hello-world	20230930070109	200
+/urun/altin-seti	20220128171240	200
+/urun/kupe-modelleri	20220128154644	200
+/urun/ozel-tasarim-takilar	20220128154341	200
+/urun/pirlanta-yuzukler	20220128162256	200
+/urun/tek-tas-modelleri	20220128163437	200
+/urun/yuzuk-modelleri	20200812072135	200
+/urunler	20191112110935	200
+/urunler/altin	20171005230600	200
+/urunler/ozel-tasarim-takilar	20220128171529	200
+/urunler/pirlanta	20191112114554	200
+/urunlerimiz/	20130803061901	200
+/urunlerimiz/310-2/	20130803061906	200
+/urunlerimiz/412-2/	20130803061912	200
+/urunlerimiz/cici-gold/	20130802212956	200
+/urunlerimiz/cilek-gold/	20130803061917	200
+/urunlerimiz/haskale-tum-cesitler/	20130803063345	200
+/urunlerimiz/kahraman-atay/	20130802213021	200
+/urunlerimiz/ozer-bilezik/	20130803061922	200
+/wp-admin	20150520230203	301
+/wp-admin/admin-ajax.php	20160213235606	200
+/wp-login.php?	20150520220003	200
+/wp-login.php?action=lostpassword	20150522002746	200
+/wp-login.php?action=register	20150522002751	200
+
+# ---- WP-CONTENT (240 adet, 404 birakildi) ----
+# 111 x /wp-content/uploads/2015/12/IMG_03xx-<genislik>x<yukseklik>.jpg   (urun fotograflari)
+# 128 x /wp-content/themes/dt-chocolate/...                              (tema varliklari)
+#   1 x /wp-content/plugins/...
+# Ilk 10 upload ornegi:
+/wp-content/uploads/2015/12/IMG_0312-1024x953.jpg	20170116092229	301
+/wp-content/uploads/2015/12/IMG_0313-1024x874.jpg	20170116075000	301
+/wp-content/uploads/2015/12/IMG_0318-1024x884.jpg	20170116005010	301
+/wp-content/uploads/2015/12/IMG_0319-1024x866.jpg	20170116044756	301
+/wp-content/uploads/2015/12/IMG_0321-1024x914.jpg	20170116001202	301
+/wp-content/uploads/2015/12/IMG_0322-1024x886.jpg	20170116001932	301
+/wp-content/uploads/2015/12/IMG_0324-1024x887.jpg	20170116044559	301
+/wp-content/uploads/2015/12/IMG_0325-1024x863.jpg	20170116043232	301
+/wp-content/uploads/2015/12/IMG_0327-1024x869.jpg	20170116043745	301
+/wp-content/uploads/2015/12/IMG_0328-1024x961.jpg	20170116095216	301
+# Tam liste gerekirse CDX sorgusu tekrar calistirilabilir:
+# http://web.archive.org/cdx/search/cdx?url=kapaklikuyumculuk.com*&fl=original,timestamp,statuscode&collapse=urlkey&limit=800

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": ".*\\.vercel\\.app" }],
+      "destination": "https://www.kapaklikuyumculuk.com/$1",
+      "permanent": true
+    },
+
+    { "source": "/galeri", "destination": "/", "permanent": true },
+    { "source": "/fotograf-galerisi/:path*", "destination": "/", "permanent": true },
+    { "source": "/gallery_plus/:path*", "destination": "/", "permanent": true },
+
+    { "source": "/urunler", "destination": "/", "permanent": true },
+    { "source": "/urunler/:path*", "destination": "/", "permanent": true },
+    { "source": "/urun/:path*", "destination": "/", "permanent": true },
+    { "source": "/urunlerimiz/:path*", "destination": "/", "permanent": true },
+
+    { "source": "/kurumsal", "destination": "/", "permanent": true },
+    { "source": "/hakkimizda", "destination": "/", "permanent": true },
+    { "source": "/misyonvizyon", "destination": "/", "permanent": true },
+    { "source": "/markalar-2", "destination": "/", "permanent": true },
+    { "source": "/calistigimiz-firmalar/:path*", "destination": "/", "permanent": true },
+
+    { "source": "/iletisim", "destination": "/", "permanent": true },
+
+    { "source": "/altin-fiyatlari", "destination": "/", "permanent": true },
+    { "source": "/doviz-kurlari", "destination": "/", "permanent": true },
+    { "source": "/anasayfa2", "destination": "/", "permanent": true },
+    { "source": "/referanslar", "destination": "/", "permanent": true },
+    { "source": "/slide-types/:path*", "destination": "/", "permanent": true }
+  ]
+}
