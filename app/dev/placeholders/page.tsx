@@ -31,9 +31,12 @@ export default function PlaceholdersPage() {
         <p className="text-label uppercase text-gold-deep">
           Kategori karoları — 1:1, kömür zemin
         </p>
-        <div className="mt-5 grid grid-cols-2 gap-px bg-line sm:grid-cols-3">
+        <div className="mt-5 grid grid-cols-2 border-l border-t border-line sm:grid-cols-3">
           {getCategories().map((category) => (
-            <figure key={category.slug} className="bg-cream">
+            <figure
+              key={category.slug}
+              className="border-b border-r border-line bg-cream"
+            >
               <div className="relative aspect-square">
                 <Image
                   src={category.coverImage}
@@ -58,9 +61,9 @@ export default function PlaceholdersPage() {
         <p className="text-label uppercase text-gold-deep">
           Ürün karosu — 1:1, krem zemin
         </p>
-        <div className="mt-5 grid grid-cols-2 gap-px bg-line sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 border-l border-t border-line sm:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="bg-surface">
+            <div key={i} className="border-b border-r border-line bg-surface">
               <div className="relative aspect-square">
                 <Image
                   src={PLACEHOLDER.urun}
