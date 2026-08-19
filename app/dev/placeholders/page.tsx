@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PLACEHOLDER } from "@/lib/placeholders";
+import { getCategories } from "@/lib/content";
 
 /* Verification artefact for iteration 3 of plan.md: every placeholder rendered
  * through next/image at the aspect ratio its real page will use. 404s in
@@ -11,14 +12,6 @@ export const metadata: Metadata = {
   title: "Placeholders",
   robots: { index: false, follow: false },
 };
-
-const KATEGORILER = [
-  ["Pırlanta", PLACEHOLDER.kategori.pirlanta],
-  ["Altın Seti", PLACEHOLDER.kategori["altin-seti"]],
-  ["Küpe Modelleri", PLACEHOLDER.kategori["kupe-modelleri"]],
-  ["Tek Taş Modelleri", PLACEHOLDER.kategori["tek-tas-modelleri"]],
-  ["Özel Tasarım Takılar", PLACEHOLDER.kategori["ozel-tasarim-takilar"]],
-] as const;
 
 export default function PlaceholdersPage() {
   if (process.env.NODE_ENV === "production") notFound();
@@ -39,20 +32,22 @@ export default function PlaceholdersPage() {
           Kategori karoları — 1:1, kömür zemin
         </p>
         <div className="mt-5 grid grid-cols-2 gap-px bg-line sm:grid-cols-3">
-          {KATEGORILER.map(([name, src]) => (
-            <figure key={src} className="bg-cream">
+          {getCategories().map((category) => (
+            <figure key={category.slug} className="bg-cream">
               <div className="relative aspect-square">
                 <Image
-                  src={src}
-                  alt={name}
+                  src={category.coverImage}
+                  alt={category.name}
                   fill
                   sizes="(min-width: 640px) 33vw, 50vw"
                   className="object-cover"
                 />
               </div>
               <figcaption className="px-3 py-2">
-                <p className="font-display text-lg">{name}</p>
-                <p className="font-mono text-xs text-ink-muted">{src}</p>
+                <p className="font-display text-lg">{category.name}</p>
+                <p className="font-mono text-xs text-ink-muted">
+                  /urunler/{category.slug}
+                </p>
               </figcaption>
             </figure>
           ))}
