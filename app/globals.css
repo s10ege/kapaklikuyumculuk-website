@@ -106,6 +106,21 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Fixed light design (see the note at the top). Declaring it stops the
+       browser rendering native controls and scrollbars in dark colours when
+       the OS is in dark mode. */
+    color-scheme: light;
+  }
+
+  /* Removes the ~300ms double-tap-zoom delay on touch. Most visits are a thumb
+     on a phone (§7), so this is felt on every single tap. Scoped to controls,
+     so pinch-zoom on the page still works. */
+  a,
+  button,
+  [role="button"],
+  summary {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {

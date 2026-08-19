@@ -54,7 +54,13 @@ for (const route of ROUTES) {
       page,
     }) => {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto(route, { waitUntil: "networkidle" });
+
+      /* Not networkidle. /iletisim embeds a Google Maps iframe that keeps
+       * chattering, so networkidle never fires and the test spent 15–26s
+       * waiting out the timeout before passing on luck. Layout depends on
+       * fonts, not on map tiles — so wait for exactly that. */
+      await page.goto(route, { waitUntil: "domcontentloaded" });
+      await page.evaluate(() => document.fonts.ready);
 
       const result = await horizontalOverflow(page);
 

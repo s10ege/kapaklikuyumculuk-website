@@ -58,13 +58,18 @@ Iterations are sequential unless marked ⇄ (independent — order free, or para
 
 ## Roadmap
 
-| Milestone | Iterations | Ends when |
-|---|---|---|
-| **M1 Foundation** | 0–5 | `npm run build` passes; tokens, fonts, images, and both data modules are typed and tested. Nothing user-visible yet. |
-| **M2 Shell & template** | 6–8 | Chrome and the category template work at all breakpoints, with the empty state and lightbox proven. This is the riskiest UI and it lands before any page depends on it. |
-| **M3 Pages** | 9–12 | All nine routes exist with real Turkish copy. |
-| **M4 Launch infrastructure** | 13–15 | Redirects, SEO and phase-two schemas in place. |
-| **M5 Ship** | 16 | Verified and deployed. |
+| Milestone | Iterations | Status | Ends when |
+|---|---|---|---|
+| **M1 Foundation** | 0–5 | ✅ done | `npm run build` passes; tokens, fonts, images, and both data modules are typed and tested. Nothing user-visible yet. |
+| **M2 Shell & template** | 6–8 | ✅ done | Chrome and the category template work at all breakpoints, with the empty state and lightbox proven. This is the riskiest UI and it lands before any page depends on it. |
+| **M3 Pages** | 9–12 | ✅ done | All nine routes exist with real Turkish copy. |
+| **M4 Launch infrastructure** | 13–15 | ✅ done | Redirects, SEO and phase-two schemas in place. |
+| **M5 Ship** | 16 | ◑ code verified, not deployed | Verified and deployed. |
+
+**Where the build stands.** 18 routes, all prerendered static, zero server
+rendering. 187 tests green: 41 unit (`npm run test:unit`) and 146 end-to-end
+(`npm run test:e2e`). Everything verifiable without the live domain has been
+verified; see *What remains* below for what has not.
 
 **Gate between M1 and M2:** run `frontend-design` + `ui-ux-pro-max` on the token set
 before building chrome. Cheap to redirect the look here, expensive after iteration 9.
@@ -395,6 +400,94 @@ The free-tier dataset is **public** — nothing private goes in it.
 
 Then: deploy · point the domain · Search Console (Domain property, not URL-prefix) ·
 resubmit sitemap · Google Business Profile.
+
+---
+
+---
+
+# What remains
+
+Nothing in the codebase is unfinished. What is left either needs the live
+domain, or needs an answer only the family can give.
+
+## 1. Deploy and the Search Console work — needs your accounts
+
+The tail of iteration 16. Everything testable locally is done; these steps
+cannot be run from here.
+
+- [ ] Deploy to Vercel and point the domain at it.
+- [ ] **Verify in Search Console as a Domain property, not URL-prefix.** The old
+      URLs are indexed as `http://www.`, and only a domain property covers every
+      host and scheme variant. Picking the wrong one is a silent half-fix.
+- [ ] Submit `sitemap.xml`, then URL Inspection → Request indexing on the homepage.
+- [ ] Removals → *Remove all URLs with this prefix* for `/urun/`, `/urunler/`,
+      `/wp-content/` and `/author/`. This hides them within hours. It is
+      temporary (~6 months); the permanent fix is the 301/404 working underneath.
+- [ ] Bing Webmaster Tools, then Yandex Webmaster — Yandex matters more than Bing
+      in Turkey.
+- [ ] Re-run the redirect suite against the live domain once DNS resolves:
+      `npm run test:e2e -- tests/redirects.spec.ts`. It currently proves the map
+      locally; proving it in production is the last check.
+
+Timing, per `docs/index-cleanup-plan.md`: removals bite in 4–24 hours, the 301s
+land over 1–4 weeks, old images fade from Google Images over 4–12 weeks.
+
+## 2. Two answers from the family
+
+Both already ship behind the §8 mechanism, so each is a one-line change.
+
+- [ ] **WhatsApp number.** `0554 915 77 90` is graded 🟡 — Instagram bio only.
+      Confirm it, then set `contact.whatsapp.pending` to `false` in
+      `lib/config.ts`. Verified end-to-end: flipping it swaps every CTA across
+      all 11 pages to `wa.me` with the product or category name prefilled, and
+      flipping it back restores the `tel:` fallback cleanly.
+- [ ] **Opening hours.** Shipping 09:00–20:00. `docs/business-facts.md` grades
+      this ❌ (Google says 09:00–20:00, two sources say 08:00–19:00); the owner's
+      answer is that the closing time is seasonal. Worth confirming the winter
+      time so `siteSettings` is right when Sanity lands.
+- [ ] Also worth confirming: that `0282 717 55 62` is still in use, and that the
+      Altın Alım–Satım copy on `/hizmetler` matches how the shop actually
+      operates — it promises weighing on the counter in front of the customer
+      and deductions named before the transaction.
+
+## 3. The brand-name consequence — launch-blocking
+
+The site says **Trakya Kapaklı Kuyumculuk** (§2, reaffirmed). This is the item
+most likely to waste the rest of the work if it is treated as follow-up.
+
+`docs/index-cleanup-plan.md` Step 1 lists that exact string as one of the three
+name variants causing the ranking problem. Publishing it while the directories
+still say something else does not replace three variants — it adds a fourth.
+
+- [ ] Google Business Profile name → `Trakya Kapaklı Kuyumculuk`
+- [ ] Instagram bio → same string, plus the canonical NAP and the website
+- [ ] Steps 3–5 directory corrections → same string, character-for-character
+- [ ] Retire `Kapaklı Kuyumcusu` everywhere you can edit it
+
+Everything the site publishes comes from `lib/config.ts`, and
+`tests/source-invariants.test.mts` fails the build if any of it is ever inlined
+somewhere else. That guarantee stops at the edge of the repo; the directories
+are the other half.
+
+## 4. Phase two
+
+- [ ] Real photography. `lib/placeholders.ts` holds every path; swapping one is
+      a string change with no component edit.
+- [ ] Wire Sanity. Schemas are written and unused — see `sanity/README.md`.
+      Only `lib/content.ts` changes.
+- [ ] Gold price ticker. The header slot exists and is empty
+      (`#gold-ticker-slot` in `components/Header.tsx`).
+
+## Not doing, and why
+
+- **Archived product photos.** 111 JPGs under `/wp-content/uploads/2015/12/`.
+  Skipped by decision — 2015-era 1024px amateur shots would need replacing
+  anyway, and the SVG motifs read as deliberate in the meantime.
+- **A contact form.** The domain has no MX records, so there is no address to
+  deliver to. A form would silently swallow every message; a test enforces its
+  absence.
+- **Coordinates in the schema.** Graded ❌, sources differ by ~150 m. The maps
+  embed keys on the address string instead.
 
 ---
 

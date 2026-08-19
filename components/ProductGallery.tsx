@@ -89,7 +89,9 @@ export function ProductGallery({ products }: { products: Product[] }) {
         onClick={(e) => {
           if (e.target === dialogRef.current) dialogRef.current?.close();
         }}
-        className="m-auto w-[min(64rem,92vw)] bg-cream p-0 text-ink backdrop:bg-charcoal-deep/80"
+        /* overscroll-contain stops a scroll gesture inside the panel chaining to
+         * the page behind it, which on a phone reads as the modal leaking. */
+        className="m-auto w-[min(64rem,92vw)] overscroll-contain bg-cream p-0 text-ink backdrop:bg-charcoal-deep/80"
       >
         {active && (
           <div className="relative grid gap-px bg-line sm:grid-cols-2">
@@ -115,7 +117,8 @@ export function ProductGallery({ products }: { products: Product[] }) {
             </div>
 
             <div className="flex flex-col bg-cream p-6 sm:p-8">
-              <p className="text-label uppercase text-gold-deep">
+              {/* tabular-nums so the counter does not reflow as the index changes. */}
+              <p className="text-label uppercase tabular-nums text-gold-deep">
                 {index + 1} / {products.length}
               </p>
 

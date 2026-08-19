@@ -92,7 +92,7 @@ export default function PlaceholdersPage() {
             alt="Vitrin görseli yakında"
             fill
             priority
-            sizes="100vw"
+            sizes="(min-width: 1024px) 64rem, 100vw"
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-charcoal-deep via-charcoal-deep/70 to-transparent" />

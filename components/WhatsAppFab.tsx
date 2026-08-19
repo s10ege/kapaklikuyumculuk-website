@@ -24,7 +24,11 @@ export function WhatsAppFab() {
        * holds here: recognition comes from the green and the glyph, not the
        * shape, so there is no reason to break the one visual rule that keeps
        * this site from looking like every other jeweller's template. */
-      className={`fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-md text-white shadow-none transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 ${
+      style={{
+        bottom: "calc(1.25rem + env(safe-area-inset-bottom))",
+        right: "calc(1.25rem + env(safe-area-inset-right))",
+      }}
+      className={`fixed z-50 flex h-14 w-14 items-center justify-center rounded-md text-white shadow-none transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 ${
         isWhatsApp ? "bg-whatsapp" : "bg-gold-deep"
       }`}
     >

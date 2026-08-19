@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Jost } from "next/font/google";
 import "./globals.css";
 
@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { JsonLd } from "@/components/JsonLd";
 import { categoryLinks, PAGE_LINKS } from "@/lib/nav";
-import { shop } from "@/lib/config";
+import { addressOneLine, phoneDisplay, shop } from "@/lib/config";
 import { jewelryStoreSchema } from "@/lib/schema";
 
 /* Display: Bodoni Moda. Body: Jost.
@@ -57,10 +57,16 @@ export const metadata: Metadata = {
      resolve to absolute URLs. Without it Next emits relative canonicals, which
      Google largely ignores. */
   metadataBase: new URL(shop.url),
-  title: "Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı Kuyumcu",
+  /* Built from lib/config.ts, not typed out. The hand-written version of this
+     description drifted to "Cumhuriyet Mah. Pınar Bulvarı" — no comma — while
+     the footer and the JSON-LD said "Cumhuriyet Mah., Pınar Bulvarı". Two
+     spellings of one address on the homepage is the exact signal
+     docs/index-cleanup-plan.md blames for the ranking problem, and it got in
+     here by someone typing carefully rather than importing. */
+  title: `${shop.name} | ${phoneDisplay} | Kapaklı Kuyumcu`,
   description:
-    "2000 yılından beri Kapaklı'da. Altın, pırlanta ve özel tasarım takılar. " +
-    "Cumhuriyet Mah. Pınar Bulvarı No: 56/A, Kapaklı / Tekirdağ.",
+    `${shop.founded} yılından beri Kapaklı'da. Altın, pırlanta ve özel ` +
+    `tasarım takılar. ${addressOneLine}. Tel: ${phoneDisplay}`,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -69,6 +75,12 @@ export const metadata: Metadata = {
     url: shop.url,
   },
   robots: { index: true, follow: true },
+};
+
+/* Matches the sticky header, which is what sits under the browser's URL bar on
+ * a phone. Without it the bar renders white against a charcoal header. */
+export const viewport: Viewport = {
+  themeColor: "#1a1816",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
