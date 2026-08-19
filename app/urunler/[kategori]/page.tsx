@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactBand } from "@/components/ContactBand";
 import { EmptyState } from "@/components/EmptyState";
-import { ProductGrid } from "@/components/ProductGrid";
+import { ProductGallery } from "@/components/ProductGallery";
 import { getCategories, getCategory, getCategorySlugs, getProducts } from "@/lib/content";
 
 /* The category template (§6.2) — the piece that has to look right with three
@@ -87,7 +87,7 @@ export default async function CategoryPage({
 
           <div className="mt-6">
             {products.length > 0 ? (
-              <ProductGrid products={products} />
+              <ProductGallery products={products} />
             ) : (
               <EmptyState subject={category.name} />
             )}

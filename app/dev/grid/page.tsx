@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { EmptyState } from "@/components/EmptyState";
+import { ProductGallery } from "@/components/ProductGallery";
 import { ProductGrid } from "@/components/ProductGrid";
 import type { Product } from "@/lib/content";
 import { PLACEHOLDER } from "@/lib/placeholders";
@@ -92,10 +93,13 @@ export default function GridPage() {
 
         <div className="mt-10 border-b border-line pb-3">
           <p className="text-label uppercase text-ink-muted">
-            {FIXTURES.length} model · 4&apos;lü masaüstü, 2&apos;li mobil
+            {FIXTURES.length} model · 4&apos;lü masaüstü, 2&apos;li mobil ·
+            görsele tıklayarak büyütün
           </p>
         </div>
-        <ProductGrid products={FIXTURES} className="mt-6" />
+        <div className="mt-6">
+          <ProductGallery products={FIXTURES} />
+        </div>
 
         <div className="mt-14 border-b border-line pb-3">
           <p className="text-label uppercase text-ink-muted">
