@@ -105,7 +105,7 @@ export default function TokensPage() {
           </div>
         </Section>
 
-        <Section title="Display — Cormorant Garamond">
+        <Section title="Display — Bodoni Moda">
           <div className="flex flex-col gap-4">
             <p className="display-lg">Trakya Kapaklı Kuyumculuk</p>
             <p className="display-md">Özel Tasarım Takılar</p>
@@ -117,7 +117,7 @@ export default function TokensPage() {
           </div>
         </Section>
 
-        <Section title="Gövde — Inter">
+        <Section title="Gövde — Jost">
           <div className="flex max-w-2xl flex-col gap-4">
             <p>{PANGRAM}</p>
             <p className="text-gold-deep">{GLYPHS}</p>
