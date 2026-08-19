@@ -14,6 +14,10 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    /* Node's native TypeScript type-stripping requires the real file extension
+       on relative imports, so tests import "../lib/config.ts". Safe with
+       noEmit: tsc never rewrites these paths. */
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
