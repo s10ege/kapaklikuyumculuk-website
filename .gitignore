@@ -14,6 +14,12 @@ next-env.d.ts
 npm-debug.log*
 *.pem
 
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
 # env — never commit these
 .env
 .env*.local
@@ -32,11 +38,13 @@ scratch/
 
 # agent skills installed from the registry — restore with `npx skills install`.
 # skills-lock.json is committed and pins the exact source + hash of each one.
-# ui-ux-pro-max and find-skills are NOT in the lockfile (copied in by hand),
-# so they live in .claude/skills/ and are committed as real content.
+# `npx skills add` writes the real content to .agents/ and symlinks it into
+# .claude/skills/, so both are ignored.
+#
+# Ignore-all-then-unignore rather than naming each installed skill: an explicit
+# list silently stops covering the next `skills add`, which is how vendored
+# third-party content ends up committed by accident.
 .agents/
-.claude/skills/frontend-design
-.claude/skills/webapp-testing
-.claude/skills/vercel-react-best-practices
-.claude/skills/vercel-composition-patterns
-.claude/skills/web-design-guidelines
+.claude/skills/*
+!.claude/skills/find-skills/
+!.claude/skills/ui-ux-pro-max/

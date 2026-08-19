@@ -1,26 +1,130 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------------------------------------------------------
+   Design tokens — spec §3.
+
+   The palette comes from the logo: a gold KK inside a double oval on near-black.
+   That makes charcoal a brand colour, not just gold and white.
+
+   Deliberately NOT theme-switchable. This is a fixed design, so there is no
+   prefers-color-scheme block — light/dark is expressed by the band rhythm
+   (charcoal header/hero/bands/footer, cream between), not by user preference.
+
+   §12: never name a token `base`. `text-base` is a built-in Tailwind font-size
+   utility and a `--color-base` token collides with it, silently painting body
+   copy near-white. The page background token is `cream`.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Gold is an accent, never a large fill. Hairlines, outlines, small-caps
+     labels, icons. Large gold areas are what make jeweller sites look cheap. */
+  --color-gold: #b8964f; /* primary accent */
+  --color-gold-deep: #8a6d2f; /* hover/pressed; gold text on light backgrounds */
+  --color-gold-soft: #cbae72; /* gold text on dark backgrounds */
+  --color-gold-pale: #efe7d6; /* hairlines, subtle section fills */
+
+  /* The only large dark areas. */
+  --color-charcoal: #2a2724; /* header, hero overlay, bands */
+  --color-charcoal-deep: #1a1816; /* footer, sticky header */
+
+  --color-cream: #fbfaf7; /* page background (warm off-white) */
+  --color-surface: #ffffff; /* cards, product tiles */
+  --color-ink: #1c1917; /* primary text */
+  --color-ink-muted: #6b6560; /* secondary text, captions */
+  --color-line: #e8e3da; /* 1px borders */
+  --color-whatsapp: #25d366; /* WhatsApp buttons only */
+
+  /* Labels — uppercase, 11px, 0.18em tracking, weight 500. Sans by design,
+     so this one stays a plain text token. */
+  --text-label: 0.6875rem; /* 11px */
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.18em;
+  --text-label--font-weight: 500;
+
+  /* §3: sharp corners — 0px, 2px maximum. Rounded corners fight the feel.
+     Capping the scale makes that structural: `rounded-lg` cannot go soft. */
+  --radius-xs: 0px;
+  --radius-sm: 1px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+  --radius-2xl: 2px;
+  --radius-3xl: 2px;
+
+  /* §3: no drop shadows. Separation comes from hairlines and whitespace.
+     Neutralised at the token level so a stray `shadow-md` is a no-op. */
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
 }
 
+/* Font families are declared `inline` so they resolve against the CSS variables
+   next/font injects, rather than being emitted as a var pointing at a var. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Display scale — §3: 48 / 40 / 32.
+ *
+ * Deliberately utilities, not `--text-*` theme tokens. Tailwind's text namespace
+ * only carries size/leading/tracking/weight — never family — so a plain
+ * `text-display-lg` on a <p> silently renders in Inter. That is a wrong-looking
+ * page rather than a broken one, which is exactly the kind of thing that ships.
+ * Bundling the family in means the display face cannot be dropped by accident,
+ * on a heading or anything else.
+ */
+@utility display-lg {
+  font-family: var(--font-display);
+  font-size: 3rem; /* 48px */
+  line-height: 1.08;
+  font-weight: 400;
+}
+
+@utility display-md {
+  font-family: var(--font-display);
+  font-size: 2.5rem; /* 40px */
+  line-height: 1.12;
+  font-weight: 400;
+}
+
+@utility display-sm {
+  font-family: var(--font-display);
+  font-size: 2rem; /* 32px */
+  line-height: 1.18;
+  font-weight: 400;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    /* §3: body 16 at 1.7–1.85 */
+    line-height: 1.75;
+  }
+
+  /* Turkish copy is full of ascenders and dotted/dotless i. Kerning and
+     ligatures on by default keeps `fi`, `ffi` and `İ` from colliding. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
 }
