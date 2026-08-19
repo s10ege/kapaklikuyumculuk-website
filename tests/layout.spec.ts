@@ -11,7 +11,12 @@ const WIDTHS = [360, 390, 768, 1440] as const;
  * render at all shows up as a failure instead of silently not being tested. */
 const ROUTES = [
   "/",
+  "/urunler",
   "/urunler/pirlanta",
+  "/galeri",
+  "/hizmetler",
+  "/hakkimizda",
+  "/iletisim",
   "/urunler/ozel-tasarim-takilar",
   "/dev/tokens",
   "/dev/placeholders",

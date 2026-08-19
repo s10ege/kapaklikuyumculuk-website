@@ -75,3 +75,135 @@ test.describe("/galeri", () => {
     }
   });
 });
+
+/* ------------------------------------------------------------------ */
+/* Iteration 11 — Hizmetler + Hakkımızda                               */
+/* ------------------------------------------------------------------ */
+
+test.describe("/hizmetler", () => {
+  test("covers both services with four points each", async ({ page }) => {
+    await page.goto("/hizmetler");
+
+    for (const name of ["Altın Alım–Satım", "Sipariş Üzerine Üretim"]) {
+      await expect(page.getByRole("heading", { name })).toBeVisible();
+    }
+
+    for (const slug of ["altin-alim-satim", "siparis-uzerine-uretim"]) {
+      const points = page.locator(`#${slug} li`);
+      expect(await points.count()).toBe(4);
+    }
+  });
+
+  test("answers the two things a customer actually worries about", async ({
+    page,
+  }) => {
+    await page.goto("/hizmetler");
+
+    /* §6.5 names these explicitly: the rate and the weighing. Both promises
+     * are load-bearing trust claims, so they are asserted rather than left to
+     * survive a future copy edit by luck. */
+    await expect(page.getByText(/gözünüzün önünde/).first()).toBeVisible();
+    await expect(page.getByText(/işlemden önce söylenir/)).toBeVisible();
+  });
+});
+
+test.describe("/hakkimizda", () => {
+  test("reclaims the indexed path and makes the returns argument", async ({
+    page,
+  }) => {
+    const response = await page.goto("/hakkimizda");
+    expect(response?.status()).toBe(200);
+
+    // §6.6 — a jeweller sells things that come back.
+    await expect(page.getByText(/geri gelir/)).toBeVisible();
+  });
+
+  test("never revives the retired two-branch claim", async ({ page }) => {
+    await page.goto("/hakkimizda");
+
+    /* The old site said "iki şube ile". The partnership ended and the second
+     * address belongs to a different business now; repeating it would feed the
+     * exact name-to-two-addresses confusion this project exists to undo. */
+    const html = await page.content();
+    expect(html).not.toContain("iki şube");
+  });
+
+  test("shows a two-cell fact grid", async ({ page }) => {
+    await page.goto("/hakkimizda");
+
+    const facts = page.locator("dl dt");
+    expect(await facts.count()).toBe(2);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* Iteration 12 — İletişim + 404                                       */
+/* ------------------------------------------------------------------ */
+
+test.describe("/iletisim", () => {
+  test("offers no form and no mailto, because no email exists", async ({
+    page,
+  }) => {
+    await page.goto("/iletisim");
+
+    /* docs/business-facts.md: the domain has no MX records, verified by DNS
+     * lookup. A contact form here would silently swallow every message a
+     * customer sent — the most damaging possible bug on this page. */
+    expect(await page.locator("form").count()).toBe(0);
+    expect(await page.locator('input[type="email"]').count()).toBe(0);
+    expect(await page.locator('a[href^="mailto:"]').count()).toBe(0);
+  });
+
+  test("lists address, both phones, hours and Instagram", async ({ page }) => {
+    await page.goto("/iletisim");
+    const main = page.getByRole("main");
+
+    await expect(
+      main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+    ).toBeVisible();
+    await expect(main.getByText("0282 717 21 31").first()).toBeVisible();
+    await expect(main.getByText("0282 717 55 62")).toBeVisible();
+    await expect(main.getByText("09:00 – 20:00")).toBeVisible();
+    await expect(main.getByText("@kuyumculukkapakli")).toBeVisible();
+  });
+
+  test("embeds a keyless map keyed on the address, not coordinates", async ({
+    page,
+  }) => {
+    await page.goto("/iletisim");
+
+    const src = await page.locator("iframe").getAttribute("src");
+    expect(src).toContain("output=embed");
+    // Coordinates are graded ❌ (~150 m disagreement), so none may be emitted.
+    expect(src).not.toMatch(/@?4[01]\.\d{3,}/);
+  });
+});
+
+test.describe("404", () => {
+  test("returns 404 and reads like a shop, not an error screen", async ({
+    page,
+  }) => {
+    const response = await page.goto("/wp-admin");
+    expect(response?.status()).toBe(404);
+
+    await expect(page.getByText(/Web sitemiz yenilendi/)).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Ürünlerimiz/ }).first(),
+    ).toBeVisible();
+    await expect(page.getByText("0282 717 21 31").first()).toBeVisible();
+  });
+
+  test("carries the address, for a visitor who only wanted the location", async ({
+    page,
+  }) => {
+    await page.goto("/gerçekten-olmayan-bir-sayfa");
+
+    /* Scoped to main: the footer carries the same address, which is the point
+     * — both render from the one value in lib/config.ts. */
+    await expect(
+      page
+        .getByRole("main")
+        .getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+    ).toBeVisible();
+  });
+});
