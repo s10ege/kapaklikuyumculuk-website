@@ -6,6 +6,13 @@ node_modules/
 out/
 dist/
 build/
+/coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# debug
+npm-debug.log*
+*.pem
 
 # env — never commit these
 .env
