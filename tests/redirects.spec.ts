@@ -1,0 +1,118 @@
+import { test, expect } from "@playwright/test";
+
+/* Gate for iteration 13 of plan.md — the highest-risk artefact in the project.
+ *
+ * A wrong redirect looks exactly like a working site, which is why every row of
+ * the map is asserted rather than eyeballed. Sources come from
+ * docs/old-urls.txt (309 URLs recovered from Archive.org) and the six paths
+ * docs/old-site-map.md confirms are still in Google's index today.
+ */
+
+/* ------------------------------------------------------------------ */
+/* Reclaimed — these must be live pages, never redirects               */
+/* ------------------------------------------------------------------ */
+
+/* §4's central insight: a live page at an already-indexed address is worth far
+ * more than a 301. If any of these ever answers 301 again, the index history it
+ * carries has been thrown away. Two of them are confirmed still indexed. */
+const RECLAIMED = [
+  "/urunler",
+  "/urunler/pirlanta",
+  "/urunler/ozel-tasarim-takilar",
+  "/galeri",
+  "/hakkimizda",
+  "/iletisim",
+];
+
+for (const path of RECLAIMED) {
+  test(`${path} is a live page, not a redirect`, async ({ request }) => {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(
+      response.status(),
+      `${path} must return 200 — it is an indexed URL being reclaimed`,
+    ).toBe(200);
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/* 301s — old path to its successor                                    */
+/* ------------------------------------------------------------------ */
+
+const REDIRECTS: [from: string, to: string][] = [
+  // §4's table
+  ["/urun/altin-seti", "/urunler/altin-seti"],
+  ["/urun/kupe-modelleri", "/urunler/kupe-modelleri"],
+  ["/urun/tek-tas-modelleri", "/urunler/tek-tas-modelleri"],
+
+  // Indexed product paths §4's table missed, found in docs/old-urls.txt
+  ["/urun/ozel-tasarim-takilar", "/urunler/ozel-tasarim-takilar"],
+  ["/urun/pirlanta-yuzukler", "/urunler/pirlanta"],
+  ["/urun/yuzuk-modelleri", "/urunler"],
+  ["/urunler/altin", "/urunler/altin-seti"],
+
+  // Unknown product paths fall back to the catalogue rather than 404
+  ["/urun/bilinmeyen-bir-model", "/urunler"],
+
+  // Generation-1 pages
+  ["/urunlerimiz", "/urunler"],
+  ["/urunlerimiz/cici-gold", "/urunler"],
+  ["/kurumsal", "/hakkimizda"],
+  ["/misyonvizyon", "/hakkimizda"],
+  ["/markalar-2", "/hakkimizda"],
+  ["/calistigimiz-firmalar/altin-firmalari", "/hakkimizda"],
+  ["/fotograf-galerisi", "/galeri"],
+  ["/fotograf-galerisi/kapakli-kuyumculuk-merkez", "/galeri"],
+  ["/gallery_plus/haskale", "/galeri"],
+
+  // No successor
+  ["/altin-fiyatlari", "/"],
+  ["/doviz-kurlari", "/"],
+  ["/referanslar", "/"],
+  ["/slide-types/referanslar", "/"],
+  ["/anasayfa2", "/"],
+];
+
+/* 308, not 301. The docs say "301" throughout, but `permanent: true` emits 308
+ * in both Next and Vercel — so 308 is also what the live holding page has been
+ * serving since the cleanup shipped. Google treats 301 and 308 identically for
+ * indexing, and matching what is already live avoids changing a signal Google
+ * has begun acting on. Do not "fix" this to 301. */
+for (const [from, to] of REDIRECTS) {
+  test(`${from} → ${to}`, async ({ request }) => {
+    const response = await request.get(from, { maxRedirects: 0 });
+
+    expect(response.status(), `${from} should be a permanent redirect`).toBe(
+      308,
+    );
+    expect(response.headers()["location"]).toBe(to);
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/* Deliberate 404s (§4 rule 3)                                         */
+/* ------------------------------------------------------------------ */
+
+/* WordPress internals have no successor. They must 404 so Google drops them,
+ * rather than 301 to a page that has nothing to do with them. */
+const MUST_404 = [
+  "/wp-admin",
+  "/wp-login.php",
+  "/wp-content/uploads/2015/12/IMG_0312-1024x953.jpg",
+  "/author/kapaklikuyumculuk",
+];
+
+for (const path of MUST_404) {
+  test(`${path} stays a 404 on purpose`, async ({ request }) => {
+    const response = await request.get(path, { maxRedirects: 0 });
+    expect(response.status(), `${path} must not be redirected`).toBe(404);
+  });
+}
+
+test("the branded Turkish 404 is what an old WordPress URL lands on", async ({
+  page,
+}) => {
+  await page.goto("/wp-content/uploads/2015/12/IMG_0312-1024x953.jpg");
+
+  // Not Vercel's English error screen.
+  await expect(page.getByText(/Web sitemiz yenilendi/)).toBeVisible();
+});
