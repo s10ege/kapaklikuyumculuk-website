@@ -49,7 +49,7 @@ export default function Home() {
   const featured = getFeaturedProducts(4);
 
   return (
-    <main className="flex flex-1 flex-col">
+    <>
       {/* ── Hero ─────────────────────────────────────────────── charcoal ── */}
       <section className="relative flex min-h-[78vh] items-center overflow-hidden bg-charcoal">
         <Image
@@ -286,6 +286,6 @@ export default function Home() {
           </dl>
         </div>
       </section>
-    </main>
+    </>
   );
 }

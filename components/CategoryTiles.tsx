@@ -22,7 +22,7 @@ export function CategoryTiles({
 }) {
   return (
     <ul className="grid grid-cols-2 border-l border-t border-line sm:grid-cols-3">
-      {categories.map((category) => (
+      {categories.map((category, i) => (
         <li
           key={category.slug}
           className="border-b border-r border-line"
@@ -35,6 +35,10 @@ export function CategoryTiles({
               src={category.coverImage}
               alt=""
               fill
+              /* On /urunler the first tile is the LCP element, and Next warns
+                 about it. Eager-loading the first row only — lazy-loading an
+                 above-the-fold image delays the paint it is measured by. */
+              priority={i === 0}
               sizes="(min-width: 640px) 33vw, 50vw"
               className="object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

@@ -70,9 +70,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           İçeriğe geç
         </a>
         <Header categories={categoryLinks()} pages={PAGE_LINKS} />
-        <div id="icerik" className="flex flex-1 flex-col">
+        {/* The one <main> landmark, defined here so every page has exactly one.
+            Pages render fragments; a page supplying its own <main> would nest
+            two and leave the skip link pointing at the outer one. */}
+        <main id="icerik" className="flex flex-1 flex-col">
           {children}
-        </div>
+        </main>
         <Footer />
         <WhatsAppFab />
       </body>
