@@ -83,5 +83,14 @@ Managed by `skills-lock.json` and updatable: `frontend-design`, `next-dev-loop`,
 the source of most line-ending noise in `git status`: `ui-ux-pro-max` (copied from another
 project), `find-skills`.
 
-Project-local: `kk-brand` (this design system, machine-readable) and `catalogue-pipeline`
-(the photo → rembg → publish loop).
+Project-local and committed: `kk-brand` (this design system, machine-readable),
+`catalogue-pipeline` (the photo → rembg → publish loop) and `project-setup` (bootstrapping
+a clone).
+
+## Setting up a clone
+
+`npm run setup`, or `/setup` in Claude Code. One script — `scripts/setup.mjs` — restores
+dependencies, the gitignored third-party skills, Playwright browsers and the working
+folders. It pings the registry before running `npm ci`, because `npm ci` deletes
+`node_modules` first and a failed offline run would leave the clone unusable. The Cowork
+device shell has no network, so setup always has to be run from a normal terminal.

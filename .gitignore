@@ -58,3 +58,4 @@ catalogue/raw/
 # project-local skills are OURS and must be committed (see .claude/skills/* above)
 !.claude/skills/kk-brand/
 !.claude/skills/catalogue-pipeline/
+!.claude/skills/project-setup/

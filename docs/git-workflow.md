@@ -3,6 +3,18 @@
 How this repo is worked on, by Soner and by Claude. Short, because a workflow nobody
 remembers is not a workflow.
 
+## After cloning
+
+```bash
+git clone https://github.com/s10ege/kapaklikuyumculuk-website.git
+cd kapaklikuyumculuk-website
+npm run setup
+```
+
+`node_modules/`, the third-party skills and the Playwright browsers are all deliberately
+not in the repo. `npm run setup` restores them from `package-lock.json` and
+`skills-lock.json`. In Claude Code the same thing is `/setup`.
+
 ## The shape
 
 - **`origin`** → `https://github.com/s10ege/kapaklikuyumculuk-website.git`
