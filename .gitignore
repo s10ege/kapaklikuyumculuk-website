@@ -48,3 +48,13 @@ scratch/
 .claude/skills/*
 !.claude/skills/find-skills/
 !.claude/skills/ui-ux-pro-max/
+
+# google drive sync scratch — this folder lives inside a synced Drive
+.tmp.drive*/
+
+# catalogue source photos — originals stay on Soner's machine
+catalogue/raw/
+
+# project-local skills are OURS and must be committed (see .claude/skills/* above)
+!.claude/skills/kk-brand/
+!.claude/skills/catalogue-pipeline/

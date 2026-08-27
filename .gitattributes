@@ -1,0 +1,14 @@
+# Normalise line endings. Without this the repo accumulates CRLF/LF churn that
+# hides real changes in diffs — six files were already affected before this landed.
+* text=auto eol=lf
+
+# Binary assets — never diffed, never normalised
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.ico  binary
+*.glb  binary
+*.woff  binary
+*.woff2 binary
+*.pdf  binary
