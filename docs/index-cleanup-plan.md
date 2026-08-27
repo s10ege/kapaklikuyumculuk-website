@@ -1,5 +1,9 @@
 # Index & Listing Cleanup Plan
 
+> **Amended 2026-08-27.** Two things in this document were superseded — the canonical
+> trade name, and the Search Console removal list. Both are corrected inline and marked
+> **AMENDED**. See `plan.md` and `FINAL.md`.
+
 Goal: make the internet agree on **one** version of who this business is, where it
 is, and how to reach it — before the new site launches.
 
@@ -43,7 +47,7 @@ Once confirmed, write the canonical form down and never deviate — same charact
 same abbreviations, same order, everywhere:
 
 ```
-Kapaklı Kuyumculuk
+Trakya Kapaklı Kuyumculuk
 Cumhuriyet Mah., Pınar Bulvarı No: 56/A
 59510 Kapaklı / Tekirdağ
 0282 717 21 31
@@ -56,9 +60,16 @@ the former partner's shop and needs correcting, not reconciling.
 Details that seem petty and are not: `Bulvarı` vs `Blv.` vs `Bulv.` · `No: 56/A` vs
 `No:56/A` · `Kapaklı/Tekirdağ` vs `Kapaklı / Tekirdağ`. Pick one. Use it.
 
-**Also decide the trade name once.** "Kapaklı Kuyumculuk" is the strongest choice —
-it matches the domain, the old site title, and most listings. "Kapaklı Kuyumcusu"
-should be retired everywhere you control.
+**AMENDED — the trade name is decided: `Trakya Kapaklı Kuyumculuk`.** This document
+originally recommended "Kapaklı Kuyumculuk" because it matches the domain and most
+listings. Soner chose the fuller name; it is now the canonical string everywhere, in
+**title case** (ALL-CAPS risks a Google Business Profile name policy violation — where
+the design shows caps, that is a CSS treatment, not the stored name). "Kapaklı
+Kuyumcusu" should still be retired everywhere you control.
+
+The decision only works if every listing moves to it in the same week. Publishing it
+while the directories still say something else adds a *fourth* variant instead of
+replacing three.
 
 ## Step 2 — Get something live at the domain
 
@@ -174,9 +185,13 @@ Still to do, and it needs a human:
       panel. Choose **Domain property**, not URL-prefix: the old URLs are indexed as
       `http://www.`, and only a domain property covers every host and scheme variant.
 - [ ] Submit `sitemap.xml`, then URL Inspection → Request indexing on the homepage
-- [ ] **Removals → Remove all URLs with this prefix** for `/urun/`, `/urunler/`,
-      `/wp-content/` and `/author/`. This hides them within hours. It is *temporary*
-      (~6 months) — the permanent removal is the 301/404 doing its work underneath.
+- [ ] **AMENDED — Removals → Remove all URLs with this prefix** for `/urun/`,
+      `/wp-content/` and `/author/`. **Not `/urunler/`.** This list originally included
+      `/urunler/`, written when only a holding page was live. `/urunler/` is now the live
+      catalogue — removing that prefix would hide all five category pages from Google for
+      about six months, and it would look exactly like a working site while it happened.
+      The removals hide the rest within hours. Temporary (~6 months); the permanent
+      removal is the 301/404 doing its work underneath.
 - [ ] Bing Webmaster Tools — same sitemap, same removal list
 - [ ] Yandex Webmaster — matters more than Bing in Turkey
 

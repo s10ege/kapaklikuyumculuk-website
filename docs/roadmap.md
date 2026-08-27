@@ -77,7 +77,7 @@ Full detail: **`domain-security-plan.md`**
 - [ ] Go through **`aile-sorulari.md`** with the family (Turkish, printable)
 - [ ] Confirm exact address, which phones are live, and real opening hours
 - [ ] Confirm the Instagram handle
-- [ ] Decide the canonical trade name (recommend: **Kapaklı Kuyumculuk**)
+- [x] Canonical trade name decided: **Trakya Kapaklı Kuyumculuk** (title case; see `plan.md`)
 - [ ] Work out whose Google account might hold the profile
 - [ ] Collect photos: storefront, interior, products
 

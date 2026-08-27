@@ -1,5 +1,8 @@
 # Google Business Profile & Local SEO Plan
 
+> **Amended 2026-08-27.** The canonical trade name in this document was superseded.
+> It is corrected inline and marked **AMENDED**. See `plan.md` and `FINAL.md`.
+
 **The problem:** searching the shop's name surfaces competitors instead of the shop.
 
 **The diagnosis:** this is almost never a review-count problem. It's an *entity
@@ -51,15 +54,18 @@ number of reviews.
 
 ## Phase 2 — Make the profile unambiguous (week 2)
 
-4. **Set the name to exactly `Kapaklı Kuyumculuk`** — no added keywords. Stuffing
-   ("Kapaklı Kuyumculuk Altın Pırlanta Tekirdağ") is a policy violation and a
-   common cause of suppression.
+4. **AMENDED — set the name to exactly `Trakya Kapaklı Kuyumculuk`**, title case, no
+   added keywords. Stuffing ("Trakya Kapaklı Kuyumculuk Altın Pırlanta Tekirdağ") is a
+   policy violation and a common cause of suppression, and so is ALL-CAPS: Google
+   guidelines prohibit unnecessary capitalisation, and all-caps names have been treated
+   as a name policy violation. Where the site shows caps, that is a CSS treatment, not
+   the stored name.
 5. **Primary category: `Kuyumcu` (Jewelry store).** Secondary categories only for
    things genuinely offered — `Kuyumcu tamiri`, `Altın alım satımı`, `Saatçi`.
    The primary category is one of the strongest ranking factors in local search.
 6. **Fix NAP everywhere to one canonical form**, taken from `content/site.ts`:
    ```
-   Kapaklı Kuyumculuk
+   Trakya Kapaklı Kuyumculuk
    Cumhuriyet Mah., Pınar Bulvarı No: 56/A
    59510 Kapaklı / Tekirdağ
    0282 717 21 31
