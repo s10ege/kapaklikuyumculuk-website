@@ -55,7 +55,20 @@ export default function Home() {
           own box (D7) — this clips that bleed at the viewport edge instead of
           letting it cause horizontal scroll on narrow screens. */}
       <section className="relative flex min-h-[78vh] items-center overflow-hidden bg-ground">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-5 py-20 lg:grid-cols-[1fr_auto] lg:gap-16">
+        {/* Soner's direction at the 1.3 review: from the coin's left edge, a
+            fade runs to the page's left edge — imperceptible where it starts,
+            gently gaining warmth toward the far left, so the text half doesn't
+            sit on dead-flat espresso next to the lit coin. Panel colour at
+            ~55% alpha ≈ rgb(31,24,18) at the extreme left. Desktop only. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden lg:block"
+          style={{
+            background:
+              "linear-gradient(to left, transparent 52%, rgba(36,28,21,0.55) 100%)",
+          }}
+        />
+        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-10 px-5 py-20 lg:grid-cols-[1fr_auto] lg:gap-16">
           <div>
             <p className="text-label uppercase text-gold-soft">
               {address.locality} · {address.region}
