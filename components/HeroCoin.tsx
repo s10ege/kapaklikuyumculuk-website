@@ -88,6 +88,12 @@ export function HeroCoin({ className = "" }: { className?: string }) {
           across 96 candidate encodes), and a soft fade makes even that unit
           physically invisible in every browser. The coin ends at ~88% of the
           radius, so the fade never touches it. */}
+      {/* pointer-events-none implements D5 literally — and it is what stops
+          Edge and Opera painting their hover overlays (PiP flyout, Video
+          Super Resolution badge, pop-out button) on the coin; the two
+          disable* attributes are the spec-level opt-outs for the same UI.
+          Playback is script-driven via the ref, so none of this affects
+          autoplay or the off-screen pause. */}
       <video
         ref={videoRef}
         aria-hidden="true"
@@ -95,8 +101,10 @@ export function HeroCoin({ className = "" }: { className?: string }) {
         loop
         playsInline
         preload="none"
+        disablePictureInPicture
+        disableRemotePlayback
         poster="/hero/coin-still-420.webp"
-        className="relative h-full w-full object-contain"
+        className="pointer-events-none relative h-full w-full object-contain"
         style={{
           maskImage:
             "radial-gradient(closest-side, black 90%, transparent 100%)",

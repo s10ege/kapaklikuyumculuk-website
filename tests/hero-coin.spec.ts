@@ -44,6 +44,13 @@ test("the coin is decorative, not interactive", async ({ page }) => {
   // even though it reliably sets the property the browser actually reads.
   await expect(video).toHaveJSProperty("muted", true);
   await expect(video).toHaveJSProperty("loop", true);
+
+  // Edge and Opera paint hover overlays (PiP, enhance, pop-out) on plain
+  // videos; these three are what keep the coin clean there. Chrome can't
+  // show those overlays, so the test pins the controls, not the symptom.
+  await expect(video).toHaveJSProperty("disablePictureInPicture", true);
+  await expect(video).toHaveJSProperty("disableRemotePlayback", true);
+  await expect(video).toHaveCSS("pointer-events", "none");
 });
 
 test("prefers-reduced-motion keeps the coin on its still frame", async ({
