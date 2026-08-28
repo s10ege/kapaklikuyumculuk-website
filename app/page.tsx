@@ -91,13 +91,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* D14: ≈1.2× the headline block height, capped at 46% of hero
-              width, minimum 280px. 386px measured against the real headline
-              block (322px tall at lg+) → 1.2 exactly; 280/320 below lg are
-              the explicit floor, since the coin sits below the headline
-              there rather than beside it, and the 1.2× balance rule stops
-              applying. */}
-          <HeroCoin className="mx-auto w-[280px] sm:w-[320px] lg:mx-0 lg:w-[386px]" />
+          {/* Sized at 580px on Soner's direction at the 1.3 review — 1.5× the
+              D14-ratio value (386px) that measured mathematically correct but
+              read too small in the browser; the right margin pulls it off the
+              container edge. 280/320 below lg are unchanged (mobile approved
+              as-is). Supersedes D14's ≈1.2× headline-height ratio; the 46%
+              width cap is waived with it, the 280px floor stands. */}
+          <HeroCoin className="mx-auto w-[280px] sm:w-[320px] lg:mx-0 lg:mr-10 lg:w-[580px]" />
         </div>
       </section>
 

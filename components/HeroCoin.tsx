@@ -81,7 +81,13 @@ export function HeroCoin({ className = "" }: { className?: string }) {
             "radial-gradient(closest-side, rgba(184,150,79,0.35), transparent 70%)",
         }}
       />
-      {/* Decorative and not clickable (D5): no href, no handler, aria-hidden. */}
+      {/* Decorative and not clickable (D5): no href, no handler, aria-hidden.
+          The radial mask feathers the video's outer 10% to transparent: the
+          baked background can only ever be within ±1/255 of the page ground
+          (tv-range H.264 cannot represent the exact hex — measured in Chrome
+          across 96 candidate encodes), and a soft fade makes even that unit
+          physically invisible in every browser. The coin ends at ~88% of the
+          radius, so the fade never touches it. */}
       <video
         ref={videoRef}
         aria-hidden="true"
@@ -91,6 +97,12 @@ export function HeroCoin({ className = "" }: { className?: string }) {
         preload="none"
         poster="/hero/coin-still-420.webp"
         className="relative h-full w-full object-contain"
+        style={{
+          maskImage:
+            "radial-gradient(closest-side, black 90%, transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(closest-side, black 90%, transparent 100%)",
+        }}
       >
         <source media="(min-width: 768px)" src="/hero/coin-800.mp4" type="video/mp4" />
         <source src="/hero/coin-420.mp4" type="video/mp4" />

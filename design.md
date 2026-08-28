@@ -43,7 +43,7 @@ dark vitrin. Done badly it looks pasted on. Every decision below follows from th
 | D11 | Sections separate by spacing and hairline rules. The panel colour is used **3–4 times per page maximum**, not for every section. |
 | D12 | Gold may be a **fill for primary buttons only**, one per section. Everywhere else gold stays a hairline accent. |
 | D13 | Hero composition: **headline left, coin right.** |
-| D14 | Coin diameter **≈1.2× the headline block height**, capped at 46% of hero width, minimum 280px. Visibly the larger element, not dominant. |
+| D14 | Coin diameter **≈1.2× the headline block height**, capped at 46% of hero width, minimum 280px. Visibly the larger element, not dominant. *Revised at the 1.3 review: Soner judged the ratio-correct 386px too small in the browser and set 580px (1.5×) at lg+, waiving the width cap; the 280px floor and mobile sizes stand.* |
 | D15 | Mobile: **headline and CTAs first, coin below.** The phone and WhatsApp buttons must be reachable without scrolling. |
 | D16 | Category tiles: cut-out image on the panel colour, hairline border, gold label, border turns gold on hover. |
 | D17 | The mobile menu panel is **cream**, reading as the header expanding. |

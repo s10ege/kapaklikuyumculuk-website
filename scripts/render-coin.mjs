@@ -32,7 +32,15 @@ const mode = process.argv[2] ?? "probe";
 const WORKDIR = resolve(args.workdir ?? join(tmpdir(), "kk-coin-render"));
 const FRAMES = parseInt(args.frames ?? "480", 10);   // 480 @ 30 fps = 16.000 s
 const SUPER = parseInt(args.size ?? "1600", 10);      // rendered; encodes downscale
-const ESPRESSO = "0x17120E";                          // D6 — must match the page ground
+/* D6 — the page ground is #17120E (23,18,14), but that exact triple is not
+ * representable in tv-range 4:2:0 H.264: measured across 96 candidate feeds
+ * decoded by real Chrome, every nearby feed lands on R=22 or R=24, never 23.
+ * 0x17120F (23,18,15) decodes to (22,18,14) — one R unit off, the closest the
+ * codec can get — and HeroCoin.tsx feathers the video edge with a mask so
+ * even that unit can never read as a seam. Verify changes against a CHROME
+ * screenshot, not an ffmpeg decode: swscale rounds differently (it will
+ * report ~(21,16,13) for this file, which is expected, not a regression). */
+const ESPRESSO = "0x17120F";
 const OUT = join(root, "public", "hero");
 
 const MIME = {
@@ -146,23 +154,41 @@ function ffmpeg(argv) {
 
 function encodeOne(width, crf) {
   const frames = join(WORKDIR, "frames", "frame-%04d.png");
+
+  /* Three deliberate colour decisions, all measured rather than assumed:
+   * 1. `format=rgba` immediately after the lavfi colour source — without it
+   *    the source generates its frames in YUV internally and the hex is
+   *    already ~2 units wrong before the pipeline even starts.
+   * 2. The RGB→YUV conversion declares its range/matrix explicitly on both
+   *    the filter (out_range/out_color_matrix) and the bitstream tags below,
+   *    so every decoder applies the inverse of the same maths.
+   * 3. tv (limited) range, not pc — full-range H.264 is mishandled by some
+   *    hardware decoders on exactly the mid-range Android devices this site
+   *    targets, and the ESPRESSO feed colour is already tuned for the
+   *    tv-range lattice (see its comment). */
   const compose = [
-    "-f", "lavfi", "-i", `color=c=${ESPRESSO}:size=${SUPER}x${SUPER}:rate=30`,
+    "-f", "lavfi", "-i", `color=c=${ESPRESSO}:size=${SUPER}x${SUPER}:rate=30,format=rgba`,
     "-framerate", "30", "-i", frames,
     "-filter_complex",
-    `[0:v][1:v]overlay=shortest=1:format=auto,scale=${width}:${width}:flags=lanczos,format=yuv420p`,
+    `[0:v][1:v]overlay=shortest=1:format=auto,` +
+      `scale=${width}:${width}:flags=lanczos:out_range=tv:out_color_matrix=bt709,` +
+      `format=yuv420p`,
     "-an",
   ];
   const mp4 = join(OUT, `coin-${width}.mp4`);
   ffmpeg([...compose, "-c:v", "libx264", "-preset", "veryslow", "-crf", String(crf),
-    "-movflags", "+faststart", mp4]);
+    "-color_range", "tv", "-colorspace", "bt709", "-color_primaries", "bt709",
+    "-color_trc", "bt709", "-movflags", "+faststart", mp4]);
 
+  /* Stills ship with real alpha instead of a matched flat background —
+   * frame-0000.png already has it (renderer.setClearColor alpha 0 in
+   * render-coin.html), so this only needs to preserve it, not fight a colour
+   * match at all. Byte-perfect against any future ground colour. */
   const still = join(OUT, `coin-still-${width}.webp`);
   ffmpeg([
-    "-f", "lavfi", "-i", `color=c=${ESPRESSO}:size=${SUPER}x${SUPER}:d=1`,
     "-i", join(WORKDIR, "frames", "frame-0000.png"),
-    "-filter_complex", `[0:v][1:v]overlay=format=auto,scale=${width}:${width}:flags=lanczos`,
-    "-frames:v", "1", "-c:v", "libwebp", "-quality", "82", still,
+    "-vf", `scale=${width}:${width}:flags=lanczos`,
+    "-c:v", "libwebp", "-quality", "82", still,
   ]);
   return [mp4, still];
 }
