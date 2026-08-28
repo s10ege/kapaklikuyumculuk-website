@@ -13,6 +13,7 @@ import {
 } from "@/lib/config";
 import { categoryLinks } from "@/lib/nav";
 import { InstagramIcon, PinIcon } from "./icons";
+import { Lockup } from "./Lockup";
 
 /* §5 — cream (D6), four columns, hairline, then copyright and legal entity.
  *
@@ -35,8 +36,10 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-5 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            {/* Jost — D8 keeps Bodoni ≥32px, and this line is 24px. */}
-            <p className="text-2xl text-ink-text">{shop.name}</p>
+            {/* The gold-deep KK oval appears on cream in the footer as well
+                as the header (design.md, palette section) — Lockup already
+                carries the on-cream colours. */}
+            <Lockup />
             <div className="mt-4 h-px w-11 bg-gold" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               {shop.founded} yılından beri Kapaklı&apos;da. Altın, pırlanta ve

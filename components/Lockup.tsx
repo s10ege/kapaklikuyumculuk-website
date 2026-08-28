@@ -73,14 +73,19 @@ export function Lockup({
       aria-label={`${shop.name} — anasayfa`}
     >
       {/* The lockup sits on cream in both the header and the footer, so the
-          mark is gold-deep — the only gold legible there (design.md). */}
+          mark is gold-deep — the only gold legible there (design.md).
+
+          The wordmark derives from shop.name and is uppercased by CSS only:
+          hard rule 2 — the stored string stays title case everywhere, and
+          with lang="tr" on the document the transform follows Turkish casing
+          (Kapaklı → KAPAKLI, dotless ı preserved). */}
       <OvalMark className="h-10 w-10 flex-none text-gold-deep transition-colors group-hover:text-gold" />
       <span className="flex flex-col leading-none">
-        <span className="text-[0.8125rem] font-medium tracking-[0.2em] text-ink-text">
-          TRAKYA KAPAKLI
+        <span className="text-[0.8125rem] font-medium uppercase tracking-[0.2em] text-ink-text">
+          {shop.name.split(" ").slice(0, -1).join(" ")}
         </span>
-        <span className="mt-[0.3rem] text-[0.625rem] tracking-[0.32em] text-gold-deep">
-          KUYUMCULUK
+        <span className="mt-[0.3rem] text-[0.625rem] uppercase tracking-[0.32em] text-gold-deep">
+          {shop.name.split(" ").at(-1)}
         </span>
       </span>
     </Link>

@@ -92,7 +92,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <a
           href="#icerik"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-gold focus:px-4 focus:py-2 focus:text-ink-text"
+          /* outline-color: the global rule paints rings gold, but this link's
+             own focus fill IS gold — gold-deep keeps the ring visible against
+             both its fill and the cream header behind it. */
+          className="sr-only [outline-color:var(--color-gold-deep)] focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-gold focus:px-4 focus:py-2 focus:text-ink-text"
         >
           İçeriğe geç
         </a>
