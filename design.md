@@ -37,7 +37,7 @@ dark vitrin. Done badly it looks pasted on. Every decision below follows from th
 | D5 | The coin is decorative and **not clickable**. |
 | D6 | **Espresso body** `#17120E`, panels `#241C15`, **cream header and footer** `#F4F0E8`. Overturns the alternating charcoal/cream band decision. |
 | D7 | A warm radial **glow** under the coin, not a shadow. No vitrin plate — unneeded on a dark ground. |
-| D8 | **Bodoni Moda is display-only, ≥32px.** Its hairlines physically disappear on dark below that. Jost carries all body text. |
+| D8 | **Bodoni Moda is display-only, ≥32px.** Its hairlines physically disappear on dark below that. Jost carries all body text. *Sole exemption: the KK monogram inside the logo mark (`Lockup.tsx` SVG) — it is the logo, not typography, renders on cream, and was verified clean at every width at the 1.4 gate.* |
 | D9 | Body text `#E8E3DA` on dark. **Never pure white** — it causes halation on near-black. |
 | D10 | **Cream reading band** for the body copy on Hakkımızda and Hizmetler only. Long-form prose is measurably harder to read on dark, and those two pages are where trust is decided. |
 | D11 | Sections separate by spacing and hairline rules. The panel colour is used **3–4 times per page maximum**, not for every section. |

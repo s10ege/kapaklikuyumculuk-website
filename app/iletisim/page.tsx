@@ -55,10 +55,11 @@ export default function ContactPage() {
             <h1 className="mt-3 display-md">Bize ulaşın</h1>
             <div className="mt-5 h-px w-11 bg-gold" />
 
+            {/* No .toLowerCase(): "Ziraat Bankası" is a proper noun and keeps
+                its capitals mid-sentence (1.5 review, C5). */}
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Mağazamız {address.landmark.value.toLowerCase()}. Aradığınız
-              modeli önden sorabilir, uygun olup olmadığını öğrenip öyle
-              gelebilirsiniz.
+              Mağazamız {address.landmark.value}nda. Aradığınız modeli önden
+              sorabilir, uygun olup olmadığını öğrenip öyle gelebilirsiniz.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

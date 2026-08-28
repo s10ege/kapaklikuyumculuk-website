@@ -3,13 +3,14 @@ import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactBand } from "@/components/ContactBand";
 import { pageTitle } from "@/lib/content";
+import { FILLER } from "@/lib/filler";
 
 /* §6.5 — Hizmetler.
  *
- * Two long-form panels. The copy angle for Altın Alım–Satım comes straight
- * from the spec: the two things a customer actually worries about are the rate
- * and the weighing, so both are addressed in the first two sentences rather
- * than buried under reassurance.
+ * Two long-form panels on the D10 cream reading band. The two load-bearing
+ * trust lines — the weighing promise and the no-surprise-deduction promise —
+ * stay REAL through the filler stage (they are asserted by e2e and preserved
+ * in docs/original-copy.md); the surrounding prose is FILLER until 3.2.
  */
 
 export const metadata: Metadata = {
@@ -25,43 +26,38 @@ type Service = {
   name: string;
   lede: string;
   body: string;
-  points: string[];
+  points: readonly string[];
+};
+
+/* The two REAL lines that survive the filler stage (hard rule via kk-brand:
+ * the weighing promise is one of the two load-bearing claims on the site). */
+const WEIGHING_PROMISE =
+  "Getirdiğiniz altın tezgâhın üstünde, sizin gözünüzün önünde tartılır.";
+const REAL_POINTS = {
+  weighing: "Tartım tezgâhın üstünde, sizin gözünüzün önünde yapılır.",
+  deduction:
+    "Düşülecek pay varsa işlemden önce söylenir — sonradan sürpriz olmaz.",
 };
 
 const SERVICES: Service[] = [
   {
     slug: "altin-alim-satim",
     name: "Altın Alım–Satım",
-    lede: "Kur ve tartı — iki soru, iki açık cevap.",
-    body:
-      "Altın bozdururken müşterinin aklındaki iki soru bellidir: bugünkü kur " +
-      "ne, ve tartı doğru mu. İkisini de açıkta yapıyoruz. Getirdiğiniz altın " +
-      "tezgâhın üstünde, sizin gözünüzün önünde tartılır; ayarı belirlenir ve " +
-      "o günkü kura göre karşılığı birlikte hesaplanır. İşçilik ya da kayıp " +
-      "payı düşülecekse, işlem yapılmadan önce söylenir.",
+    lede: FILLER.services["altin-alim-satim"].lede,
+    body: `${WEIGHING_PROMISE} ${FILLER.services["altin-alim-satim"].body}`,
     points: [
-      "Tartım tezgâhın üstünde, sizin gözünüzün önünde yapılır.",
-      "Ayar tayini ve hesap adım adım anlatılır; istediğiniz kadar sorun.",
-      "Düşülecek pay varsa işlemden önce söylenir — sonradan sürpriz olmaz.",
-      "Hurda altın, bilezik, künye ve set alımı yapılır.",
+      REAL_POINTS.weighing,
+      FILLER.services["altin-alim-satim"].points[0],
+      REAL_POINTS.deduction,
+      FILLER.services["altin-alim-satim"].points[1],
     ],
   },
   {
     slug: "siparis-uzerine-uretim",
     name: "Sipariş Üzerine Üretim",
-    lede: "Vitrinde olmayan bir modeli ürettirebilirsiniz.",
-    body:
-      "Aklınızdaki parçayı çizerek, bir fotoğrafla ya da yalnızca tarif " +
-      "ederek getirin; ölçüyü, ayarı ve gramajı birlikte netleştirelim. Eski " +
-      "altınlarınızı bozdurup yeni bir parçaya dönüştürmek de mümkün — " +
-      "çoğu zaman en uygun yol bu oluyor. Süre modelin işçiliğine göre " +
-      "değiştiği için teslim tarihini en baştan konuşuruz.",
-    points: [
-      "Çizim, fotoğraf ya da sözlü tarif; hepsi başlangıç noktası olabilir.",
-      "Ayar, gramaj ve taş seçimi üretime başlamadan netleştirilir.",
-      "Teslim tarihi baştan konuşulur, üretim boyunca haber verilir.",
-      "Eski altınlarınız yeni parçanın hesabına sayılabilir.",
-    ],
+    lede: FILLER.services["siparis-uzerine-uretim"].lede,
+    body: FILLER.services["siparis-uzerine-uretim"].body,
+    points: FILLER.services["siparis-uzerine-uretim"].points,
   },
 ];
 
@@ -82,34 +78,41 @@ export default function ServicesPage() {
             Nasıl çalıştığımızı baştan yazdık ki mağazaya gelmeden ne
             olacağını bilin.
           </p>
+        </div>
+      </section>
 
-          <div className="mt-12 flex flex-col gap-12">
+      {/* D10 — the cream reading band. This page is the other place trust is
+          decided; the two services' long-form prose moves onto the frame
+          colour, ink on cream, line-light hairlines. */}
+      <section className="bg-frame text-ink-text">
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
+          <div className="flex flex-col gap-12">
             {SERVICES.map((service) => (
               <article
                 key={service.slug}
                 id={service.slug}
-                className="border-t border-line-dark pt-10"
+                className="border-t border-line-light pt-10 first:border-t-0 first:pt-0"
               >
                 <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
                   <div>
                     <h2 className="display-sm">{service.name}</h2>
-                    <div className="mt-5 h-px w-11 bg-gold" />
+                    <div className="mt-5 h-px w-11 bg-gold-deep" />
                     {/* Jost — D8 keeps Bodoni ≥32px; the lede is 20px. */}
-                    <p className="mt-5 text-xl leading-snug text-gold-soft">
+                    <p className="mt-5 text-xl leading-snug text-gold-deep">
                       {service.lede}
                     </p>
                   </div>
 
                   <div>
-                    <p className="leading-relaxed text-muted">
+                    <p className="leading-relaxed text-ink-muted">
                       {service.body}
                     </p>
 
-                    <ul className="mt-8 border-t border-line-dark">
+                    <ul className="mt-8 border-t border-line-light">
                       {service.points.map((point) => (
                         <li
                           key={point}
-                          className="border-b border-line-dark py-4 text-sm leading-relaxed"
+                          className="border-b border-line-light py-4 text-sm leading-relaxed"
                         >
                           {point}
                         </li>

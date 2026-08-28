@@ -40,7 +40,8 @@ export function Footer() {
                 as the header (design.md, palette section) — Lockup already
                 carries the on-cream colours. */}
             <Lockup />
-            <div className="mt-4 h-px w-11 bg-gold" />
+            {/* gold-deep — the on-cream gold; plain gold measures 2.46:1 here. */}
+            <div className="mt-4 h-px w-11 bg-gold-deep" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               {shop.founded} yılından beri Kapaklı&apos;da. Altın, pırlanta ve
               özel tasarım takılar; {shop.claim}.
@@ -109,7 +110,7 @@ export function Footer() {
               href={mapsSearchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 border border-gold-deep/40 px-4 text-sm text-gold-deep transition-colors hover:bg-gold/15"
+              className="mt-5 inline-flex min-h-11 items-center gap-2 border border-gold-deep/60 px-4 text-sm text-gold-deep transition-colors hover:bg-gold/15"
             >
               <PinIcon className="h-4 w-4" />
               Yol Tarifi Al

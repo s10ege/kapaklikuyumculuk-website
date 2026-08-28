@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { CategoryTiles } from "@/components/CategoryTiles";
@@ -17,7 +16,7 @@ import {
   shop,
 } from "@/lib/config";
 import { getCategories, getFeaturedProducts } from "@/lib/content";
-import { PLACEHOLDER } from "@/lib/placeholders";
+import { FILLER } from "@/lib/filler";
 
 /* Anasayfa (§6.1).
  *
@@ -27,16 +26,9 @@ import { PLACEHOLDER } from "@/lib/placeholders";
  * below are kept as section markers only.
  */
 
-const SERVICE_COPY: Record<string, string> = {
-  "altin-alim-satim":
-    "Altınınızı tartıp güncel kura göre değerlendiriyoruz. Tartım tezgâhın " +
-    "üstünde, sizin gözünüzün önünde yapılır; varsa düşülecek pay işlem " +
-    "öncesinde söylenir.",
-  "siparis-uzerine-uretim":
-    "Aklınızdaki modeli çizerek, fotoğrafla ya da tarif ederek getirin. " +
-    "İşçiliğe göre süreyi ve teslim tarihini baştan konuşur, üretim boyunca " +
-    "haber veririz.",
-};
+/* D19 — one line per service panel on the homepage; the full copy lives on
+ * /hizmetler. Filler until 3.2 (the originals are in docs/original-copy.md). */
+const SERVICE_COPY: Record<string, string> = FILLER.homeServices;
 
 export default function Home() {
   const categories = getCategories();
@@ -83,8 +75,7 @@ export default function Home() {
             <div className="mt-6 h-px w-11 bg-gold" />
 
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              {shop.founded} yılından beri aynı yerde: altın, pırlanta ve
-              sipariş üzerine üretilen özel tasarım takılar.
+              {FILLER.heroLede}
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
@@ -176,43 +167,22 @@ export default function Home() {
       </section>
 
       {/* ── Hakkımızda ───────────────────────────────────────── espresso ──
-          §6.1: trust is the entire product for a local jeweller. */}
+          §6.1: trust is the entire product for a local jeweller. No visual:
+          the old diamond-in-circles motif here was explicitly retired
+          (design.md, "What else changes") and D19 wants this section sparse —
+          the compressed copy carries it alone. */}
       <section>
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-20 lg:grid-cols-2 lg:items-center lg:gap-14">
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <Image
-              src={PLACEHOLDER.hero}
-              alt=""
-              fill
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-
-          <div>
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+          <div className="max-w-2xl">
             <p className="text-label uppercase text-gold-soft">Hakkımızda</p>
             <h2 className="mt-3 display-md">{shop.claim}</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
 
-            {/* Recovered from the old site's Kurumsal page — true, verifiable,
-                and a stronger claim than anything we could write. */}
-            <div className="mt-6 flex flex-col gap-4 leading-relaxed text-cream-text">
-              <p>
-                Kapaklı Kuyumculuk {shop.founded} yılında Kapaklı ilçesinin
-                merkezinde kuruldu ve ilçenin ilk kuyumcusu oldu. O günden beri
-                aynı yerde, aynı ailenin elinde.
-              </p>
-              <p>
-                Bir kuyumcunun sattığı şeyler geri gelir — ölçü değişir, tamir
-                gerekir, bir sonraki kuşağa devredilir. Bu yüzden bir takıyı
-                satarken de, yıllar sonra elimize geri geldiğinde de aynı
-                şekilde davranırız.
-              </p>
-              <p>
-                Altın, pırlanta ve seçkin saat markalarının yanında sipariş
-                üzerine üretim de yapıyoruz.
-              </p>
-            </div>
+            {/* D19 — two sentences and the link; the full argument lives on
+                /hakkimizda. Filler until 3.2. */}
+            <p className="mt-6 max-w-md leading-relaxed text-cream-text">
+              {FILLER.homeAbout}
+            </p>
 
             <Link
               href="/hakkimizda"

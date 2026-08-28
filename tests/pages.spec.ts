@@ -56,10 +56,10 @@ test.describe("/galeri", () => {
   test("falls back to the Yakında panel while empty", async ({ page }) => {
     await page.goto("/galeri");
 
-    /* Exact: "Yakında" is a substring of "yakından", which appears in this
-     * page's own intro copy ("daha yakından görmek için"). */
     await expect(page.getByText("Yakında", { exact: true })).toBeVisible();
-    await expect(page.getByText(/Galerimiz vitrinimizde/)).toBeVisible();
+    /* Galeri gets its own headline — the "{subject} vitrinimizde" template
+     * produced "Galerimiz vitrinimizde", which is nonsense (1.5 review). */
+    await expect(page.getByText(/Galeri hazırlanıyor/)).toBeVisible();
   });
 
   test("offers a route onward, so an old search result does not dead-end", async ({

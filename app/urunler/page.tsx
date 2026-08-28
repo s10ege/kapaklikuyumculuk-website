@@ -41,9 +41,14 @@ export default function ProductsPage() {
             sipariş üzerine üretim de yapıyoruz.
           </p>
 
-          {/* No "Tüm Ürünler" tile here: this is that page. */}
+          {/* No "Tüm Ürünler" tile here: this is that page. The ask-cell
+              completes the six-cell grid instead (1.5 review, C4). */}
           <div className="mt-10">
-            <CategoryTiles categories={categories} showAllTile={false} />
+            <CategoryTiles
+              categories={categories}
+              showAllTile={false}
+              showAskTile
+            />
           </div>
         </div>
       </section>

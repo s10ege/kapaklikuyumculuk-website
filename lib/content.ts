@@ -1,6 +1,7 @@
 /* Explicit .ts extensions: node:test runs these modules directly under Node's
  * native type stripping, which requires the real extension on relative imports.
  * Turbopack resolves them the same way, so both paths agree. */
+import { FILLER } from "./filler.ts";
 import { PLACEHOLDER } from "./placeholders.ts";
 import { phoneDisplay, shop } from "./config.ts";
 
@@ -68,11 +69,13 @@ export function pageTitle(name: string): string {
 
 /* The five from §2, in display order.
  *
- * Each `intro` is real writing rather than keyword filler, because it has to
- * carry the category on its own: there are no product pages, so this paragraph
- * is what Google reads and what a customer arriving from Instagram actually
- * reads too. Each mentions Kapaklı or Tekirdağ exactly once, where it belongs
- * in the sentence.
+ * The `intro` is the category's entire search surface — there are no product
+ * pages, so this paragraph is what Google reads and what a customer arriving
+ * from Instagram actually reads too. During stages 1–2 it renders Turkish
+ * FILLER (design.md § Copy); the original real intros are preserved in
+ * docs/original-copy.md and Soner's rewrite replaces the FILLER import in
+ * stage 3.2, before anything deploys. Each intro (filler included) mentions
+ * Kapaklı or Tekirdağ exactly once, where it belongs in the sentence.
  *
  * §10 targets local intent — "kapaklı kuyumcu", "tekirdağ pırlanta", "kapaklı
  * altın". Competing nationally on "pırlanta yüzük" against the chains is not
@@ -86,13 +89,7 @@ const CATEGORIES: Category[] = [
     description:
       "Sertifikalı pırlanta yüzük, kolye ve küpe modelleri. Taşı ışık " +
       "altında inceleyerek seçin. Kapaklı / Tekirdağ.",
-    intro:
-      "Pırlantada fark, taşın sertifikasında ve işçiliğinde ortaya çıkar. " +
-      "Tektaş yüzükten pırlanta kolyeye kadar vitrinimizdeki parçaları, " +
-      "kesim ve berraklık değerleriyle birlikte anlatarak gösteriyoruz. " +
-      "Kapaklı'daki mağazamızda taşı elinize alıp ışık altında " +
-      "inceleyebilir, bütçenize uygun seçenekleri yan yana " +
-      "karşılaştırabilirsiniz.",
+    intro: FILLER.categoryIntro["pirlanta"],
     coverImage: PLACEHOLDER.kategori.pirlanta,
     order: 1,
   },
@@ -103,13 +100,7 @@ const CATEGORIES: Category[] = [
     description:
       "Nişan ve düğün için 14, 18 ve 22 ayar altın setleri. Bilezik, " +
       "kolye, küpe ve yüzük bir arada. Kapaklı / Tekirdağ.",
-    intro:
-      "Altın seti; bilezik, kolye, küpe ve yüzüğün birbiriyle uyumlu " +
-      "şekilde bir araya gelmesiyle oluşur ve çoğunlukla nişan, düğün ya da " +
-      "özel günler için hazırlanır. 14, 18 ve 22 ayar seçenekleriyle setin " +
-      "gramajını ve modelini birlikte belirliyoruz. Tekirdağ ve çevresinden " +
-      "gelen müşterilerimiz için set içeriğini isteğe göre " +
-      "değiştirebiliyoruz.",
+    intro: FILLER.categoryIntro["altin-seti"],
     coverImage: PLACEHOLDER.kategori["altin-seti"],
     order: 2,
   },
@@ -120,12 +111,7 @@ const CATEGORIES: Category[] = [
     description:
       "Altın, pırlanta ve gümüş küpe modelleri; halka, sallantılı, çocuk " +
       "küpesi ve daha fazlası. Kapaklı / Tekirdağ.",
-    intro:
-      "Günlük kullanım için sade halkalardan özel günlerin sallantılı " +
-      "modellerine kadar geniş bir küpe yelpazemiz var. Altın, pırlanta ve " +
-      "gümüş seçenekleri; çocuk küpelerinden tragus ve helikse kadar farklı " +
-      "ihtiyaçlara karşılık veriyor. Kulağınıza ve kullanım alışkanlığınıza " +
-      "uygun modeli Kapaklı'daki mağazamızda deneyerek seçebilirsiniz.",
+    intro: FILLER.categoryIntro["kupe-modelleri"],
     coverImage: PLACEHOLDER.kategori["kupe-modelleri"],
     order: 3,
   },
@@ -136,12 +122,7 @@ const CATEGORIES: Category[] = [
     description:
       "Tek taş yüzük modelleri. Montür, tırnak sayısı ve karat " +
       "seçeneklerini karşılaştırın. Kapaklı / Tekirdağ.",
-    intro:
-      "Tek taş, bir kuyumcunun en çok konuşulan parçasıdır; çünkü çoğu " +
-      "zaman bir söz verilirken alınır. Montürün yüksekliği, tırnak sayısı " +
-      "ve taşın oturuşu yüzüğün parmaktaki görünümünü doğrudan değiştirir. " +
-      "Kapaklı'daki mağazamızda farklı montür ve karat seçeneklerini yan " +
-      "yana görüp aradaki farkı kendiniz değerlendirebilirsiniz.",
+    intro: FILLER.categoryIntro["tek-tas-modelleri"],
     coverImage: PLACEHOLDER.kategori["tek-tas-modelleri"],
     order: 4,
   },
@@ -152,13 +133,7 @@ const CATEGORIES: Category[] = [
     description:
       "Sipariş üzerine üretilen özel tasarım takılar. Eski altınlarınızı " +
       "yeni bir parçaya dönüştürün. Kapaklı / Tekirdağ.",
-    intro:
-      "Aklınızdaki modeli çizerek, bir fotoğrafla ya da yalnızca tarif " +
-      "ederek getirin; birlikte netleştirip üretime veriyoruz. Eski " +
-      "altınlarınızı bozdurup yeni bir parçaya dönüştürmek de mümkün. " +
-      "Tekirdağ'da sipariş üzerine ürettiğimiz takılarda süre modelin " +
-      "işçiliğine göre değişir, bu yüzden teslim tarihini en baştan " +
-      "konuşuyoruz.",
+    intro: FILLER.categoryIntro["ozel-tasarim-takilar"],
     coverImage: PLACEHOLDER.kategori["ozel-tasarim-takilar"],
     order: 5,
   },

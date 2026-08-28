@@ -114,8 +114,10 @@ export default async function CategoryPage({
       {/* Sibling categories, so nobody dead-ends on an empty page (§6.2). At
           launch every category is empty, which makes this row the main way
           round the catalogue. */}
+      {/* pb-28 below sm: the fixed FAB overlaps the last row's İncele label
+          on narrow screens without it (1.4 review). */}
       <nav aria-label="Diğer kategoriler">
-        <div className="mx-auto max-w-6xl px-5 py-12">
+        <div className="mx-auto max-w-6xl px-5 pt-12 pb-28 sm:pb-12">
           <p className="text-label uppercase text-gold-soft">
             Diğer kategoriler
           </p>

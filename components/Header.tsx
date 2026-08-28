@@ -77,7 +77,7 @@ export function Header({
                     aria-current={active ? "page" : undefined}
                     className={`inline-flex min-h-11 items-center border-b text-sm transition-colors ${
                       active
-                        ? "border-gold text-gold-deep"
+                        ? "border-gold-deep text-gold-deep"
                         : "border-transparent text-ink-text/80 hover:text-gold-deep"
                     }`}
                   >
@@ -135,7 +135,7 @@ export function Header({
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex min-h-11 items-center px-5 text-sm tracking-wide text-ink-text/70 transition-colors hover:text-gold-deep"
+                    className="flex min-h-11 items-center px-5 text-sm tracking-wide text-ink-muted transition-colors hover:text-gold-deep"
                   >
                     {link.label}
                   </Link>

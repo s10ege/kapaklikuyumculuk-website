@@ -41,9 +41,10 @@ export default function GalleryPage() {
           <h1 className="mt-3 display-md">Vitrinimizden</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
 
+          {/* No "tap the image" instruction while there are no images —
+              restore it with the stage-2 photos (1.5 review, C3). */}
           <p className="mt-6 max-w-2xl leading-relaxed text-muted">
-            Tüm kategorilerden seçtiğimiz parçalar bir arada. Bir modeli daha
-            yakından görmek için görsele dokunun.
+            Tüm kategorilerden seçtiğimiz parçalar burada bir araya gelecek.
           </p>
 
           <div className="mt-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line-dark pb-3">
@@ -63,7 +64,10 @@ export default function GalleryPage() {
             {products.length > 0 ? (
               <ProductGallery products={products} />
             ) : (
-              <EmptyState subject="Galerimiz" />
+              <EmptyState
+                subject="Galerimiz"
+                headline="Galeri hazırlanıyor — vitrindeki parçaları fotoğraflıyoruz."
+              />
             )}
           </div>
 

@@ -12,10 +12,14 @@ import { ContactButton } from "./ContactButton";
  */
 export function EmptyState({
   subject,
+  headline,
   className = "",
 }: {
   /** What the visitor came looking for — a category name, or "Galeri". */
   subject: string;
+  /** Overrides the templated headline where the template reads wrong —
+   *  "Galerimiz vitrinimizde" was nonsense (1.5 review, V2). */
+  headline?: string;
   className?: string;
 }) {
   return (
@@ -26,18 +30,22 @@ export function EmptyState({
 
       {/* Jost — D8 keeps Bodoni ≥32px and this line tops out at 30px. */}
       <p className="mx-auto mt-4 max-w-md text-2xl leading-snug sm:text-3xl">
-        {subject} vitrinimizde — fotoğraflarını hazırlıyoruz.
+        {headline ?? `${subject} vitrinimizde — fotoğraflarını hazırlıyoruz.`}
       </p>
 
+      {/* No "vitrinde olmayan modelleri de..." here: the ContactBand a scroll
+          below says exactly that as its headline (1.5 review, C2). */}
       <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
         Aradığınız modeli bize yazın ya da telefonla sorun; elimizdekileri
-        sizin için çıkaralım. Vitrinde olmayan modelleri de tedarik
-        edebiliyoruz.
+        sizin için çıkaralım.
       </p>
 
+      {/* onDark, not solid: the ContactBand a few hundred pixels below this
+          panel carries the page's gold fill, and two identical gold
+          "Bizi Arayın" fills in one scroll read as templated (1.4 review). */}
       <ContactButton
         productName={subject}
-        variant="solid"
+        variant="onDark"
         className="mt-7"
       />
     </div>
