@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>coin render rig</title>
+<style>
+  html, body { margin: 0; background: #17120e; }
+  canvas { display: block; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/vendor/three/build/three.module.js",
+    "three/addons/": "/vendor/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<script type="module">
+/* Offline render rig for the Ata Lirası hero loop (design.md D2/D3).
+ *
+ * Served by scripts/render-coin.mjs, which drives window.renderFrame(i, N)
+ * frame by frame and saves the returned PNGs. Nothing here ships to a
+ * visitor — only the encoded output in public/hero/ does.
+ *
+ * The canvas is rendered with a transparent background; the flat espresso
+ * ground (#17120E) is composited by ffmpeg so the shipped pixels are
+ * bit-exact against the page colour, independent of tone mapping.
+ */
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+const params = new URLSearchParams(location.search);
+const SIZE = parseInt(params.get("size") ?? "1600", 10);
+
+/* D3 — the axis tilt is functional, not decorative: upright, the coin goes
+ * edge-on to a sliver twice per turn; tilted it shows a rim with thickness. */
+const TILT_X = THREE.MathUtils.degToRad(15);
+const TILT_Z = THREE.MathUtils.degToRad(6);
+
+/* Eased dwell: θ(φ) = φ − (A/2)·sin(2φ) with φ = 2πi/N. Angular speed
+ * 1 − A·cos(2φ) is minimal exactly where each face is square to the camera
+ * (θ = 0 and π) and maximal through the edge. Periodic over one revolution,
+ * so frame N is exactly frame 0 — the seam cannot exist by construction.
+ * A = 0.85 puts the face within a few degrees of square for ~1.5 s. */
+const EASE_A = parseFloat(params.get("ease") ?? "0.85");
+
+/* Fraction of the half-frame the coin's bounding sphere fills. */
+const FILL = parseFloat(params.get("fill") ?? "0.88");
+
+/* Spin offset so the obverse (Atatürk — the texture in back.png; the file
+ * names are swapped relative to the numismatic naming) faces the camera at
+ * θ = 0. Set from the probe render. */
+const SPIN_OFFSET = parseFloat(params.get("spinOffset") ?? "0");
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: true,
+  preserveDrawingBuffer: true,
+});
+renderer.setPixelRatio(1);
+renderer.setSize(SIZE, SIZE);
+renderer.setClearColor(0x000000, 0);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = parseFloat(params.get("exposure") ?? "1.1");
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+/* Warm key from the upper left — matches the lighting baked into the face
+ * photography and drives the specular sweep on the rim as the coin turns. */
+const key = new THREE.DirectionalLight(0xfff0dd, 2.2);
+key.position.set(-2.5, 3, 4);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xffe8c8, 0.5);
+fill.position.set(3, -1, 2);
+scene.add(fill);
+
+const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+
+/* tilt (fixed) → spin (θ per frame) → align (GLB orientation fix). */
+const tiltGroup = new THREE.Group();
+const spinGroup = new THREE.Group();
+const alignGroup = new THREE.Group();
+tiltGroup.rotation.set(TILT_X, 0, TILT_Z);
+tiltGroup.add(spinGroup);
+spinGroup.add(alignGroup);
+scene.add(tiltGroup);
+
+window.coinReady = (async () => {
+  const gltf = await new GLTFLoader().loadAsync("/asset/turkey_coin3.glb");
+  const model = gltf.scene;
+
+  /* Centre the coin on the origin so all three groups rotate about it. */
+  const box = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  model.position.sub(center);
+
+  /* The face-normal axis is the thin one. Align it to +Z so the spin about
+   * Y carries each face square to the camera once per revolution. */
+  const dims = [size.x, size.y, size.z];
+  const thin = dims.indexOf(Math.min(...dims));
+  if (thin === 0) alignGroup.rotation.y = Math.PI / 2; // +X → +Z
+  if (thin === 1) alignGroup.rotation.x = Math.PI / 2; // +Y → +Z
+  alignGroup.add(model);
+
+  /* The reeded edge is modelled as free-standing teeth with gaps — edge-on,
+   * the background shows straight through and the rim reads as a broken
+   * comb. Plug it with a solid cylinder just inside the teeth. */
+  let sideMaterial = null;
+  model.traverse((o) => {
+    if (o.isMesh) {
+      const m = Array.isArray(o.material) ? o.material : [o.material];
+      m.forEach((mat) => { if (mat.name === "side") sideMaterial = mat; });
+    }
+  });
+  const plug = new THREE.Mesh(
+    new THREE.CylinderGeometry(
+      (Math.max(...dims) / 2) * 0.985,
+      (Math.max(...dims) / 2) * 0.985,
+      Math.min(...dims) * 0.8,
+      180,
+    ),
+    sideMaterial ?? new THREE.MeshStandardMaterial({ color: 0x8a6d2f, metalness: 0.9, roughness: 0.6 }),
+  );
+  plug.rotation.x = Math.PI / 2;
+  alignGroup.add(plug);
+
+  /* Frame the coin: bounding sphere is rotation-invariant, so the framing
+   * never breathes as it turns. */
+  const radius = 0.5 * Math.hypot(Math.max(...dims), Math.min(...dims));
+  const dist = radius / (FILL * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+  camera.position.set(0, 0, dist);
+  camera.lookAt(0, 0, 0);
+  /* Tight depth range — a 0.01 near plane at ~86 units starves the depth
+   * buffer and the plug z-fights the faces as streaks across the relief. */
+  camera.near = dist - radius * 3;
+  camera.far = dist + radius * 3;
+  camera.updateProjectionMatrix();
+
+  /* The face photographs keep their white studio background, and the rim's
+   * knurl teeth sample exactly those texels — at edge-on the coin sprouted
+   * white paper flaps. Repaint neutral near-white texels gold; the coin
+   * itself is always warm (r ≫ b), so the channel-spread test spares it. */
+  const goldenised = new Map();
+  const goldFill = (tex) => {
+    if (!tex) return null;
+    if (goldenised.has(tex)) return goldenised.get(tex);
+    const img = tex.image;
+    const c = document.createElement("canvas");
+    c.width = img.width;
+    c.height = img.height;
+    const g = c.getContext("2d");
+    g.drawImage(img, 0, 0);
+    const d = g.getImageData(0, 0, c.width, c.height);
+    const p = d.data;
+    for (let i = 0; i < p.length; i += 4) {
+      const max = Math.max(p[i], p[i + 1], p[i + 2]);
+      const min = Math.min(p[i], p[i + 1], p[i + 2]);
+      if (min > 170 && max - min < 30) {
+        p[i] = 198; p[i + 1] = 152; p[i + 2] = 70;
+      }
+    }
+    g.putImageData(d, 0, 0);
+    const nt = new THREE.CanvasTexture(c);
+    nt.flipY = tex.flipY;
+    nt.colorSpace = tex.colorSpace;
+    nt.wrapS = tex.wrapS;
+    nt.wrapT = tex.wrapT;
+    goldenised.set(tex, nt);
+    return nt;
+  };
+
+  /* The GLB carries a black COLOR_0 vertex-colour attribute; GLTFLoader
+   * multiplies it into the base colour, which renders the coin black. The
+   * material factors themselves are correct, so drop the attribute. */
+  const attributes = [];
+  model.traverse((o) => {
+    if (o.isMesh) {
+      attributes.push({ mesh: o.name, attrs: Object.keys(o.geometry.attributes) });
+      if (o.geometry.attributes.color) o.geometry.deleteAttribute("color");
+      const m = Array.isArray(o.material) ? o.material : [o.material];
+      m.forEach((mat) => {
+        mat.vertexColors = false;
+        if (mat.map) mat.map = goldFill(mat.map);
+        /* The GLB ships the milled edge as near-black metal, which vanishes
+         * against espresso exactly when the coin turns edge-on. Gold
+         * reflectance instead, so the rim glints as the highlight travels. */
+        if (mat.name === "side") {
+          mat.color.setRGB(0.75, 0.52, 0.2);
+          mat.roughness = 0.65;
+          mat.metalness = 0.9;
+          mat.envMapIntensity = 0.5;
+        }
+        mat.needsUpdate = true;
+      });
+    }
+  });
+
+  /* Diagnostics: debug=normal shades by surface normal (tests geometry and
+   * pipeline without materials); debug=basic shows the raw face textures
+   * unlit (tests texture decode without lighting). */
+  const debug = params.get("debug");
+  if (debug === "normal") {
+    model.traverse((o) => { if (o.isMesh) o.material = new THREE.MeshNormalMaterial(); });
+  } else if (debug === "basic") {
+    model.traverse((o) => {
+      if (o.isMesh) o.material = new THREE.MeshBasicMaterial({ map: o.material.map });
+    });
+  } else if (debug === "lambert") {
+    model.traverse((o) => {
+      if (o.isMesh) o.material = new THREE.MeshLambertMaterial({ map: o.material.map });
+    });
+  } else if (debug === "fresh") {
+    model.traverse((o) => {
+      if (o.isMesh)
+        o.material = new THREE.MeshStandardMaterial({
+          map: o.material.map,
+          metalness: 0.72,
+          roughness: 0.34,
+        });
+    });
+  }
+
+  /* Report what we found, for the probe log. */
+  const materials = [];
+  model.traverse((o) => {
+    if (o.isMesh) {
+      const m = Array.isArray(o.material) ? o.material : [o.material];
+      m.forEach((mat) =>
+        materials.push({
+          mesh: o.name,
+          material: mat.name,
+          type: mat.type,
+          color: mat.color?.getHexString?.() ?? null,
+          map: mat.map ? `${mat.map.image?.width}x${mat.map.image?.height}` : null,
+          colorSpace: mat.map?.colorSpace ?? null,
+          metalness: mat.metalness,
+          roughness: mat.roughness,
+        }),
+      );
+    }
+  });
+  return {
+    dims,
+    thin,
+    radius,
+    dist,
+    extensions: gltf.parser.json.extensionsUsed ?? [],
+    attributes,
+    materialsJson: gltf.parser.json.materials?.map((m) => JSON.stringify(m)) ?? [],
+    materials,
+  };
+})();
+
+window.renderFrame = (i, N) => {
+  const phi = (2 * Math.PI * i) / N;
+  const theta = phi - (EASE_A / 2) * Math.sin(2 * phi);
+  spinGroup.rotation.y = theta + SPIN_OFFSET;
+  renderer.render(scene, camera);
+  return renderer.domElement.toDataURL("image/png");
+};
+</script>
+</body>
+</html>
