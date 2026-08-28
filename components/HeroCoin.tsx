@@ -26,10 +26,6 @@ export function HeroCoin({ className = "" }: { className?: string }) {
     const video = videoRef.current;
     if (!video) return;
 
-    if (window.matchMedia("(min-width: 768px)").matches) {
-      video.poster = "/hero/coin-still-800.webp";
-    }
-
     const nav = navigator as Navigator & {
       connection?: { saveData?: boolean };
     };
@@ -39,8 +35,18 @@ export function HeroCoin({ className = "" }: { className?: string }) {
       Boolean(nav.connection?.saveData);
 
     // Stays on its poster, forever — that is the correct fallback, not a
-    // degraded one.
-    if (reduced) return;
+    // degraded one. Only THIS path upgrades the poster to the sharp desktop
+    // still: these are the visitors who will look at it indefinitely. For
+    // everyone else the small poster shows for under two seconds before
+    // playback replaces it — and upgrading it for them fired a third, late
+    // LCP candidate that tripled desktop LCP on slow networks (measured at
+    // the 1.6 verification: 3472ms vs 1424ms).
+    if (reduced) {
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        video.poster = "/hero/coin-still-800.webp";
+      }
+      return;
+    }
 
     let timer: ReturnType<typeof setTimeout> | undefined;
 
