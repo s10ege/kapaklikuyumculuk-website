@@ -65,7 +65,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-0 hidden lg:block"
           style={{
             background:
-              "linear-gradient(to left, transparent 52%, rgba(36,28,21,0.55) 100%)",
+              "linear-gradient(to left, transparent 52%, rgba(36,28,21,0.85) 100%)",
           }}
         />
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-10 px-5 py-20 lg:grid-cols-[1fr_auto] lg:gap-16">
