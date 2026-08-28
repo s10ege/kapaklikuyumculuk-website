@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { ContactButton } from "@/components/ContactButton";
+import { HeroCoin } from "@/components/HeroCoin";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ArrowRightIcon, PinIcon } from "@/components/icons";
 import {
@@ -43,53 +44,60 @@ export default function Home() {
 
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────── espresso ── */}
+      {/* ── Hero ─────────────────────────────────────────────── espresso ──
+          D1/D13/D15: the old diamond-and-circles motif is retired — the coin
+          is the hero's only motif now, homepage-only (D1). Headline left /
+          coin right at lg+ (D13); stacked with the headline and both CTAs
+          first on narrower screens, so they stay reachable without scrolling
+          (D15). The single grid child order below serves both layouts: no
+          reordering, just a column that only appears at lg. */}
+      {/* overflow-hidden: the coin's radial glow deliberately bleeds past its
+          own box (D7) — this clips that bleed at the viewport edge instead of
+          letting it cause horizontal scroll on narrow screens. */}
       <section className="relative flex min-h-[78vh] items-center overflow-hidden bg-ground">
-        <Image
-          src={PLACEHOLDER.hero}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        {/* §6.1 — gradient from the left, so the headline stays legible over
-            whatever photograph replaces the placeholder. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-ground via-ground/85 to-ground/25" />
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-5 py-20 lg:grid-cols-[1fr_auto] lg:gap-16">
+          <div>
+            <p className="text-label uppercase text-gold-soft">
+              {address.locality} · {address.region}
+            </p>
 
-        <div className="relative mx-auto w-full max-w-6xl px-5 py-20">
-          <p className="text-label uppercase text-gold-soft">
-            {address.locality} · {address.region}
-          </p>
+            <h1 className="mt-5 display-lg text-cream-text">
+              Trakya Kapaklı
+              <br />
+              <span className="text-gold-soft">Kuyumculuk</span>
+            </h1>
 
-          <h1 className="mt-5 display-lg text-cream-text">
-            Trakya Kapaklı
-            <br />
-            <span className="text-gold-soft">Kuyumculuk</span>
-          </h1>
+            <div className="mt-6 h-px w-11 bg-gold" />
 
-          <div className="mt-6 h-px w-11 bg-gold" />
+            <p className="mt-6 max-w-md leading-relaxed text-muted">
+              {shop.founded} yılından beri aynı yerde: altın, pırlanta ve
+              sipariş üzerine üretilen özel tasarım takılar.
+            </p>
 
-          <p className="mt-6 max-w-md leading-relaxed text-muted">
-            {shop.founded} yılından beri aynı yerde: altın, pırlanta ve sipariş
-            üzerine üretilen özel tasarım takılar.
-          </p>
-
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link
-              href="/urunler"
-              className="inline-flex min-h-11 items-center gap-2 bg-gold px-6 py-3 text-sm font-medium text-ink-text transition-colors hover:bg-gold-soft"
-            >
-              Ürünlerimiz
-              <ArrowRightIcon className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/iletisim"
-              className="inline-flex min-h-11 items-center border border-gold-soft/50 px-6 py-3 text-sm text-gold-soft transition-colors hover:bg-gold/15"
-            >
-              İletişim
-            </Link>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Link
+                href="/urunler"
+                className="inline-flex min-h-11 items-center gap-2 bg-gold px-6 py-3 text-sm font-medium text-ink-text transition-colors hover:bg-gold-soft"
+              >
+                Ürünlerimiz
+                <ArrowRightIcon className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/iletisim"
+                className="inline-flex min-h-11 items-center border border-gold-soft/50 px-6 py-3 text-sm text-gold-soft transition-colors hover:bg-gold/15"
+              >
+                İletişim
+              </Link>
+            </div>
           </div>
+
+          {/* D14: ≈1.2× the headline block height, capped at 46% of hero
+              width, minimum 280px. 386px measured against the real headline
+              block (322px tall at lg+) → 1.2 exactly; 280/320 below lg are
+              the explicit floor, since the coin sits below the headline
+              there rather than beside it, and the 1.2× balance rule stops
+              applying. */}
+          <HeroCoin className="mx-auto w-[280px] sm:w-[320px] lg:mx-0 lg:w-[386px]" />
         </div>
       </section>
 
