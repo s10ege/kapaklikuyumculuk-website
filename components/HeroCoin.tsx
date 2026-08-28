@@ -115,6 +115,13 @@ export function HeroCoin({ className = "" }: { className?: string }) {
         <source media="(min-width: 768px)" src="/hero/coin-800.mp4" type="video/mp4" />
         <source src="/hero/coin-420.mp4" type="video/mp4" />
       </video>
+      {/* Opera injects its pop-out and Lucid-mode buttons when the element
+          under the cursor is a video, and (unlike Edge) ignores both the
+          disable* attributes and the video's own pointer-events. This inert
+          cover sits above the video and receives the hover instead, so
+          Opera's heuristic never finds a video at the cursor. Invisible,
+          decorative, and hover-dead like everything else here (D5). */}
+      <div aria-hidden="true" className="absolute inset-0" />
     </div>
   );
 }
