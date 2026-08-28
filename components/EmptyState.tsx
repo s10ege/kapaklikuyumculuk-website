@@ -20,15 +20,16 @@ export function EmptyState({
 }) {
   return (
     <div
-      className={`border border-line bg-surface px-6 py-14 text-center sm:py-20 ${className}`}
+      className={`border border-line-dark bg-panel px-6 py-14 text-center sm:py-20 ${className}`}
     >
-      <p className="text-label uppercase text-gold-deep">Yakında</p>
+      <p className="text-label uppercase text-gold-soft">Yakında</p>
 
-      <p className="mx-auto mt-4 max-w-md font-display text-2xl leading-snug sm:text-3xl">
+      {/* Jost — D8 keeps Bodoni ≥32px and this line tops out at 30px. */}
+      <p className="mx-auto mt-4 max-w-md text-2xl leading-snug sm:text-3xl">
         {subject} vitrinimizde — fotoğraflarını hazırlıyoruz.
       </p>
 
-      <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink-muted">
+      <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
         Aradığınız modeli bize yazın ya da telefonla sorun; elimizdekileri
         sizin için çıkaralım. Vitrinde olmayan modelleri de tedarik
         edebiliyoruz.

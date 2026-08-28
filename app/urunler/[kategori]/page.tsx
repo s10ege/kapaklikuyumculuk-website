@@ -76,24 +76,24 @@ export default async function CategoryPage({
         ]}
       />
 
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <p className="text-label uppercase text-gold-deep">Koleksiyon</p>
+          <p className="text-label uppercase text-gold-soft">Koleksiyon</p>
           <h1 className="mt-3 display-md">{category.name}</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
 
           {/* With no product pages, this paragraph is the category's entire
               search surface (§6.2). It is written to be read. */}
-          <p className="mt-6 max-w-2xl leading-relaxed text-ink-muted">
+          <p className="mt-6 max-w-2xl leading-relaxed text-muted">
             {category.intro}
           </p>
 
-          <div className="mt-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line pb-3">
-            <p className="text-label uppercase text-ink-muted">
+          <div className="mt-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line-dark pb-3">
+            <p className="text-label uppercase text-muted">
               {products.length > 0 ? `${products.length} model` : "Hazırlanıyor"}
             </p>
             {products.length > 0 && (
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-muted">
                 Görsele tıklayarak büyütün
               </p>
             )}
@@ -114,20 +114,21 @@ export default async function CategoryPage({
       {/* Sibling categories, so nobody dead-ends on an empty page (§6.2). At
           launch every category is empty, which makes this row the main way
           round the catalogue. */}
-      <nav aria-label="Diğer kategoriler" className="bg-cream">
+      <nav aria-label="Diğer kategoriler">
         <div className="mx-auto max-w-6xl px-5 py-12">
-          <p className="text-label uppercase text-gold-deep">
+          <p className="text-label uppercase text-gold-soft">
             Diğer kategoriler
           </p>
-          <ul className="mt-5 border-t border-line">
+          <ul className="mt-5 border-t border-line-dark">
             {siblings.map((sibling) => (
-              <li key={sibling.slug} className="border-b border-line">
+              <li key={sibling.slug} className="border-b border-line-dark">
                 <Link
                   href={`/urunler/${sibling.slug}`}
-                  className="flex min-h-[3.5rem] items-center justify-between gap-4 py-2 transition-colors hover:text-gold-deep"
+                  className="flex min-h-[3.5rem] items-center justify-between gap-4 py-2 transition-colors hover:text-gold-soft"
                 >
-                  <span className="font-display text-xl">{sibling.name}</span>
-                  <span className="text-label uppercase text-ink-muted">
+                  {/* Jost — D8 keeps Bodoni ≥32px; row titles are 20px. */}
+                  <span className="text-xl">{sibling.name}</span>
+                  <span className="text-label uppercase text-muted">
                     İncele
                   </span>
                 </Link>

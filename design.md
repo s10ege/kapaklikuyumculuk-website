@@ -64,7 +64,13 @@ line-dark    #262B31   hairlines on espresso
 line-light   #E4DED2   hairlines on cream
 gold         #B8964F   hairline accent
 gold-soft    #CBAE72   gold on dark, where it needs to lift
-gold-deep    #8A6D2F   gold on cream — the only version legible there
+gold-deep    #77602A   gold on cream — the only version legible there
+                       (darkened from #8A6D2F at the 1.2 gate: the original
+                       measured 4.29:1 on frame, under the 4.5:1 AA minimum
+                       for the small text that uses it)
+ink-muted    #5F5A52   secondary text on cream — added at the 1.2 gate; the
+                       frame had no muted token and alpha improvisations
+                       measured as low as 2.9:1
 whatsapp     #25D366
 ```
 

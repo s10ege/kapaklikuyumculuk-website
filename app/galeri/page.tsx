@@ -35,25 +35,25 @@ export default function GalleryPage() {
         trail={[{ label: "Anasayfa", href: "/" }, { label: "Galeri" }]}
       />
 
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <p className="text-label uppercase text-gold-deep">Galeri</p>
+          <p className="text-label uppercase text-gold-soft">Galeri</p>
           <h1 className="mt-3 display-md">Vitrinimizden</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
 
-          <p className="mt-6 max-w-2xl leading-relaxed text-ink-muted">
+          <p className="mt-6 max-w-2xl leading-relaxed text-muted">
             Tüm kategorilerden seçtiğimiz parçalar bir arada. Bir modeli daha
             yakından görmek için görsele dokunun.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line pb-3">
-            <p className="text-label uppercase text-ink-muted">
+          <div className="mt-10 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line-dark pb-3">
+            <p className="text-label uppercase text-muted">
               {products.length > 0
                 ? `${products.length} model`
                 : "Hazırlanıyor"}
             </p>
             {products.length > 0 && (
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-muted">
                 Görsele tıklayarak büyütün
               </p>
             )}
@@ -70,18 +70,19 @@ export default function GalleryPage() {
           {/* With the gallery empty at launch, this row is how a visitor who
               landed here from an old search result gets somewhere useful. */}
           <nav aria-label="Kategoriler" className="mt-14">
-            <p className="text-label uppercase text-gold-deep">Kategoriler</p>
-            <ul className="mt-5 border-t border-line">
+            <p className="text-label uppercase text-gold-soft">Kategoriler</p>
+            <ul className="mt-5 border-t border-line-dark">
               {categories.map((category) => (
-                <li key={category.slug} className="border-b border-line">
+                <li key={category.slug} className="border-b border-line-dark">
                   <Link
                     href={`/urunler/${category.slug}`}
-                    className="flex min-h-[3.5rem] items-center justify-between gap-4 py-2 transition-colors hover:text-gold-deep"
+                    className="flex min-h-[3.5rem] items-center justify-between gap-4 py-2 transition-colors hover:text-gold-soft"
                   >
-                    <span className="font-display text-xl">
+                    {/* Jost — D8 keeps Bodoni ≥32px; row titles are 20px. */}
+                    <span className="text-xl">
                       {category.name}
                     </span>
-                    <span className="text-label uppercase text-ink-muted">
+                    <span className="text-label uppercase text-muted">
                       İncele
                     </span>
                   </Link>

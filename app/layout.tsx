@@ -78,9 +78,9 @@ export const metadata: Metadata = {
 };
 
 /* Matches the sticky header, which is what sits under the browser's URL bar on
- * a phone. Without it the bar renders white against a charcoal header. */
+ * a phone — cream since D6 put the frame around the espresso body. */
 export const viewport: Viewport = {
-  themeColor: "#1a1816",
+  themeColor: "#f4f0e8",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -92,7 +92,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <a
           href="#icerik"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-gold focus:px-4 focus:py-2 focus:text-charcoal-deep"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-gold focus:px-4 focus:py-2 focus:text-ink-text"
         >
           İçeriğe geç
         </a>

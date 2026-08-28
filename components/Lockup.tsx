@@ -72,12 +72,14 @@ export function Lockup({
       className={`group flex min-h-11 items-center gap-3 ${className}`}
       aria-label={`${shop.name} — anasayfa`}
     >
-      <OvalMark className="h-10 w-10 flex-none text-gold transition-colors group-hover:text-gold-soft" />
+      {/* The lockup sits on cream in both the header and the footer, so the
+          mark is gold-deep — the only gold legible there (design.md). */}
+      <OvalMark className="h-10 w-10 flex-none text-gold-deep transition-colors group-hover:text-gold" />
       <span className="flex flex-col leading-none">
-        <span className="text-[0.8125rem] font-medium tracking-[0.2em] text-cream">
+        <span className="text-[0.8125rem] font-medium tracking-[0.2em] text-ink-text">
           TRAKYA KAPAKLI
         </span>
-        <span className="mt-[0.3rem] text-[0.625rem] tracking-[0.32em] text-gold-soft">
+        <span className="mt-[0.3rem] text-[0.625rem] tracking-[0.32em] text-gold-deep">
           KUYUMCULUK
         </span>
       </span>

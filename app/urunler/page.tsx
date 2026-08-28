@@ -29,13 +29,13 @@ export default function ProductsPage() {
         trail={[{ label: "Anasayfa", href: "/" }, { label: "Ürünlerimiz" }]}
       />
 
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <p className="text-label uppercase text-gold-deep">Koleksiyonlar</p>
+          <p className="text-label uppercase text-gold-soft">Koleksiyonlar</p>
           <h1 className="mt-3 display-md">Ürünlerimiz</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
 
-          <p className="mt-6 max-w-2xl leading-relaxed text-ink-muted">
+          <p className="mt-6 max-w-2xl leading-relaxed text-muted">
             Vitrinimizi beş başlıkta topladık. Aradığınız parça burada yoksa
             sorun — tedarik edebildiklerimiz vitrindekilerden çok daha geniş, ve
             sipariş üzerine üretim de yapıyoruz.

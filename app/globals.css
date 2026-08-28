@@ -1,37 +1,48 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Design tokens — spec §3.
+   Design tokens — design.md, decisions D6–D12.
 
-   The palette comes from the logo: a gold KK inside a double oval on near-black.
-   That makes charcoal a brand colour, not just gold and white.
+   The palette comes from the logo: a gold KK inside a double oval on
+   near-black. D6 commits to that ground fully: an espresso body with a cream
+   frame — header and footer, plus the two reading bands that arrive in
+   iteration 1.5. The coin and the logo both work harder on dark; the cream
+   frame supplies the warmth.
 
-   Deliberately NOT theme-switchable. This is a fixed design, so there is no
-   prefers-color-scheme block — light/dark is expressed by the band rhythm
-   (charcoal header/hero/bands/footer, cream between), not by user preference.
+   Deliberately NOT theme-switchable. This is a fixed dark design, so there is
+   no prefers-color-scheme block — light is the frame, dark is the room.
 
    §12: never name a token `base`. `text-base` is a built-in Tailwind font-size
    utility and a `--color-base` token collides with it, silently painting body
-   copy near-white. The page background token is `cream`.
+   copy near-white. The page background token is `ground`.
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Gold is an accent, never a large fill. Hairlines, outlines, small-caps
-     labels, icons. Large gold areas are what make jeweller sites look cheap. */
-  --color-gold: #b8964f; /* primary accent */
-  --color-gold-deep: #8a6d2f; /* hover/pressed; gold text on light backgrounds */
-  --color-gold-soft: #cbae72; /* gold text on dark backgrounds */
-  --color-gold-pale: #efe7d6; /* hairlines, subtle section fills */
+  /* Gold is a hairline accent, never a large fill (D12). The one exception is
+     a primary button, one per section. */
+  --color-gold: #b8964f; /* hairline accent */
+  --color-gold-soft: #cbae72; /* gold on dark, where it needs to lift */
+  /* Darkened from the original #8A6D2F at the 1.2 gate: that value measured
+     4.29:1 on frame — under the 4.5:1 AA text minimum at the small sizes the
+     footer and header actually use. #77602A measures 5.3:1 and keeps the
+     olive character. */
+  --color-gold-deep: #77602a; /* gold on cream — the only version legible there */
 
-  /* The only large dark areas. */
-  --color-charcoal: #2a2724; /* header, hero overlay, bands */
-  --color-charcoal-deep: #1a1816; /* footer, sticky header */
+  --color-ground: #17120e; /* espresso — page background, the dominant colour */
+  --color-panel: #241c15; /* raised surfaces, cards, bands (3–4 uses/page, D11) */
+  --color-frame: #f4f0e8; /* cream — header, footer, reading bands */
 
-  --color-cream: #fbfaf7; /* page background (warm off-white) */
-  --color-surface: #ffffff; /* cards, product tiles */
-  --color-ink: #1c1917; /* primary text */
-  --color-ink-muted: #6b6560; /* secondary text, captions */
-  --color-line: #e8e3da; /* 1px borders */
+  --color-ink-text: #1a1816; /* text on cream */
+  /* Added at the 1.2 gate: the cream frame had no secondary-text token, so
+     components improvised with ink-text alpha — and the footer's fine print
+     landed at 2.9:1. Solid ink-muted measures 6:1 on frame. */
+  --color-ink-muted: #5f5a52; /* secondary text on cream */
+  --color-cream-text: #e8e3da; /* body text on dark — never pure white (D9) */
+  --color-muted: #9a958d; /* secondary text on dark */
+
+  --color-line-dark: #262b31; /* hairlines on espresso */
+  --color-line-light: #e4ded2; /* hairlines on cream */
+
   --color-whatsapp: #25d366; /* WhatsApp buttons only */
 
   /* Labels — uppercase, 11px, 0.18em tracking, weight 500. Sans by design,
@@ -51,8 +62,9 @@
   --radius-2xl: 2px;
   --radius-3xl: 2px;
 
-  /* §3: no drop shadows. Separation comes from hairlines and whitespace.
-     Neutralised at the token level so a stray `shadow-md` is a no-op. */
+  /* No shadows (D7 — the warm glow under the hero coin is the sole exception,
+     and it is a radial gradient, not a shadow token). Neutralised at the token
+     level so a stray `shadow-md` is a no-op. */
   --shadow-2xs: none;
   --shadow-xs: none;
   --shadow-sm: none;
@@ -73,14 +85,14 @@
   --default-font-optical-sizing: auto;
 }
 
-/* Display scale — §3: 48 / 40 / 32.
+/* Display scale — 48 / 40 / 32.
  *
- * Deliberately utilities, not `--text-*` theme tokens. Tailwind's text namespace
- * only carries size/leading/tracking/weight — never family — so a plain
- * `text-display-lg` on a <p> silently renders in Inter. That is a wrong-looking
- * page rather than a broken one, which is exactly the kind of thing that ships.
- * Bundling the family in means the display face cannot be dropped by accident,
- * on a heading or anything else.
+ * Deliberately utilities, not `--text-*` theme tokens, and the ONLY route to
+ * the display face. D8: Bodoni Moda is display-only, ≥32px — its hairlines
+ * physically disappear on dark below that. Because the family is bundled into
+ * these three utilities and granted nowhere else, a 20px Bodoni heading is
+ * structurally impossible rather than a review finding. Jost carries
+ * everything smaller.
  */
 @utility display-lg {
   font-family: var(--font-display);
@@ -106,10 +118,10 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    /* Fixed light design (see the note at the top). Declaring it stops the
-       browser rendering native controls and scrollbars in dark colours when
-       the OS is in dark mode. */
-    color-scheme: light;
+    /* Fixed dark design (see the note at the top). Declaring it keeps native
+       controls and scrollbars dark instead of glaring white against espresso
+       when the OS is in light mode. */
+    color-scheme: dark;
   }
 
   /* Removes the ~300ms double-tap-zoom delay on touch. Most visits are a thumb
@@ -124,8 +136,8 @@
   }
 
   body {
-    background-color: var(--color-cream);
-    color: var(--color-ink);
+    background-color: var(--color-ground);
+    color: var(--color-cream-text);
     font-family: var(--font-sans);
     font-size: 1rem;
     /* §3: body 16 at 1.7–1.85 */
@@ -133,17 +145,36 @@
   }
 
   /* Turkish copy is full of ascenders and dotted/dotless i. Kerning and
-     ligatures on by default keeps `fi`, `ffi` and `İ` from colliding. */
+     ligatures on by default keeps `fi`, `ffi` and `İ` from colliding.
+     No font-family here — D8: the display face arrives only via the
+     display-lg/md/sm utilities, which are all ≥32px. A heading without one
+     stays in Jost on purpose. */
   h1,
   h2,
   h3 {
-    font-family: var(--font-display);
     font-weight: 400;
     text-wrap: balance;
   }
 
+  /* D18 — gold focus rings on both grounds; gold-deep on cream, where plain
+     gold measures 2.46:1 and misses the 3:1 non-text minimum.
+
+     outline-color is set statically on every element rather than inside
+     :focus-visible: Tailwind's `transition-colors` animates outline-color,
+     so a ring that only gains its colour on focus fades in from the text
+     colour and spends its first 150ms invisible. A constant colour has
+     nothing to animate — focus only adds width and style. */
+  * {
+    outline-color: var(--color-gold);
+  }
+  .bg-frame,
+  .bg-frame * {
+    outline-color: var(--color-gold-deep);
+  }
+
   :focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline-style: solid;
+    outline-width: 2px;
     outline-offset: 3px;
   }
 }

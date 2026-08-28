@@ -72,12 +72,12 @@ export default function ServicesPage() {
         trail={[{ label: "Anasayfa", href: "/" }, { label: "Hizmetler" }]}
       />
 
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <p className="text-label uppercase text-gold-deep">Hizmetler</p>
+          <p className="text-label uppercase text-gold-soft">Hizmetler</p>
           <h1 className="mt-3 display-md">Ne yapıyoruz</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
-          <p className="mt-6 max-w-2xl leading-relaxed text-ink-muted">
+          <p className="mt-6 max-w-2xl leading-relaxed text-muted">
             Vitrin dışında iki iş yapıyoruz, ve ikisi de güvene dayanıyor.
             Nasıl çalıştığımızı baştan yazdık ki mağazaya gelmeden ne
             olacağını bilin.
@@ -88,27 +88,28 @@ export default function ServicesPage() {
               <article
                 key={service.slug}
                 id={service.slug}
-                className="border-t border-line pt-10"
+                className="border-t border-line-dark pt-10"
               >
                 <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
                   <div>
                     <h2 className="display-sm">{service.name}</h2>
                     <div className="mt-5 h-px w-11 bg-gold" />
-                    <p className="mt-5 font-display text-xl leading-snug text-gold-deep">
+                    {/* Jost — D8 keeps Bodoni ≥32px; the lede is 20px. */}
+                    <p className="mt-5 text-xl leading-snug text-gold-soft">
                       {service.lede}
                     </p>
                   </div>
 
                   <div>
-                    <p className="leading-relaxed text-ink-muted">
+                    <p className="leading-relaxed text-muted">
                       {service.body}
                     </p>
 
-                    <ul className="mt-8 border-t border-line">
+                    <ul className="mt-8 border-t border-line-dark">
                       {service.points.map((point) => (
                         <li
                           key={point}
-                          className="border-b border-line py-4 text-sm leading-relaxed"
+                          className="border-b border-line-dark py-4 text-sm leading-relaxed"
                         >
                           {point}
                         </li>

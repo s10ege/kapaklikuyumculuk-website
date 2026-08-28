@@ -17,13 +17,15 @@ panel      #241C15   cards, raised bands — 3-4 uses per page maximum (D11)
 frame      #F4F0E8   cream — header, footer, and the reading bands on
                      Hakkımızda and Hizmetler (D10)
 ink-text   #1A1816   text on cream
+ink-muted  #5F5A52   secondary text on cream (added at the 1.2 gate)
 cream-text #E8E3DA   body text on dark — NEVER pure white, it causes halation (D9)
 muted      #9A958D   secondary text on dark
 line-dark  #262B31   hairlines on espresso
 line-light #E4DED2   hairlines on cream
 gold       #B8964F   hairline accent
 gold-soft  #CBAE72   gold on dark, where it needs to lift
-gold-deep  #8A6D2F   gold on cream — the only version legible there
+gold-deep  #77602A   gold on cream — the only version legible there
+                     (darkened from #8A6D2F at the 1.2 gate for AA contrast)
 whatsapp   #25D366
 ```
 

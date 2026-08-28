@@ -48,14 +48,14 @@ export default function ContactPage() {
         trail={[{ label: "Anasayfa", href: "/" }, { label: "İletişim" }]}
       />
 
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto grid max-w-6xl gap-12 px-5 py-12 sm:py-16 lg:grid-cols-2 lg:gap-14">
           <div>
-            <p className="text-label uppercase text-gold-deep">İletişim</p>
+            <p className="text-label uppercase text-gold-soft">İletişim</p>
             <h1 className="mt-3 display-md">Bize ulaşın</h1>
             <div className="mt-5 h-px w-11 bg-gold" />
 
-            <p className="mt-6 max-w-md leading-relaxed text-ink-muted">
+            <p className="mt-6 max-w-md leading-relaxed text-muted">
               Mağazamız {address.landmark.value.toLowerCase()}. Aradığınız
               modeli önden sorabilir, uygun olup olmadığını öğrenip öyle
               gelebilirsiniz.
@@ -63,17 +63,18 @@ export default function ContactPage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactButton variant="solid" />
+              {/* Jost — D8 keeps Bodoni ≥32px; the number is 24px. */}
               <a
                 href={phoneHref}
-                className="inline-flex min-h-11 items-center px-4 font-display text-2xl text-gold-deep transition-colors hover:text-ink"
+                className="inline-flex min-h-11 items-center px-4 text-2xl text-gold-soft transition-colors hover:text-cream-text"
               >
                 {phoneDisplay}
               </a>
             </div>
 
-            <dl className="mt-10 border-t border-line">
-              <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-                <dt className="text-label uppercase text-ink-muted sm:w-28 sm:flex-none">
+            <dl className="mt-10 border-t border-line-dark">
+              <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+                <dt className="text-label uppercase text-muted sm:w-28 sm:flex-none">
                   Adres
                 </dt>
                 <dd>
@@ -84,31 +85,31 @@ export default function ContactPage() {
                       </span>
                     ))}
                   </address>
-                  <span className="mt-1 block text-sm text-ink-muted">
+                  <span className="mt-1 block text-sm text-muted">
                     {address.landmark.value}
                   </span>
                 </dd>
               </div>
 
-              <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-                <dt className="text-label uppercase text-ink-muted sm:w-28 sm:flex-none">
+              <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+                <dt className="text-label uppercase text-muted sm:w-28 sm:flex-none">
                   Telefon
                 </dt>
                 <dd className="flex flex-col">
                   <a
                     href={phoneHref}
-                    className="inline-flex min-h-11 items-center transition-colors hover:text-gold-deep"
+                    className="inline-flex min-h-11 items-center transition-colors hover:text-gold-soft"
                   >
                     {phoneDisplay}
                   </a>
-                  <span className="text-sm text-ink-muted">
+                  <span className="text-sm text-muted">
                     {phoneAltDisplay}
                   </span>
                 </dd>
               </div>
 
-              <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-                <dt className="text-label uppercase text-ink-muted sm:w-28 sm:flex-none">
+              <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+                <dt className="text-label uppercase text-muted sm:w-28 sm:flex-none">
                   Saatler
                 </dt>
                 <dd>
@@ -116,7 +117,7 @@ export default function ContactPage() {
                   <span className="block">
                     {hours.opens} – {hours.closes}
                   </span>
-                  <span className="block text-sm text-ink-muted">
+                  <span className="block text-sm text-muted">
                     {hours.closedNote}
                   </span>
                 </dd>
@@ -124,8 +125,8 @@ export default function ContactPage() {
 
               {/* Hides itself entirely while the handle is pending (§8). */}
               {!contact.instagram.pending && (
-                <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-                  <dt className="text-label uppercase text-ink-muted sm:w-28 sm:flex-none">
+                <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+                  <dt className="text-label uppercase text-muted sm:w-28 sm:flex-none">
                     Instagram
                   </dt>
                   <dd>
@@ -133,7 +134,7 @@ export default function ContactPage() {
                       href={instagramUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-gold-deep"
+                      className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-gold-soft"
                     >
                       <InstagramIcon className="h-4 w-4" />
                       {`@${contact.instagram.value}`}
@@ -145,7 +146,7 @@ export default function ContactPage() {
           </div>
 
           <div className="flex flex-col">
-            <div className="relative aspect-[4/3] w-full border border-line bg-surface lg:aspect-auto lg:flex-1">
+            <div className="relative aspect-[4/3] w-full border border-line-dark bg-panel lg:aspect-auto lg:flex-1">
               <iframe
                 title={`${shop.name} konumu`}
                 src={mapsEmbedUrl}
@@ -159,7 +160,7 @@ export default function ContactPage() {
               href={mapsSearchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 border border-gold-deep px-5 py-3 text-sm text-gold-deep transition-colors hover:bg-gold-pale"
+              className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 border border-gold-soft/50 px-5 py-3 text-sm text-gold-soft transition-colors hover:bg-gold/15"
             >
               <PinIcon className="h-4 w-4" />
               Yol Tarifi Al

@@ -10,7 +10,7 @@
  */
 
 export const PLACEHOLDER = {
-  /* Charcoal ground, for category tiles sitting in a cream section. */
+  /* Panel ground, for category tiles in the espresso room (D6). */
   kategori: {
     pirlanta: "/placeholder/kategori-pirlanta.svg",
     "altin-seti": "/placeholder/kategori-altin-seti.svg",
@@ -19,12 +19,13 @@ export const PLACEHOLDER = {
     "ozel-tasarim-takilar": "/placeholder/kategori-ozel-tasarim-takilar.svg",
   },
 
-  /* Cream ground, for product cards on a cream page — an emerald cut, so a
-   * product tile is never mistaken for a category tile at a glance. */
+  /* Panel ground, for product cards — an emerald cut, so a product tile is
+   * never mistaken for a category tile at a glance. */
   urun: "/placeholder/urun.svg",
 
-  /* 16:9. §6.1 lays a charcoal gradient over this from the left, so the motif
-   * sits right of centre and stays clear of the headline. */
+  /* 16:9. §6.1 lays an espresso gradient over this from the left, so the motif
+   * sits right of centre and stays clear of the headline. Retired by the coin
+   * in iteration 1.3. */
   hero: "/placeholder/hero.svg",
 } as const;
 

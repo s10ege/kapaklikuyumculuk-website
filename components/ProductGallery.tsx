@@ -65,9 +65,9 @@ export function ProductGallery({ products }: { products: Product[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 border-l border-t border-line lg:grid-cols-4">
+      <div className="grid grid-cols-2 border-l border-t border-line-dark lg:grid-cols-4">
         {products.map((product, i) => (
-          <div key={product.id} className="border-b border-r border-line">
+          <div key={product.id} className="border-b border-r border-line-dark">
             <button
               type="button"
               onClick={() => open(i)}
@@ -91,20 +91,20 @@ export function ProductGallery({ products }: { products: Product[] }) {
         }}
         /* overscroll-contain stops a scroll gesture inside the panel chaining to
          * the page behind it, which on a phone reads as the modal leaking. */
-        className="m-auto w-[min(64rem,92vw)] overscroll-contain bg-cream p-0 text-ink backdrop:bg-charcoal-deep/80"
+        className="m-auto w-[min(64rem,92vw)] overscroll-contain bg-panel p-0 text-cream-text backdrop:bg-ground/80"
       >
         {active && (
-          <div className="relative grid gap-px bg-line sm:grid-cols-2">
+          <div className="relative grid gap-px bg-line-dark sm:grid-cols-2">
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center bg-cream text-ink-muted transition-colors hover:text-gold-deep"
+              className="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center bg-panel text-muted transition-colors hover:text-gold-soft"
             >
               <span className="sr-only">Kapat</span>
               <CloseIcon className="h-5 w-5" />
             </button>
 
-            <div className="relative aspect-square bg-surface">
+            <div className="relative aspect-square bg-panel">
               {active.images[0] && (
                 <Image
                   src={active.images[0]}
@@ -116,29 +116,30 @@ export function ProductGallery({ products }: { products: Product[] }) {
               )}
             </div>
 
-            <div className="flex flex-col bg-cream p-6 sm:p-8">
+            <div className="flex flex-col bg-panel p-6 sm:p-8">
               {/* tabular-nums so the counter does not reflow as the index changes. */}
-              <p className="text-label uppercase tabular-nums text-gold-deep">
+              <p className="text-label uppercase tabular-nums text-gold-soft">
                 {index + 1} / {products.length}
               </p>
 
-              <h2 className="mt-3 font-display text-2xl leading-snug sm:text-3xl">
+              {/* Jost — D8 keeps Bodoni ≥32px and this tops out at 30px. */}
+              <h2 className="mt-3 text-2xl leading-snug sm:text-3xl">
                 {active.name}
               </h2>
 
               {specLine(active) && (
-                <p className="mt-2 text-sm text-ink-muted">
+                <p className="mt-2 text-sm text-muted">
                   {specLine(active)}
                 </p>
               )}
 
               {active.note && (
-                <p className="mt-2 text-sm text-gold-deep">{active.note}</p>
+                <p className="mt-2 text-sm text-gold-soft">{active.note}</p>
               )}
 
               {/* Why no price. Saying it plainly is more reassuring than
                   leaving a blank where a price would be. */}
-              <p className="mt-5 border-t border-line pt-5 text-sm leading-relaxed text-ink-muted">
+              <p className="mt-5 border-t border-line-dark pt-5 text-sm leading-relaxed text-muted">
                 Fiyatlar günlük altın kuruna göre değiştiği için sitede
                 yayınlanmıyor. Güncel fiyat ve gramaj için bize ulaşın.
               </p>
@@ -150,18 +151,18 @@ export function ProductGallery({ products }: { products: Product[] }) {
               />
 
               {products.length > 1 && (
-                <div className="mt-6 flex gap-px border-t border-line pt-6">
+                <div className="mt-6 flex gap-px border-t border-line-dark pt-6">
                   <button
                     type="button"
                     onClick={() => step(-1)}
-                    className="inline-flex min-h-11 items-center border border-line px-4 text-sm transition-colors hover:border-gold hover:text-gold-deep"
+                    className="inline-flex min-h-11 items-center border border-line-dark px-4 text-sm transition-colors hover:border-gold hover:text-gold-soft"
                   >
                     ← Önceki
                   </button>
                   <button
                     type="button"
                     onClick={() => step(1)}
-                    className="inline-flex min-h-11 items-center border border-line px-4 text-sm transition-colors hover:border-gold hover:text-gold-deep"
+                    className="inline-flex min-h-11 items-center border border-line-dark px-4 text-sm transition-colors hover:border-gold hover:text-gold-soft"
                   >
                     Sonraki →
                   </button>

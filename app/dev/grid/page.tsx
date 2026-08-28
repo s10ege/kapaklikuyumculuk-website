@@ -82,17 +82,17 @@ export default function GridPage() {
   if (process.env.NODE_ENV === "production") notFound();
 
   return (
-    <main className="bg-cream">
+    <main>
       <div className="mx-auto max-w-6xl px-5 py-14">
-        <p className="text-label uppercase text-gold-deep">Iterasyon 7</p>
+        <p className="text-label uppercase text-gold-soft">Iterasyon 7</p>
         <h1 className="mt-3 display-lg">Ürün Izgarası</h1>
-        <p className="mt-3 max-w-xl text-ink-muted">
+        <p className="mt-3 max-w-xl text-muted">
           Örnek verilerle. Lansmanda katalog boş olduğu için gerçek kategori
           sayfaları yalnızca Yakında panelini gösterir.
         </p>
 
-        <div className="mt-10 border-b border-line pb-3">
-          <p className="text-label uppercase text-ink-muted">
+        <div className="mt-10 border-b border-line-dark pb-3">
+          <p className="text-label uppercase text-muted">
             {FIXTURES.length} model · 4&apos;lü masaüstü, 2&apos;li mobil ·
             görsele tıklayarak büyütün
           </p>
@@ -101,15 +101,15 @@ export default function GridPage() {
           <ProductGallery products={FIXTURES} />
         </div>
 
-        <div className="mt-14 border-b border-line pb-3">
-          <p className="text-label uppercase text-ink-muted">
+        <div className="mt-14 border-b border-line-dark pb-3">
+          <p className="text-label uppercase text-muted">
             Tek satırda üç ürün — ızgara boşluk bırakmadan hizalanır
           </p>
         </div>
         <ProductGrid products={FIXTURES.slice(0, 3)} className="mt-6" />
 
-        <div className="mt-14 border-b border-line pb-3">
-          <p className="text-label uppercase text-ink-muted">
+        <div className="mt-14 border-b border-line-dark pb-3">
+          <p className="text-label uppercase text-muted">
             Boş durum — lansmanda beş kategoride de görünen ekran
           </p>
         </div>

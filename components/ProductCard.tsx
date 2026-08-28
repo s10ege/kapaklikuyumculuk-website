@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Product } from "@/lib/content";
 
-/* §6.2 — image, name in serif, spec line, DETAY label.
+/* §6.2 — image, name, spec line, DETAY label.
  *
  * Purely presentational, and deliberately so: iteration 8 wraps this same card
  * in a button to open the lightbox, and the gallery there renders exactly what
@@ -31,7 +31,7 @@ export function ProductCard({
   const image = product.images[0];
 
   return (
-    <article className="group flex h-full flex-col bg-surface">
+    <article className="group flex h-full flex-col bg-panel">
       <div className="relative aspect-square overflow-hidden">
         {image && (
           <Image
@@ -48,12 +48,13 @@ export function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-1 px-3 py-3">
-        <p className="font-display text-lg leading-snug">{product.name}</p>
-        {spec && <p className="text-xs text-ink-muted">{spec}</p>}
+        {/* Jost — D8 keeps Bodoni ≥32px; a card name is 18px. */}
+        <p className="text-lg leading-snug">{product.name}</p>
+        {spec && <p className="text-xs text-muted">{spec}</p>}
         {product.note && (
-          <p className="text-xs text-gold-deep">{product.note}</p>
+          <p className="text-xs text-gold-soft">{product.note}</p>
         )}
-        <p className="mt-auto pt-2 text-label uppercase text-ink-muted transition-colors group-hover:text-gold-deep">
+        <p className="mt-auto pt-2 text-label uppercase text-muted transition-colors group-hover:text-gold-soft">
           Detay
         </p>
       </div>

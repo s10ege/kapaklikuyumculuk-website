@@ -51,7 +51,8 @@ ink-text   #1A1816   text on cream
 cream-text #E8E3DA   body text on dark — NEVER pure white (halation)
 muted      #9A958D   secondary text on dark
 line-dark  #262B31 · line-light #E4DED2
-gold       #B8964F · gold-soft #CBAE72 · gold-deep #8A6D2F (gold on cream)
+gold       #B8964F · gold-soft #CBAE72 · gold-deep #77602A (gold on cream)
+ink-muted  #5F5A52   secondary text on cream
 whatsapp   #25D366
 ```
 

@@ -44,16 +44,16 @@ export default function AboutPage() {
         trail={[{ label: "Anasayfa", href: "/" }, { label: "Hakkımızda" }]}
       />
 
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
-          <p className="text-label uppercase text-gold-deep">Hakkımızda</p>
+          <p className="text-label uppercase text-gold-soft">Hakkımızda</p>
           <h1 className="mt-3 display-md">{shop.claim}</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
 
           <div className="mt-12 grid gap-10 lg:grid-cols-[0.8fr_1fr] lg:gap-14">
             {/* Portrait, per §6.6 — a shop photograph reads as proof in a way
                 a product shot does not. */}
-            <div className="relative aspect-[3/4] overflow-hidden border border-line">
+            <div className="relative aspect-[3/4] overflow-hidden border border-line-dark">
               <Image
                 src={PLACEHOLDER.hero}
                 alt=""
@@ -70,14 +70,14 @@ export default function AboutPage() {
                   merkezinde kuruldu ve ilçenin ilk kuyumcusu oldu. O günden bu
                   yana aynı adreste, aynı ailenin elinde.
                 </p>
-                <p className="text-ink-muted">
+                <p className="text-muted">
                   Bir kuyumcunun sattığı şeyler geri gelir. Yüzük küçük gelir,
                   zincir kopar, bir bilezik yıllar sonra toruna devredilir. Bu
                   yüzden bir takıyı satarken de, yıllar sonra tamire
                   geldiğinde de aynı şekilde davranmak zorundasınız. Aynı
                   ilçede, aynı insanlara iş yapmanın kuralı bu.
                 </p>
-                <p className="text-ink-muted">
+                <p className="text-muted">
                   Vitrinimizde altın, pırlanta ve seçkin saat markaları var.
                   Bunun yanında altın alım–satımı ve sipariş üzerine üretim
                   yapıyoruz. Aradığınız model vitrinde yoksa sorun — tedarik
@@ -87,16 +87,17 @@ export default function AboutPage() {
 
               {/* Two-cell fact grid (§6.6). Two, because two verified facts
                   are worth more than six padded ones. */}
-              <dl className="mt-10 grid border-l border-t border-line sm:grid-cols-2">
+              <dl className="mt-10 grid border-l border-t border-line-dark sm:grid-cols-2">
                 {FACTS.map((fact) => (
                   <div
                     key={fact.label}
-                    className="border-b border-r border-line bg-surface px-5 py-6"
+                    className="border-b border-r border-line-dark bg-panel px-5 py-6"
                   >
-                    <dt className="text-label uppercase text-ink-muted">
+                    <dt className="text-label uppercase text-muted">
                       {fact.label}
                     </dt>
-                    <dd className="mt-2 font-display text-2xl">{fact.value}</dd>
+                    {/* Jost — D8 keeps Bodoni ≥32px; the value is 24px. */}
+                    <dd className="mt-2 text-2xl">{fact.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -104,14 +105,14 @@ export default function AboutPage() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <Link
                   href="/urunler"
-                  className="inline-flex min-h-11 items-center gap-2 bg-gold px-5 py-3 text-sm font-medium text-charcoal-deep transition-colors hover:bg-gold-soft"
+                  className="inline-flex min-h-11 items-center gap-2 bg-gold px-5 py-3 text-sm font-medium text-ink-text transition-colors hover:bg-gold-soft"
                 >
                   Ürünlerimiz
                   <ArrowRightIcon className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/hizmetler"
-                  className="inline-flex min-h-11 items-center border border-gold-deep px-5 py-3 text-sm text-gold-deep transition-colors hover:bg-gold-pale"
+                  className="inline-flex min-h-11 items-center border border-gold-soft/50 px-5 py-3 text-sm text-gold-soft transition-colors hover:bg-gold/15"
                 >
                   Hizmetlerimiz
                 </Link>

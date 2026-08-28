@@ -1,13 +1,14 @@
 import { ContactButton } from "./ContactButton";
 import { phoneDisplay, phoneHref } from "@/lib/config";
 
-/* The charcoal CTA band (§6.2, §6.5, §6.1).
+/* The CTA band (§6.2, §6.5, §6.1).
  *
  * "Vitrinde olmayan modelleri de bulabiliriz" is the argument the shop actually
  * makes in person: a small jeweller's real inventory is larger than its window,
  * and saying so is what turns a browsing visitor into a message.
  *
- * Part of the band rhythm — charcoal here, cream above and below.
+ * Panel on ground (D6/D11) — a raised band in the dark room, one of the few
+ * permitted panel uses per page.
  */
 export function ContactBand({
   heading = "Vitrinde olmayan modelleri de bulabiliriz",
@@ -19,21 +20,22 @@ export function ContactBand({
   productName?: string;
 }) {
   return (
-    <section className="bg-charcoal">
+    <section className="bg-panel">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-14 sm:py-16 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-xl">
-          <h2 className="font-display text-2xl leading-snug text-cream sm:text-3xl">
+          {/* Jost — D8 keeps Bodoni ≥32px and this heading tops out at 30px. */}
+          <h2 className="text-2xl leading-snug text-cream-text sm:text-3xl">
             {heading}
           </h2>
           <div className="mt-4 h-px w-11 bg-gold" />
-          <p className="mt-4 text-sm leading-relaxed text-cream/70">{body}</p>
+          <p className="mt-4 text-sm leading-relaxed text-muted">{body}</p>
         </div>
 
         <div className="flex flex-none flex-wrap items-center gap-3">
           <ContactButton productName={productName} variant="solid" />
           <a
             href={phoneHref}
-            className="inline-flex min-h-11 items-center px-4 font-display text-xl text-gold-soft transition-colors hover:text-cream"
+            className="inline-flex min-h-11 items-center px-4 text-xl text-gold-soft transition-colors hover:text-cream-text"
           >
             {phoneDisplay}
           </a>

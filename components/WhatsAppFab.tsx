@@ -28,7 +28,7 @@ export function WhatsAppFab() {
         bottom: "calc(1.25rem + env(safe-area-inset-bottom))",
         right: "calc(1.25rem + env(safe-area-inset-right))",
       }}
-      className={`fixed z-50 flex h-14 w-14 items-center justify-center rounded-md text-white shadow-none transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 ${
+      className={`fixed z-50 flex h-14 w-14 items-center justify-center rounded-md text-cream-text shadow-none transition-transform hover:scale-105 motion-reduce:transition-none motion-reduce:hover:scale-100 ${
         isWhatsApp ? "bg-whatsapp" : "bg-gold-deep"
       }`}
     >

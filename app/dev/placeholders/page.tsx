@@ -19,23 +19,23 @@ export default function PlaceholdersPage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-14">
       <header className="pb-8">
-        <p className="text-label uppercase text-gold-deep">Iterasyon 3</p>
+        <p className="text-label uppercase text-gold-soft">Iterasyon 3</p>
         <h1 className="mt-3 display-lg">Yer Tutucu Görseller</h1>
-        <p className="mt-3 max-w-xl text-ink-muted">
+        <p className="mt-3 max-w-xl text-muted">
           Tümü <code className="font-mono text-sm">next/image</code> üzerinden.
           Gerçek fotoğrafa geçmek yalnızca yol dizesini değiştirmeyi gerektirir.
         </p>
       </header>
 
-      <section className="border-t border-line pt-8">
-        <p className="text-label uppercase text-gold-deep">
-          Kategori karoları — 1:1, kömür zemin
+      <section className="border-t border-line-dark pt-8">
+        <p className="text-label uppercase text-gold-soft">
+          Kategori karoları — 1:1, panel zemin
         </p>
-        <div className="mt-5 grid grid-cols-2 border-l border-t border-line sm:grid-cols-3">
+        <div className="mt-5 grid grid-cols-2 border-l border-t border-line-dark sm:grid-cols-3">
           {getCategories().map((category) => (
             <figure
               key={category.slug}
-              className="border-b border-r border-line bg-cream"
+              className="border-b border-r border-line-dark bg-panel"
             >
               <div className="relative aspect-square">
                 <Image
@@ -47,8 +47,8 @@ export default function PlaceholdersPage() {
                 />
               </div>
               <figcaption className="px-3 py-2">
-                <p className="font-display text-lg">{category.name}</p>
-                <p className="font-mono text-xs text-ink-muted">
+                <p className="text-lg">{category.name}</p>
+                <p className="font-mono text-xs text-muted">
                   /urunler/{category.slug}
                 </p>
               </figcaption>
@@ -57,13 +57,13 @@ export default function PlaceholdersPage() {
         </div>
       </section>
 
-      <section className="mt-10 border-t border-line pt-8">
-        <p className="text-label uppercase text-gold-deep">
-          Ürün karosu — 1:1, krem zemin
+      <section className="mt-10 border-t border-line-dark pt-8">
+        <p className="text-label uppercase text-gold-soft">
+          Ürün karosu — 1:1, panel zemin
         </p>
-        <div className="mt-5 grid grid-cols-2 border-l border-t border-line sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 border-l border-t border-line-dark sm:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="border-b border-r border-line bg-surface">
+            <div key={i} className="border-b border-r border-line-dark bg-panel">
               <div className="relative aspect-square">
                 <Image
                   src={PLACEHOLDER.urun}
@@ -74,17 +74,17 @@ export default function PlaceholdersPage() {
                 />
               </div>
               <div className="px-3 py-2">
-                <p className="font-display text-base">22 Ayar Burma Bilezik</p>
-                <p className="text-xs text-ink-muted">22 ayar · 38.5 gr</p>
+                <p className="text-base">22 Ayar Burma Bilezik</p>
+                <p className="text-xs text-muted">22 ayar · 38.5 gr</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mt-10 border-t border-line pt-8">
-        <p className="text-label uppercase text-gold-deep">
-          Vitrin — 16:9, soldan kömür geçişli
+      <section className="mt-10 border-t border-line-dark pt-8">
+        <p className="text-label uppercase text-gold-soft">
+          Vitrin — 16:9, soldan espresso geçişli
         </p>
         <div className="relative mt-5 aspect-video overflow-hidden">
           <Image
@@ -95,12 +95,12 @@ export default function PlaceholdersPage() {
             sizes="(min-width: 1024px) 64rem, 100vw"
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-charcoal-deep via-charcoal-deep/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ground via-ground/70 to-transparent" />
           <div className="absolute inset-0 flex flex-col justify-center px-8">
             <p className="text-label uppercase text-gold-soft">
               2000&apos;den beri · Kapaklı
             </p>
-            <p className="mt-3 display-md text-cream">
+            <p className="mt-3 display-md text-cream-text">
               Trakya Kapaklı
               <br />
               <span className="text-gold-soft">Kuyumculuk</span>

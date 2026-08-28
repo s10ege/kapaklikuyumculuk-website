@@ -3,7 +3,7 @@ import { ProductCard } from "./ProductCard";
 
 /* §6.2 — 4-up desktop, 2-up mobile, square crops, 1px rules.
  *
- * The rules are the signature. §3: separation comes from 1px of --color-line,
+ * The rules are the signature. Separation comes from 1px of --color-line-dark,
  * so the grid reads as one continuous surface with lines drawn on it — a
  * display case divided by thin metal, rather than cards floating on a page.
  *
@@ -23,10 +23,10 @@ export function ProductGrid({
 }) {
   return (
     <div
-      className={`grid grid-cols-2 border-l border-t border-line lg:grid-cols-4 ${className}`}
+      className={`grid grid-cols-2 border-l border-t border-line-dark lg:grid-cols-4 ${className}`}
     >
       {products.map((product) => (
-        <div key={product.id} className="border-b border-r border-line">
+        <div key={product.id} className="border-b border-r border-line-dark">
           <ProductCard product={product} />
         </div>
       ))}

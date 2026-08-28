@@ -8,7 +8,7 @@ import { Lockup } from "./Lockup";
 import { CloseIcon, MenuIcon } from "./icons";
 import type { NavLink } from "@/lib/nav";
 
-/* §5 — sticky, charcoal-deep, slim.
+/* §5 — sticky, cream (D6), slim.
  *
  * Categories and page links are passed in rather than imported, so this stays a
  * client component without dragging lib/content into the browser bundle.
@@ -56,7 +56,7 @@ export function Header({
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 bg-charcoal-deep">
+    <header className="sticky top-0 z-40 bg-frame text-ink-text">
       {/* Reserved for the phase-two gold price ticker (§5). Deliberately empty
           and zero-height now: the slot exists so adding the ticker later is a
           change here and nowhere else in the layout. */}
@@ -77,8 +77,8 @@ export function Header({
                     aria-current={active ? "page" : undefined}
                     className={`inline-flex min-h-11 items-center border-b text-sm transition-colors ${
                       active
-                        ? "border-gold text-gold-soft"
-                        : "border-transparent text-cream/80 hover:text-gold-soft"
+                        ? "border-gold text-gold-deep"
+                        : "border-transparent text-ink-text/80 hover:text-gold-deep"
                     }`}
                   >
                     {link.label}
@@ -94,7 +94,7 @@ export function Header({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="mobil-menu"
-          className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-cream lg:hidden"
+          className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-ink-text lg:hidden"
         >
           <span className="sr-only">{open ? "Menüyü kapat" : "Menüyü aç"}</span>
           {open ? (
@@ -106,19 +106,21 @@ export function Header({
       </div>
 
       {open && (
+        /* D17 — the panel is cream, reading as the header expanding. */
         <div
           id="mobil-menu"
-          className="border-t border-white/10 bg-charcoal-deep lg:hidden"
+          className="border-t border-line-light bg-frame lg:hidden"
         >
           {/* Categories first, then pages (§5). Someone arriving from Instagram
               wants to see pieces, not an About page. */}
           <nav aria-label="Kategoriler">
             <ul className="flex flex-col">
               {categories.map((link) => (
-                <li key={link.href} className="border-b border-white/10">
+                <li key={link.href} className="border-b border-line-light">
+                  {/* Jost, not Bodoni — D8 keeps the display face ≥32px. */}
                   <Link
                     href={link.href}
-                    className="flex min-h-[3.25rem] items-center px-5 font-display text-xl text-cream transition-colors hover:text-gold-soft"
+                    className="flex min-h-[3.25rem] items-center px-5 text-xl text-ink-text transition-colors hover:text-gold-deep"
                   >
                     {link.label}
                   </Link>
@@ -133,7 +135,7 @@ export function Header({
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex min-h-11 items-center px-5 text-sm tracking-wide text-cream/70 transition-colors hover:text-gold-soft"
+                    className="flex min-h-11 items-center px-5 text-sm tracking-wide text-ink-text/70 transition-colors hover:text-gold-deep"
                   >
                     {link.label}
                   </Link>

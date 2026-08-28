@@ -14,7 +14,7 @@ import {
 import { categoryLinks } from "@/lib/nav";
 import { InstagramIcon, PinIcon } from "./icons";
 
-/* §5 — charcoal-deep, four columns, hairline, then copyright and legal entity.
+/* §5 — cream (D6), four columns, hairline, then copyright and legal entity.
  *
  * Every value here comes from lib/config.ts. This block and the Google Business
  * Profile have to agree character for character (§10), which is only true if
@@ -23,7 +23,7 @@ import { InstagramIcon, PinIcon } from "./icons";
 
 function ColumnHeading({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-label uppercase text-gold-soft">{children}</p>
+    <p className="text-label uppercase text-gold-deep">{children}</p>
   );
 }
 
@@ -31,11 +31,12 @@ export function Footer() {
   const categories = categoryLinks();
 
   return (
-    <footer className="bg-charcoal-deep text-cream/75">
+    <footer className="bg-frame text-ink-text/80">
       <div className="mx-auto max-w-6xl px-5 py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-2xl text-cream">{shop.name}</p>
+            {/* Jost — D8 keeps Bodoni ≥32px, and this line is 24px. */}
+            <p className="text-2xl text-ink-text">{shop.name}</p>
             <div className="mt-4 h-px w-11 bg-gold" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
               {shop.founded} yılından beri Kapaklı&apos;da. Altın, pırlanta ve
@@ -52,7 +53,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-gold-soft"
+                    className="inline-flex min-h-11 items-center text-sm transition-colors hover:text-gold-deep"
                   >
                     {link.label}
                   </Link>
@@ -67,12 +68,12 @@ export function Footer() {
               {addressLines.map((line) => (
                 <span key={line}>{line}</span>
               ))}
-              <span className="text-cream/50">
+              <span className="text-ink-muted">
                 {address.landmark.value}
               </span>
               <a
                 href={phoneHref}
-                className="inline-flex min-h-11 items-center font-display text-xl text-gold-soft transition-colors hover:text-cream"
+                className="inline-flex min-h-11 items-center text-xl text-gold-deep transition-colors hover:text-ink-text"
               >
                 {phoneDisplay}
               </a>
@@ -83,7 +84,7 @@ export function Footer() {
                   href={instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-2 text-sm transition-colors hover:text-gold-soft"
+                  className="inline-flex min-h-11 items-center gap-2 text-sm transition-colors hover:text-gold-deep"
                 >
                   <InstagramIcon className="h-4 w-4" />
                   <span>{`@${contact.instagram.value}`}</span>
@@ -99,13 +100,13 @@ export function Footer() {
               <span>
                 {hours.opens} – {hours.closes}
               </span>
-              <span className="text-cream/50">{hours.closedNote}</span>
+              <span className="text-ink-muted">{hours.closedNote}</span>
             </div>
             <a
               href={mapsSearchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 border border-gold-soft/40 px-4 text-sm text-gold-soft transition-colors hover:bg-gold/15"
+              className="mt-5 inline-flex min-h-11 items-center gap-2 border border-gold-deep/40 px-4 text-sm text-gold-deep transition-colors hover:bg-gold/15"
             >
               <PinIcon className="h-4 w-4" />
               Yol Tarifi Al
@@ -113,15 +114,18 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-6">
+        <div className="mt-12 border-t border-line-light pt-6">
           {/* Evaluated once, when the page is prerendered — so the year is the
               year of the last deploy, not of the visit. Correct in practice for
               a site that is redeployed when anything changes. */}
-          <p className="text-xs leading-relaxed text-cream/45">
+          {/* Solid ink-muted, not ink-text alpha — the alpha versions measured
+              4.4:1 and 2.9:1 on cream, and the legal name is documentary
+              evidence for the Google ownership claim. It should be readable. */}
+          <p className="text-xs leading-relaxed text-ink-muted">
             © {new Date().getFullYear()} {shop.name} · {address.locality} /{" "}
             {address.region}
           </p>
-          <p className="mt-1 text-xs leading-relaxed text-cream/30">
+          <p className="mt-1 text-xs leading-relaxed text-ink-muted">
             {shop.legalName}
           </p>
         </div>

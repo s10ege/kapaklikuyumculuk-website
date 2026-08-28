@@ -20,17 +20,10 @@ import { PLACEHOLDER } from "@/lib/placeholders";
 
 /* Anasayfa (§6.1).
  *
- * Band rhythm, per decision 2 in plan.md — the page reads as lit display cases
- * between dark frames:
- *
- *   charcoal   header
- *   charcoal   hero
- *   cream      kategoriler   (six dark tiles, so visually weighted)
- *   cream      öne çıkanlar  (absent entirely at launch)
- *   cream      hizmetler
- *   charcoal   hakkımızda    (§6.1 assigns charcoal here explicitly)
- *   cream      iletişim
- *   charcoal   footer
+ * D6 overturned the alternating band rhythm: the body is one espresso room —
+ * sections separate by spacing and hairlines (D11), panels are rationed — and
+ * the cream frame is the header and footer around it. The old band comments
+ * below are kept as section markers only.
  */
 
 const SERVICE_COPY: Record<string, string> = {
@@ -50,8 +43,8 @@ export default function Home() {
 
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────── charcoal ── */}
-      <section className="relative flex min-h-[78vh] items-center overflow-hidden bg-charcoal">
+      {/* ── Hero ─────────────────────────────────────────────── espresso ── */}
+      <section className="relative flex min-h-[78vh] items-center overflow-hidden bg-ground">
         <Image
           src={PLACEHOLDER.hero}
           alt=""
@@ -62,14 +55,14 @@ export default function Home() {
         />
         {/* §6.1 — gradient from the left, so the headline stays legible over
             whatever photograph replaces the placeholder. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal-deep via-charcoal-deep/85 to-charcoal-deep/25" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ground via-ground/85 to-ground/25" />
 
         <div className="relative mx-auto w-full max-w-6xl px-5 py-20">
           <p className="text-label uppercase text-gold-soft">
             {address.locality} · {address.region}
           </p>
 
-          <h1 className="mt-5 display-lg text-cream">
+          <h1 className="mt-5 display-lg text-cream-text">
             Trakya Kapaklı
             <br />
             <span className="text-gold-soft">Kuyumculuk</span>
@@ -77,7 +70,7 @@ export default function Home() {
 
           <div className="mt-6 h-px w-11 bg-gold" />
 
-          <p className="mt-6 max-w-md leading-relaxed text-cream/75">
+          <p className="mt-6 max-w-md leading-relaxed text-muted">
             {shop.founded} yılından beri aynı yerde: altın, pırlanta ve sipariş
             üzerine üretilen özel tasarım takılar.
           </p>
@@ -85,7 +78,7 @@ export default function Home() {
           <div className="mt-9 flex flex-wrap gap-3">
             <Link
               href="/urunler"
-              className="inline-flex min-h-11 items-center gap-2 bg-gold px-6 py-3 text-sm font-medium text-charcoal-deep transition-colors hover:bg-gold-soft"
+              className="inline-flex min-h-11 items-center gap-2 bg-gold px-6 py-3 text-sm font-medium text-ink-text transition-colors hover:bg-gold-soft"
             >
               Ürünlerimiz
               <ArrowRightIcon className="h-4 w-4" />
@@ -100,10 +93,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Kategoriler ─────────────────────────────────────────── cream ── */}
-      <section className="bg-cream">
+      {/* ── Kategoriler ──────────────────────────────────────── espresso ── */}
+      <section>
         <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-          <p className="text-label uppercase text-gold-deep">Koleksiyonlar</p>
+          <p className="text-label uppercase text-gold-soft">Koleksiyonlar</p>
           <h2 className="mt-3 display-md">Ürünlerimiz</h2>
           <div className="mt-5 h-px w-11 bg-gold" />
 
@@ -118,9 +111,9 @@ export default function Home() {
           than rendering an empty shelf. At launch there are no products, so
           this section does not exist in the markup at all. */}
       {featured.length > 0 && (
-        <section className="bg-cream">
+        <section>
           <div className="mx-auto max-w-6xl px-5 pb-16 sm:pb-20">
-            <p className="text-label uppercase text-gold-deep">Öne Çıkanlar</p>
+            <p className="text-label uppercase text-gold-soft">Öne Çıkanlar</p>
             <h2 className="mt-3 display-md">Seçtiklerimiz</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
             <div className="mt-10">
@@ -130,26 +123,27 @@ export default function Home() {
         </section>
       )}
 
-      {/* ── Hizmetler ───────────────────────────────────────────── cream ──
+      {/* ── Hizmetler ────────────────────────────────────────── espresso ──
           Two panels, not five. §6.1: two reads as deliberate, a padded list of
           five reads as filler. */}
-      <section className="bg-cream">
+      <section>
         <div className="mx-auto max-w-6xl px-5 pb-16 sm:pb-20">
-          <p className="text-label uppercase text-gold-deep">Hizmetler</p>
-          <div className="mt-8 grid border-l border-t border-line sm:grid-cols-2">
+          <p className="text-label uppercase text-gold-soft">Hizmetler</p>
+          <div className="mt-8 grid border-l border-t border-line-dark sm:grid-cols-2">
             {services.map((service) => (
               <div
                 key={service.slug}
-                className="border-b border-r border-line bg-surface p-6 sm:p-8"
+                className="border-b border-r border-line-dark bg-panel p-6 sm:p-8"
               >
-                <h3 className="font-display text-2xl">{service.name}</h3>
+                {/* Jost — D8 keeps Bodoni ≥32px; this heading is 24px. */}
+                <h3 className="text-2xl">{service.name}</h3>
                 <div className="mt-4 h-px w-11 bg-gold" />
-                <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+                <p className="mt-4 text-sm leading-relaxed text-muted">
                   {SERVICE_COPY[service.slug]}
                 </p>
                 <Link
                   href="/hizmetler"
-                  className="mt-6 inline-flex min-h-11 items-center gap-1.5 text-label uppercase text-gold-deep transition-colors hover:text-ink"
+                  className="mt-6 inline-flex min-h-11 items-center gap-1.5 text-label uppercase text-gold-soft transition-colors hover:text-cream-text"
                 >
                   Ayrıntılar
                   <ArrowRightIcon className="h-3.5 w-3.5" />
@@ -160,9 +154,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Hakkımızda ────────────────────────────────────────── charcoal ──
+      {/* ── Hakkımızda ───────────────────────────────────────── espresso ──
           §6.1: trust is the entire product for a local jeweller. */}
-      <section className="bg-charcoal">
+      <section>
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-20 lg:grid-cols-2 lg:items-center lg:gap-14">
           <div className="relative aspect-[4/3] overflow-hidden">
             <Image
@@ -176,12 +170,12 @@ export default function Home() {
 
           <div>
             <p className="text-label uppercase text-gold-soft">Hakkımızda</p>
-            <h2 className="mt-3 display-md text-cream">{shop.claim}</h2>
+            <h2 className="mt-3 display-md">{shop.claim}</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
 
             {/* Recovered from the old site's Kurumsal page — true, verifiable,
                 and a stronger claim than anything we could write. */}
-            <div className="mt-6 flex flex-col gap-4 leading-relaxed text-cream/75">
+            <div className="mt-6 flex flex-col gap-4 leading-relaxed text-cream-text">
               <p>
                 Kapaklı Kuyumculuk {shop.founded} yılında Kapaklı ilçesinin
                 merkezinde kuruldu ve ilçenin ilk kuyumcusu oldu. O günden beri
@@ -210,23 +204,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── İletişim ────────────────────────────────────────────── cream ── */}
-      <section className="bg-cream">
+      {/* ── İletişim ─────────────────────────────────────────── espresso ── */}
+      <section>
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-20 lg:grid-cols-2 lg:gap-14">
           <div>
-            <p className="text-label uppercase text-gold-deep">İletişim</p>
+            <p className="text-label uppercase text-gold-soft">İletişim</p>
             <h2 className="mt-3 display-md">Mağazamıza bekleriz</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
-            <p className="mt-6 max-w-md leading-relaxed text-ink-muted">
+            <p className="mt-6 max-w-md leading-relaxed text-muted">
               Aradığınız modeli tarif edin ya da uğrayın; vitrinde olmayan
               modelleri de tedarik edebiliyoruz.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactButton variant="solid" />
+              {/* Jost — D8 keeps Bodoni ≥32px; the number is 24px. */}
               <a
                 href={phoneHref}
-                className="inline-flex min-h-11 items-center px-4 font-display text-2xl text-gold-deep transition-colors hover:text-ink"
+                className="inline-flex min-h-11 items-center px-4 text-2xl text-gold-soft transition-colors hover:text-cream-text"
               >
                 {phoneDisplay}
               </a>
@@ -235,9 +230,9 @@ export default function Home() {
 
           {/* Hairline-separated definition grid — the same continuous-surface
               treatment as the product grid. */}
-          <dl className="border-t border-line">
-            <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-              <dt className="text-label uppercase text-ink-muted sm:w-32 sm:flex-none">
+          <dl className="border-t border-line-dark">
+            <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+              <dt className="text-label uppercase text-muted sm:w-32 sm:flex-none">
                 Adres
               </dt>
               <dd>
@@ -246,14 +241,14 @@ export default function Home() {
                     {line}
                   </span>
                 ))}
-                <span className="mt-1 block text-sm text-ink-muted">
+                <span className="mt-1 block text-sm text-muted">
                   {address.landmark.value}
                 </span>
               </dd>
             </div>
 
-            <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-              <dt className="text-label uppercase text-ink-muted sm:w-32 sm:flex-none">
+            <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+              <dt className="text-label uppercase text-muted sm:w-32 sm:flex-none">
                 Saatler
               </dt>
               <dd>
@@ -261,14 +256,14 @@ export default function Home() {
                 <span className="block">
                   {hours.opens} – {hours.closes}
                 </span>
-                <span className="block text-sm text-ink-muted">
+                <span className="block text-sm text-muted">
                   {hours.closedNote}
                 </span>
               </dd>
             </div>
 
-            <div className="flex flex-col gap-1 border-b border-line py-5 sm:flex-row sm:gap-6">
-              <dt className="text-label uppercase text-ink-muted sm:w-32 sm:flex-none">
+            <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+              <dt className="text-label uppercase text-muted sm:w-32 sm:flex-none">
                 Yol tarifi
               </dt>
               <dd>
@@ -276,7 +271,7 @@ export default function Home() {
                   href={mapsSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-2 text-gold-deep transition-colors hover:text-ink"
+                  className="inline-flex min-h-11 items-center gap-2 text-gold-soft transition-colors hover:text-cream-text"
                 >
                   <PinIcon className="h-4 w-4" />
                   Haritada açın

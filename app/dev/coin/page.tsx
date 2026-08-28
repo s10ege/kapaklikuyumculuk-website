@@ -7,9 +7,9 @@ import { join } from "node:path";
  *
  * The Ata Lirası loop, rendered offline from ata_animation/turkey_coin3.glb
  * by scripts/render-coin.mjs, reviewed here at 390 / 768 / 1440 before it is
- * wired into the hero (iteration 1.3). The espresso ground is hardcoded
- * because the palette tokens land in iteration 1.2 — it must match the flat
- * colour baked into the video exactly, or the seam shows.
+ * wired into the hero (iteration 1.3). The `ground` token must stay #17120E —
+ * it is baked into the video as the flat background, and any drift shows as a
+ * visible rectangle around the coin.
  *
  * 404s in production.
  */
@@ -36,7 +36,7 @@ function Caption({ file }: { file: string }) {
   const kb = sizeKb(file);
   const budget = BUDGET_KB[file];
   return (
-    <p className="mt-3 text-sm text-[#9A958D]">
+    <p className="mt-3 text-sm text-muted">
       {file} ·{" "}
       {kb === null ? "dosya yok" : budget ? `${kb} KB / bütçe ${budget} KB` : `${kb} KB`}
     </p>
@@ -47,18 +47,18 @@ export default function CoinPage() {
   if (process.env.NODE_ENV === "production") notFound();
 
   return (
-    <main className="bg-[#17120E] text-[#E8E3DA]">
+    <main>
       <div className="mx-auto max-w-6xl px-5 py-14">
-        <p className="text-label uppercase text-[#CBAE72]">İterasyon 1.1</p>
+        <p className="text-label uppercase text-gold-soft">İterasyon 1.1</p>
         <h1 className="mt-3 display-lg">Ata Lirası Döngüsü</h1>
-        <p className="mt-3 max-w-xl text-[#9A958D]">
+        <p className="mt-3 max-w-xl text-muted">
           ~16 saniyede bir tur; her yüz karşıya geldiğinde yavaşlayıp ~1,5
           saniye durur. Dikişi görmek için en az iki tam turu izleyin —
           başlangıca dönüş hissedilmemeli.
         </p>
 
-        <div className="mt-12 border-b border-[#262B31] pb-3">
-          <p className="text-label uppercase text-[#9A958D]">
+        <div className="mt-12 border-b border-line-dark pb-3">
+          <p className="text-label uppercase text-muted">
             Masaüstü · 800 piksel
           </p>
         </div>
@@ -77,8 +77,8 @@ export default function CoinPage() {
           <Caption file="coin-800.mp4" />
         </div>
 
-        <div className="mt-12 border-b border-[#262B31] pb-3">
-          <p className="text-label uppercase text-[#9A958D]">
+        <div className="mt-12 border-b border-line-dark pb-3">
+          <p className="text-label uppercase text-muted">
             Mobil · 420 piksel
           </p>
         </div>
@@ -97,8 +97,8 @@ export default function CoinPage() {
           <Caption file="coin-420.mp4" />
         </div>
 
-        <div className="mt-12 border-b border-[#262B31] pb-3">
-          <p className="text-label uppercase text-[#9A958D]">
+        <div className="mt-12 border-b border-line-dark pb-3">
+          <p className="text-label uppercase text-muted">
             Sabit kare · prefers-reduced-motion ve prefers-reduced-data
           </p>
         </div>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Ürün görseli yakında">
-  <rect width="400" height="400" fill="#FBFAF7"/>
+  <rect width="400" height="400" fill="#241C15"/>
   <g fill="none" stroke="#B8964F" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
     <!-- emerald cut, deliberately not the round brilliant used on the category
          tiles, so a product placeholder is never mistaken for a category one -->
@@ -12,7 +12,7 @@
     <path d="M182 140 V260"/>
     <path d="M218 140 V260"/>
   </g>
-  <g fill="none" stroke="#8A6D2F" stroke-width="1" opacity="0.4">
+  <g fill="none" stroke="#CBAE72" stroke-width="1" opacity="0.4">
     <path d="M56 56 H120 M56 56 V120"/>
     <path d="M344 344 H280 M344 344 V280"/>
   </g>

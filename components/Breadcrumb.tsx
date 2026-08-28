@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/* §6.2 — the charcoal breadcrumb strip that opens every category page.
+/* §6.2 — the panel breadcrumb strip that opens every category page.
  *
  * Also the visible half of the BreadcrumbList JSON-LD added in iteration 14:
  * the same trail a person reads is the one the crawler reads.
@@ -10,8 +10,8 @@ export type Crumb = { label: string; href?: string };
 
 export function Breadcrumb({ trail }: { trail: Crumb[] }) {
   return (
-    <nav aria-label="Sayfa yolu" className="bg-charcoal">
-      <ol className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3 text-xs text-cream/60">
+    <nav aria-label="Sayfa yolu" className="bg-panel">
+      <ol className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3 text-xs text-muted">
         {trail.map((crumb, i) => {
           const last = i === trail.length - 1;
           return (
@@ -25,7 +25,7 @@ export function Breadcrumb({ trail }: { trail: Crumb[] }) {
                 </Link>
               ) : (
                 <span
-                  className={last ? "text-cream/90" : undefined}
+                  className={last ? "text-cream-text" : undefined}
                   aria-current={last ? "page" : undefined}
                 >
                   {crumb.label}
