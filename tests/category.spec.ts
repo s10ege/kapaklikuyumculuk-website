@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { getProducts } from "../lib/content.ts";
+
 /* Gate for iteration 7 of plan.md. */
 
 const CATEGORIES = [
@@ -27,15 +29,30 @@ for (const category of CATEGORIES) {
     expect(await intro.count()).toBeGreaterThan(0);
   });
 
-  test(`/urunler/${category.slug} shows the Yakında panel, never a blank grid`, async ({
+  test(`/urunler/${category.slug} shows one card per product or the Yakında panel, never a blank grid`, async ({
     page,
   }) => {
+    /* State-agnostic: the folder decides, and the expected state comes from
+     * the same reader the build uses. Empty → the Yakında panel; populated →
+     * exactly one card per product. One of the two, never both, never
+     * neither — a blank grid would look identical to a healthy launch. */
+    const products = getProducts(category.slug);
+
     await page.goto(`/urunler/${category.slug}`);
 
-    await expect(page.getByText("Yakında")).toBeVisible();
-    await expect(
-      page.getByText(`${category.name} vitrinimizde`),
-    ).toBeVisible();
+    const yakinda = page.getByText("Yakında");
+    const cards = page.locator('button[aria-haspopup="dialog"]');
+
+    if (products.length === 0) {
+      await expect(yakinda).toBeVisible();
+      await expect(
+        page.getByText(`${category.name} vitrinimizde`),
+      ).toBeVisible();
+      await expect(cards).toHaveCount(0);
+    } else {
+      await expect(cards).toHaveCount(products.length);
+      await expect(yakinda).toHaveCount(0);
+    }
   });
 }
 

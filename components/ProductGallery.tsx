@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ProductCard, specLine } from "./ProductCard";
+import { ProductCard } from "./ProductCard";
 import { ContactButton } from "./ContactButton";
 import { CloseIcon } from "./icons";
 import type { Product } from "@/lib/content";
@@ -108,7 +108,7 @@ export function ProductGallery({ products }: { products: Product[] }) {
               {active.images[0] && (
                 <Image
                   src={active.images[0]}
-                  alt={active.name}
+                  alt={active.alt ?? active.name}
                   fill
                   sizes="(min-width: 640px) 32rem, 92vw"
                   className="object-cover"
@@ -127,10 +127,8 @@ export function ProductGallery({ products }: { products: Product[] }) {
                 {active.name}
               </h2>
 
-              {specLine(active) && (
-                <p className="mt-2 text-sm text-muted">
-                  {specLine(active)}
-                </p>
+              {active.spec && (
+                <p className="mt-2 text-sm text-muted">{active.spec}</p>
               )}
 
               {active.note && (

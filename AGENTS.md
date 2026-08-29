@@ -85,7 +85,7 @@ the source of most line-ending noise in `git status`: `ui-ux-pro-max` (copied fr
 project), `find-skills`.
 
 Project-local and committed: `kk-brand` (this design system, machine-readable),
-`catalogue-pipeline` (the photo → rembg → publish loop) and `project-setup` (bootstrapping
+`catalogue-pipeline` (the photo → polish → publish loop) and `project-setup` (bootstrapping
 a clone).
 
 ## Setting up a clone

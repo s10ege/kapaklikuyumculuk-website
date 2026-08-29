@@ -1,5 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
+import { getProducts } from "../lib/content.ts";
+
 /* Gate for iteration 14 of plan.md.
  *
  * §10 notes that a Google Business Profile is worth more traffic than this
@@ -89,12 +91,25 @@ test.describe("category pages", () => {
     );
   });
 
-  test("emit no ItemList while the category is empty", async ({ page }) => {
-    await page.goto("/urunler/pirlanta");
-
+  test("emit an ItemList exactly when the category has products", async ({
+    page,
+  }) => {
     /* An ItemList claiming to list products that do not exist is a
-     * structured-data mismatch, not a rich result. */
-    expect(await jsonLd(page, "ItemList")).toBeNull();
+     * structured-data mismatch, not a rich result — and a populated grid
+     * missing its ItemList wastes the category's whole search surface. The
+     * expected state comes from the same reader the build uses. */
+    const products = getProducts("pirlanta");
+
+    await page.goto("/urunler/pirlanta");
+    const list = await jsonLd(page, "ItemList");
+
+    if (products.length === 0) {
+      expect(list).toBeNull();
+    } else {
+      expect(list).not.toBeNull();
+      expect(list.numberOfItems).toBe(products.length);
+      expect(list.itemListElement).toHaveLength(products.length);
+    }
   });
 
   test("carry their own canonical", async ({ page }) => {

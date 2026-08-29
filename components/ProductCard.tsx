@@ -8,18 +8,6 @@ import type { Product } from "@/lib/content";
  * the static grid renders. One card, one appearance, two contexts.
  */
 
-/** `22 ayar · 38.5 gr` — the vernacular a Turkish customer actually judges by.
- *  Prices are absent everywhere on this site because they track the daily gold
- *  rate; weight and karat are the facts that do not move. */
-export function specLine(product: Product): string {
-  const parts: string[] = [];
-  if (product.ayar) parts.push(`${product.ayar} ayar`);
-  if (product.gram !== undefined) {
-    parts.push(`${product.gram.toLocaleString("tr-TR")} gr`);
-  }
-  return parts.join(" · ");
-}
-
 export function ProductCard({
   product,
   sizes = "(min-width: 1024px) 25vw, 50vw",
@@ -27,7 +15,6 @@ export function ProductCard({
   product: Product;
   sizes?: string;
 }) {
-  const spec = specLine(product);
   const image = product.images[0];
 
   return (
@@ -36,7 +23,7 @@ export function ProductCard({
         {image && (
           <Image
             src={image}
-            alt={product.name}
+            alt={product.alt ?? product.name}
             fill
             sizes={sizes}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
@@ -50,7 +37,7 @@ export function ProductCard({
       <div className="flex flex-1 flex-col gap-1 px-3 py-3">
         {/* Jost — D8 keeps Ibarra ≥32px; a card name is 18px. */}
         <p className="text-lg leading-snug">{product.name}</p>
-        {spec && <p className="text-xs text-muted">{spec}</p>}
+        {product.spec && <p className="text-xs text-muted">{product.spec}</p>}
         {product.note && (
           <p className="text-xs text-gold-soft">{product.note}</p>
         )}

@@ -32,12 +32,13 @@ export function CategoryTiles({
           key={category.slug}
           className="border-b border-r border-line-dark"
         >
-          {/* D16 — cut-out image on the panel colour, hairline border (the
-              1px grid), gold label, border turns gold on hover. The image is
-              object-contain with its own padding so the motif — and later the
-              transparent product cut-outs from stage 2 — sits ON the panel
-              rather than filling the tile; no scrim needed over a surface
-              that is already the panel colour. */}
+          {/* D16, revised 2026-08-29 — the polished photograph fills the tile
+              (object-cover), inside the same hairline border (the 1px grid),
+              with the gold label and the gold outline on hover. The cut-outs
+              that object-contain and its padding existed for are gone with the
+              rembg pipeline; a photograph half-floating on the panel colour
+              would read as a mistake rather than a motif. The scrim below is
+              the cost of that: a label over a photograph needs one. */}
           <Link
             href={`/urunler/${category.slug}`}
             className="group relative block aspect-square overflow-hidden bg-panel"
@@ -51,14 +52,23 @@ export function CategoryTiles({
                  above-the-fold image delays the paint it is measured by. */
               priority={i === 0}
               sizes="(min-width: 640px) 33vw, 50vw"
-              className="object-contain p-5 pb-14 transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100 sm:p-6 sm:pb-16"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />
 
-            {/* Gold inset border on hover — an outline rather than a border, so
-                nothing reflows and the 1px grid stays exact. */}
-            <div className="pointer-events-none absolute inset-0 opacity-0 outline outline-1 -outline-offset-[5px] outline-gold transition-opacity group-hover:opacity-100 motion-reduce:transition-none" />
+            {/* The smallest scrim the label needs (D16) — carried by the label
+                row itself rather than a fixed fraction of the tile, so it is
+                exactly as tall as the text is. `Küpe Modelleri` wraps to two
+                lines at 390 and one at 1440; a `h-1/2` scrim covered the second
+                line and left the first at 2.1:1 over white paper. The extra top
+                padding is the fade-in distance.
 
-            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
+                The stops are measured, not guessed. gold-soft on a light ground
+                cannot reach 3:1 at all — a photograph shot on white paper has
+                to be pushed below roughly 95 grey behind the label before it
+                does, which is what these put it at even where a specular
+                highlight lands under a glyph. 3:1 is the AA bar for text this
+                size. */}
+            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-ground/95 via-ground/80 to-transparent p-4 pt-12 sm:p-5 sm:pt-14">
               {/* Gold label (D16), Jost — D8 keeps Ibarra ≥32px. */}
               <span className="text-xl leading-tight text-gold-soft sm:text-2xl">
                 {category.name}
@@ -68,6 +78,11 @@ export function CategoryTiles({
                 <ArrowRightIcon className="h-3.5 w-3.5" />
               </span>
             </div>
+
+            {/* Gold inset border on hover — an outline rather than a border, so
+                nothing reflows and the 1px grid stays exact. Last, so its
+                bottom edge is not washed out by the label's scrim. */}
+            <div className="pointer-events-none absolute inset-0 opacity-0 outline outline-1 -outline-offset-[5px] outline-gold transition-opacity group-hover:opacity-100 motion-reduce:transition-none" />
           </Link>
         </li>
       ))}

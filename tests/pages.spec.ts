@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { getProducts } from "../lib/content.ts";
+
 /* Gates for iterations 10–12 of plan.md — the remaining pages. */
 
 const CATEGORY_NAMES = [
@@ -53,13 +55,29 @@ test.describe("/galeri", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
-  test("falls back to the Yakında panel while empty", async ({ page }) => {
+  test("shows one card per product, or the Yakında panel while empty", async ({
+    page,
+  }) => {
+    /* State-agnostic: /galeri aggregates every category, so the expected
+     * state is the unfiltered reader — the same one the build uses. Empty →
+     * the Yakında panel with Galeri's own headline (the "{subject}
+     * vitrinimizde" template produced "Galerimiz vitrinimizde", which is
+     * nonsense — 1.5 review). Populated → one card per product, no panel. */
+    const products = getProducts();
+
     await page.goto("/galeri");
 
-    await expect(page.getByText("Yakında", { exact: true })).toBeVisible();
-    /* Galeri gets its own headline — the "{subject} vitrinimizde" template
-     * produced "Galerimiz vitrinimizde", which is nonsense (1.5 review). */
-    await expect(page.getByText(/Galeri hazırlanıyor/)).toBeVisible();
+    const yakinda = page.getByText("Yakında", { exact: true });
+    const cards = page.locator('button[aria-haspopup="dialog"]');
+
+    if (products.length === 0) {
+      await expect(yakinda).toBeVisible();
+      await expect(page.getByText(/Galeri hazırlanıyor/)).toBeVisible();
+      await expect(cards).toHaveCount(0);
+    } else {
+      await expect(cards).toHaveCount(products.length);
+      await expect(yakinda).toHaveCount(0);
+    }
   });
 
   test("offers a route onward, so an old search result does not dead-end", async ({

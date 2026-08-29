@@ -8,6 +8,7 @@ import {
   getFeaturedProducts,
   getProducts,
   pageTitle,
+  parseCatalogueMeta,
 } from "../lib/content.ts";
 
 /* ------------------------------------------------------------------ */
@@ -119,27 +120,94 @@ test("every category title uses the template", () => {
 });
 
 /* ------------------------------------------------------------------ */
-/* The empty launch state (§2)                                         */
+/* The catalogue, however full it happens to be (§3)                    */
 /* ------------------------------------------------------------------ */
 
-test("there are no products at launch", () => {
-  assert.deepEqual(getProducts(), []);
+/* These assert invariants rather than a count. The catalogue is read from
+ * public/urunler/ at import, so how many products exist depends on what is on
+ * disk — nothing at all on a fresh clone, six during the 2.1 trial, fifty after
+ * the real shoot. A test pinned to any one of those numbers would fail for the
+ * wrong reason on the other two.
+ *
+ * The empty catalogue is a legitimate state, not a broken one: every grid has a
+ * designed Yakında panel for it (§6.2). What must never happen is a product that
+ * renders as a blank card or points at an image that is not there. */
+
+test("an empty catalogue is a valid state, not an error", () => {
+  // The launch state, and the state of any clone without the photographs.
+  // Reading it must not throw, and must not invent anything.
+  assert.ok(Array.isArray(getProducts()));
+  assert.ok(Array.isArray(getFeaturedProducts()));
 });
 
-test("every category is empty, so every grid shows Yakında", () => {
-  for (const slug of PUBLISHED_SLUGS) {
-    assert.deepEqual(getProducts(slug), []);
+test("every product can actually render a card", () => {
+  for (const p of getProducts()) {
+    assert.ok(p.id.length > 0, "a product has no id");
+    assert.ok(p.name.length > 0, `${p.id} has no name`);
+    assert.ok(
+      PUBLISHED_SLUGS.includes(p.category),
+      `${p.id} is in "${p.category}", which is not a published category`,
+    );
+    assert.ok(p.images.length > 0, `${p.id} has no image`);
+    for (const image of p.images) {
+      assert.match(image, /^\/urunler\/[a-z0-9-]+\/[a-z0-9-]+_\d{2}\.webp$/,
+        `${p.id} has an image path the folder walk could not have produced: ${image}`);
+    }
   }
 });
 
-test("featured is empty, so Öne Çıkanlar hides itself", () => {
-  assert.deepEqual(getFeaturedProducts(), []);
+test("product ids are unique, so React keys and the lightbox index agree", () => {
+  const ids = getProducts().map((p) => p.id);
+  assert.equal(new Set(ids).size, ids.length);
+});
+
+test("products come back in order", () => {
+  const orders = getProducts().map((p) => p.order);
+  assert.deepEqual(orders, [...orders].sort((a, b) => a - b));
+});
+
+test("a category only ever returns its own products", () => {
+  for (const slug of PUBLISHED_SLUGS) {
+    for (const p of getProducts(slug)) {
+      assert.equal(p.category, slug);
+    }
+  }
+});
+
+test("Öne Çıkanlar is capped at four and holds only flagged products", () => {
+  const featured = getFeaturedProducts();
+  assert.ok(featured.length <= 4, `${featured.length} featured products, max is 4`);
+  for (const p of featured) assert.equal(p.featured, true);
+  // The cap is the argument's job, not the caller's.
+  assert.ok(getFeaturedProducts(2).length <= 2);
 });
 
 test("filtering by an unknown category returns empty, not everything", () => {
   // Guards the shape of the filter: a falsy-check bug here would make an
   // unknown slug render the entire catalogue.
   assert.deepEqual(getProducts("does-not-exist"), []);
+});
+
+/* ------------------------------------------------------------------ */
+/* catalogue.json is hand-edited (§3)                                   */
+/* ------------------------------------------------------------------ */
+
+/* Soner edits this file by hand between shoots. A stray comma must cost the
+ * display names and the featured flags — not the build. */
+
+test("catalogue.json survives being hand-edited badly", () => {
+  assert.deepEqual(parseCatalogueMeta("{ this is not json"), {});
+  assert.deepEqual(parseCatalogueMeta("[]"), {});
+  assert.deepEqual(parseCatalogueMeta("null"), {});
+  assert.deepEqual(parseCatalogueMeta('"a string"'), {});
+});
+
+test("a well-formed catalogue.json comes back as written", () => {
+  const meta = parseCatalogueMeta(
+    '{"altin-seti/burma-bilezik":{"name":"Burma Bilezik","featured":true}}',
+  );
+  assert.equal(meta["altin-seti/burma-bilezik"]?.name, "Burma Bilezik");
+  assert.equal(meta["altin-seti/burma-bilezik"]?.featured, true);
 });
 
 /* ------------------------------------------------------------------ */

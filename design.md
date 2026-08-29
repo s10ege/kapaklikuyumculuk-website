@@ -46,7 +46,7 @@ dark vitrin. Done badly it looks pasted on. Every decision below follows from th
 | D13 | Hero composition: **headline left, coin right.** |
 | D14 | Coin diameter **≈1.2× the headline block height**, capped at 46% of hero width, minimum 280px. Visibly the larger element, not dominant. *Revised at the 1.3 review: Soner judged the ratio-correct 386px too small in the browser and set 580px (1.5×) at lg+, waiving the width cap; the 280px floor and mobile sizes stand.* |
 | D15 | Mobile: **headline and CTAs first, coin below.** The phone and WhatsApp buttons must be reachable without scrolling. |
-| D16 | Category tiles: cut-out image on the panel colour, hairline border, gold label, border turns gold on hover. |
+| D16 | Category tiles: cut-out image on the panel colour, hairline border, gold label, border turns gold on hover. *Revised 2026-08-29 (stage-2 change of plan, per Soner): no cut-outs — no professional photography, and the rembg pipeline is retired. The tile is filled by the polished photograph itself (`object-cover`), hairline border and gold label unchanged, plus the smallest scrim the label needs to stay legible over a photo. Code change pending in `CategoryTiles.tsx` / `lib/content.ts`; reviewed at the stage-2 contact-sheet gate.* |
 | D17 | The mobile menu panel is **cream**, reading as the header expanding. |
 | D18 | Focus rings are **gold**, verified visible on both espresso and cream. |
 | D19 | **The homepage is coin-first and deliberately sparse.** Öne Çıkanlar shows at most four products, then a `Tüm Ürünler →` button. Homepage Hakkımızda compresses to two sentences and a link; Hizmetler to two compact panels of one line each. Full copy lives on its own page. |
@@ -157,7 +157,9 @@ it later. A build gate (`TECHNICAL.md` §3) fails if filler survives to launch.
   stand alone.
 - No new shadows anywhere. No gold gradient text. No bevels. The coin carries the richness.
 - No full-bleed product photography anywhere on the site — full-bleed exposes every flaw in
-  amateur source material. Images sit in hairline-bordered cards at a fixed size.
+  amateur source material. Images sit in hairline-bordered cards at a fixed size. *(After
+  the 2026-08-29 D16 revision, category tiles are the one exception — a photo filling a
+  fixed, hairline-bordered square with a scrim, not a page section.)*
 
 ## The rest of the site
 

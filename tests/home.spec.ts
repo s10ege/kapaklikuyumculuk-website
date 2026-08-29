@@ -1,5 +1,7 @@
 import { test, expect } from "@playwright/test";
 
+import { getFeaturedProducts } from "../lib/content.ts";
+
 /* Gate for iteration 9 of plan.md. */
 
 test("hero carries the shop name and both CTAs", async ({ page }) => {
@@ -42,15 +44,30 @@ test("category tiles show all five plus the Tüm Ürünler tile", async ({
   ).toBeVisible();
 });
 
-test("Öne Çıkanlar is absent, not empty, while nothing is featured", async ({
+test("the Seçtiklerimiz shelf mirrors the featured flags — absent or filled, never empty", async ({
   page,
 }) => {
+  /* §6.1: with nothing flagged featured the section hides itself entirely
+   * rather than rendering an empty shelf — absence from the DOM, not just
+   * invisibility. With featured products it shows exactly one card each
+   * (getFeaturedProducts caps at four). The expected state comes from the
+   * same reader the build uses. */
+  const featured = getFeaturedProducts();
+
   await page.goto("/");
 
-  /* §6.1: the section hides itself entirely rather than rendering an empty
-   * shelf. Asserting absence from the DOM, not just invisibility. */
   await expect(page.getByText("Öne Çıkanlar")).toHaveCount(0);
-  await expect(page.getByText("Seçtiklerimiz")).toHaveCount(0);
+
+  const shelf = page.getByText("Seçtiklerimiz");
+  const cards = page.locator('button[aria-haspopup="dialog"]');
+
+  if (featured.length === 0) {
+    await expect(shelf).toHaveCount(0);
+    await expect(cards).toHaveCount(0);
+  } else {
+    await expect(shelf).toBeVisible();
+    await expect(cards).toHaveCount(featured.length);
+  }
 });
 
 test("exactly two service panels, because five would read as filler", async ({

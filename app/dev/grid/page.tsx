@@ -29,8 +29,7 @@ const FIXTURES: Product[] = [
     name: "22 Ayar Burma Bilezik",
     category: "altin-seti",
     images: [PLACEHOLDER.urun],
-    ayar: "22",
-    gram: 38.5,
+    spec: "22 ayar · 38,5 gr",
     order: 1,
   },
   {
@@ -46,8 +45,7 @@ const FIXTURES: Product[] = [
     name: "18 Ayar Altın Kolye",
     category: "altin-seti",
     images: [PLACEHOLDER.urun],
-    ayar: "18",
-    gram: 12.4,
+    spec: "18 ayar · 12,4 gr",
     order: 3,
   },
   {
@@ -55,8 +53,7 @@ const FIXTURES: Product[] = [
     name: "Beşi Bir Yerde",
     category: "altin-seti",
     images: [PLACEHOLDER.urun],
-    ayar: "22",
-    gram: 36,
+    spec: "22 ayar · 36 gr",
     order: 4,
   },
   {
@@ -64,8 +61,7 @@ const FIXTURES: Product[] = [
     name: "Pırlanta Halka Küpe",
     category: "kupe-modelleri",
     images: [PLACEHOLDER.urun],
-    ayar: "18",
-    gram: 4.75,
+    spec: "18 ayar · 4,75 gr",
     order: 5,
   },
   {
@@ -73,7 +69,7 @@ const FIXTURES: Product[] = [
     name: "Gümüş Hızma",
     category: "ozel-tasarim-takilar",
     images: [PLACEHOLDER.urun],
-    ayar: "gümüş",
+    spec: "gümüş",
     order: 6,
   },
 ];
