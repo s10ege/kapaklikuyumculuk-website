@@ -7,7 +7,7 @@ import { test, expect } from "@playwright/test";
  */
 
 const TURKISH = "ıİğĞşŞçÇöÖüÜâÂîÎûÛ";
-const DISPLAY = "Bodoni Moda";
+const DISPLAY = "Ibarra Real Nova";
 const BODY = "Jost";
 
 test("both faces actually load", async ({ page }) => {

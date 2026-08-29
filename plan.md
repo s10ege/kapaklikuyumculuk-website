@@ -4,7 +4,7 @@
 > order. The detailed record of the original build (iterations 0–16, milestones M1–M5)
 > is preserved in [`docs/build-history.md`](docs/build-history.md).
 >
-> Last updated 2026-08-27.
+> Last updated 2026-08-29.
 
 ## Context
 
@@ -27,8 +27,8 @@ Priority order. Each stage has its own file.
 
 | # | File | Covers | Status |
 |---|---|---|---|
-| 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | **← current** |
-| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | blocked on 1 |
+| 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
+| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | **← next** — not started; begins only on Soner's explicit go |
 | 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | blocked on 2 |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
@@ -47,7 +47,7 @@ behind each one lives in that stage's file; this is the execution order.
 | 1.3 | **Hero rebuild** — coin placement and sizing (D14), mobile order (D15), the warm glow, the old diamond motif retired | The homepage hero is finished at 390 / 768 / 1440 |
 | 1.4 | **Chrome** — cream header, gold-deep lockup, cream mobile menu panel, cream footer | Nav works at all three breakpoints, tap targets ≥44px, focus rings visible on both grounds |
 | 1.5 | **Interior pass** — category tiles (D16), section separation (D11), cream reading bands on Hakkımızda and Hizmetler (D10), Turkish filler swapped in | All eleven routes look deliberate in the new system |
-| 1.6 | **Verification** — the eight checks in `design.md` § Done when | Soner approves the design, in writing |
+| 1.6 | **Verification** — the eight checks in `design.md` § Done when. Ran long: at this gate Soner also removed the homepage eyebrows and replaced the display face (Bodoni → Marcellus → live trials → **Ibarra Real Nova 500**), all recorded in D8. Checks measured 2026-08-29; two (Android 60fps, CLS/LCP numbers) fold into stage 3.5 | Soner approves the design, in writing — ✅ **approved 2026-08-29** (monogram matched to 500 with it) |
 
 **Gate 1→2:** no photography begins until the design is approved. The photography brief
 depends on the final panel colour and image treatment.
@@ -117,6 +117,15 @@ As of commit `a48f740` (2026-08-19), before this redesign:
 - **Not deployed.** The domain still serves the holding page, and no Vercel project
   is linked.
 
+And at the end of the 1.6 verification (2026-08-29):
+
+- Redesign complete on all 11 routes: espresso/cream palette, coin hero, new chrome,
+  interior pass, homepage eyebrows removed, display face **Ibarra Real Nova 500**.
+- 41 unit and 150 end-to-end tests green (font, hero, redirect and layout suites
+  included). `tsc --noEmit` clean. Build fully static, zero `ƒ` markers.
+- Still not deployed. **Stage 1 approved in writing 2026-08-29**; `CATALOGUE.md`
+  stays unopened until Soner explicitly starts stage 2.
+
 ## Decisions locked
 
 | # | Decision | Where |
@@ -130,6 +139,7 @@ As of commit `a48f740` (2026-08-19), before this redesign:
 | 7 | Hours publish 09:00–20:00 pending confirmation; closing shifts winter↔summer | `TECHNICAL.md` §2 |
 | 8 | Redirect map lives in `next.config.ts` — verified against `docs/old-urls.txt` | `TECHNICAL.md` §4 |
 | 9 | Vercel Analytics on the free tier, with `/wa` and `/yol-tarifi` giving click counts | `TECHNICAL.md` §9 |
+| 10 | Display face **Ibarra Real Nova, weight 500** (replacing Bodoni Moda after a three-round selection); homepage section eyebrows removed, interior pages keep theirs | `design.md` D8 |
 
 ## Decisions overturned
 

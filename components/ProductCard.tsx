@@ -48,7 +48,7 @@ export function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col gap-1 px-3 py-3">
-        {/* Jost — D8 keeps Bodoni ≥32px; a card name is 18px. */}
+        {/* Jost — D8 keeps Ibarra ≥32px; a card name is 18px. */}
         <p className="text-lg leading-snug">{product.name}</p>
         {spec && <p className="text-xs text-muted">{spec}</p>}
         {product.note && (

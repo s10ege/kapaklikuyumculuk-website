@@ -64,7 +64,7 @@ export default function ContactPage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactButton variant="solid" />
-              {/* Jost — D8 keeps Bodoni ≥32px; the number is 24px. */}
+              {/* Jost — D8 keeps Ibarra ≥32px; the number is 24px. */}
               <a
                 href={phoneHref}
                 className="inline-flex min-h-11 items-center px-4 text-2xl text-gold-soft transition-colors hover:text-cream-text"

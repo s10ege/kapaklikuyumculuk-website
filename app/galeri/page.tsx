@@ -82,7 +82,7 @@ export default function GalleryPage() {
                     href={`/urunler/${category.slug}`}
                     className="flex min-h-[3.5rem] items-center justify-between gap-4 py-2 transition-colors hover:text-gold-soft"
                   >
-                    {/* Jost — D8 keeps Bodoni ≥32px; row titles are 20px. */}
+                    {/* Jost — D8 keeps Ibarra ≥32px; row titles are 20px. */}
                     <span className="text-xl">
                       {category.name}
                     </span>

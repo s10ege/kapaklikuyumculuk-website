@@ -43,6 +43,9 @@ function OvalMark({ className }: { className?: string }) {
         stroke="currentColor"
         strokeWidth="1"
       />
+      {/* fontWeight matches the display headings (D8): without it a variable
+          display face falls back to 400 and the monogram draws lighter than
+          every heading. Soner's call at the 1.6 approval. */}
       <text
         x="32"
         y="32"
@@ -50,6 +53,7 @@ function OvalMark({ className }: { className?: string }) {
         dominantBaseline="central"
         fill="currentColor"
         fontFamily="var(--font-display), Georgia, serif"
+        fontWeight="500"
         fontSize="21"
         letterSpacing="0.02em"
       >

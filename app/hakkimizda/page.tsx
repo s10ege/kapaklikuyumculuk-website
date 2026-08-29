@@ -95,7 +95,7 @@ export default function AboutPage() {
                     <dt className="text-label uppercase text-ink-muted">
                       {fact.label}
                     </dt>
-                    {/* Jost — D8 keeps Bodoni ≥32px; the value is 24px. */}
+                    {/* Jost — D8 keeps Ibarra ≥32px; the value is 24px. */}
                     <dd className="mt-2 text-2xl">{fact.value}</dd>
                   </div>
                 ))}

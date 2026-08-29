@@ -77,42 +77,43 @@
 /* Font families are declared `inline` so they resolve against the CSS variables
    next/font injects, rather than being emitted as a var pointing at a var. */
 @theme inline {
-  --font-display: var(--font-display-face), "Didot", Georgia, serif;
+  --font-display: var(--font-display-face), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-body-face), system-ui, -apple-system, "Segoe UI", sans-serif;
-
-  /* Didone hairlines vanish if the browser fakes an optical size. Bodoni Moda
-     ships a real opsz axis, so let it do the work. */
-  --default-font-optical-sizing: auto;
 }
 
 /* Display scale — 48 / 40 / 32.
  *
  * Deliberately utilities, not `--text-*` theme tokens, and the ONLY route to
- * the display face. D8: Bodoni Moda is display-only, ≥32px — its hairlines
- * physically disappear on dark below that. Because the family is bundled into
- * these three utilities and granted nowhere else, a 20px Bodoni heading is
- * structurally impossible rather than a review finding. Jost carries
- * everything smaller.
+ * the display face. D8: the display face is display-only, ≥32px. Because the
+ * family is bundled into these three utilities and granted nowhere else, a
+ * 20px display heading is structurally impossible rather than a review
+ * finding. Jost carries everything smaller.
+ *
+ * The face is Ibarra Real Nova at 500 — settled at the 1.6 review after
+ * Bodoni Moda (400, then 600) and Marcellus were rejected, and after live
+ * in-site trials against EB Garamond and Cormorant Garamond. Medium lifts it
+ * on the espresso ground without reading bold; the variable font ships
+ * 400–700, so 500 is a real face, not synthesis.
  */
 @utility display-lg {
   font-family: var(--font-display);
   font-size: 3rem; /* 48px */
   line-height: 1.08;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 @utility display-md {
   font-family: var(--font-display);
   font-size: 2.5rem; /* 40px */
   line-height: 1.12;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 @utility display-sm {
   font-family: var(--font-display);
   font-size: 2rem; /* 32px */
   line-height: 1.18;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 @layer base {

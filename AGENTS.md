@@ -60,8 +60,8 @@ whatsapp   #25D366
   section (D12).
 - **No shadows.** The single exception is the warm radial glow under the hero coin (D7).
 - Radius 0–2px. Grid gaps are 1px of `line` showing through, not margins.
-- **Bodoni Moda is display-only, ≥32px** — its hairlines vanish on dark below that (D8).
-  Jost carries all body text.
+- **Ibarra Real Nova is display-only, ≥32px, weight 500** (D8) — chosen at the 1.6
+  review after Bodoni Moda and Marcellus were rejected. Jost carries all body text.
 - Never name a token `base` — it collides with `text-base`.
 
 ## Agents

@@ -1,8 +1,9 @@
 # design.md — Anasayfa hero and the Ata Lirası
 
-> **Stage 1 of 4.** Nothing in [`CATALOGUE.md`](CATALOGUE.md) begins until every element
-> here is approved. Baseline is commit `a48f740`. Spec §n references remain valid; where
-> this file and the spec disagree, this file wins.
+> **Stage 1 of 4 — ✅ approved by Soner in writing, 2026-08-29.** Baseline is commit
+> `a48f740`. Spec §n references remain valid; where this file and the spec disagree,
+> this file wins. [`CATALOGUE.md`](CATALOGUE.md) has not been opened; stage 2 starts
+> only on Soner's explicit go.
 
 ## Where the hero stood before
 
@@ -37,7 +38,7 @@ dark vitrin. Done badly it looks pasted on. Every decision below follows from th
 | D5 | The coin is decorative and **not clickable**. |
 | D6 | **Espresso body** `#17120E`, panels `#241C15`, **cream header and footer** `#F4F0E8`. Overturns the alternating charcoal/cream band decision. |
 | D7 | A warm radial **glow** under the coin, not a shadow. No vitrin plate — unneeded on a dark ground. |
-| D8 | **Bodoni Moda is display-only, ≥32px.** Its hairlines physically disappear on dark below that. Jost carries all body text. *Sole exemption: the KK monogram inside the logo mark (`Lockup.tsx` SVG) — it is the logo, not typography, renders on cream, and was verified clean at every width at the 1.4 gate.* |
+| D8 | **Ibarra Real Nova is the display face — display-only, ≥32px, weight 500.** Jost carries all body text. *Sole exemption: the KK monogram inside the logo mark (`Lockup.tsx` SVG) — it is the logo, not typography, and renders on cream. The 1.6 QA pass caught it rendering at weight 400 (the SVG set no font-weight) while headings are 500 — invisible under single-weight faces, real under a variable one. At Soner's direction it now carries an explicit `fontWeight="500"`, matching the headings.* *Revised at the 1.6 review through a real selection: Bodoni Moda fell at 400 and again at 600 — the Didone thick/thin contrast itself read as lost on espresso, not the weight; Marcellus was rejected in situ; live in-site trials against EB Garamond and Cormorant Garamond (both too ornate) settled on Ibarra Real Nova at 500 — a formal transitional serif with moderate contrast and a large x-height. The ≥32px display-only rule stays.* |
 | D9 | Body text `#E8E3DA` on dark. **Never pure white** — it causes halation on near-black. |
 | D10 | **Cream reading band** for the body copy on Hakkımızda and Hizmetler only. Long-form prose is measurably harder to read on dark, and those two pages are where trust is decided. |
 | D11 | Sections separate by spacing and hairline rules. The panel colour is used **3–4 times per page maximum**, not for every section. |
@@ -149,6 +150,11 @@ it later. A build gate (`TECHNICAL.md` §3) fails if filler survives to launch.
 ## What else changes on the homepage
 
 - Retire the two concentric circles behind the old diamond motif.
+- *Added at the 1.6 review:* the small gold eyebrow labels above section titles
+  (`Kapaklı · Tekirdağ`, `Koleksiyonlar`, `Öne Çıkanlar`, `Hizmetler`, `Hakkımızda`,
+  `İletişim`) are removed from the **homepage only** — interior pages keep theirs for
+  now. The homepage Hizmetler section deliberately carries no heading; its two panels
+  stand alone.
 - No new shadows anywhere. No gold gradient text. No bevels. The coin carries the richness.
 - No full-bleed product photography anywhere on the site — full-bleed exposes every flaw in
   amateur source material. Images sit in hairline-bordered cards at a fixed size.
@@ -162,14 +168,36 @@ louder.
 
 ## Done when
 
-1. The loop is built and reviewed at 390 / 768 / 1440.
-2. It holds 60fps on a mid-range Android.
-3. Reduced-motion and reduced-data still frames verified.
-4. CLS measured at 0; LCP still the H1.
-5. `npm run build` — every route statically generated, no `ƒ` markers.
-6. New e2e test: hero headline and CTAs present with JavaScript disabled.
-7. Turkish glyph rendering unaffected at 390 and 1440.
-8. Soner has approved the design. Explicitly, in writing.
+Status recorded at the 1.6 verification, 2026-08-29:
+
+1. The loop is built and reviewed at 390 / 768 / 1440. ✅ *Built at 1.1–1.3; the 1.6
+   QA pass re-captured all three widths (plus 320) on the final design.*
+2. It holds 60fps on a mid-range Android. ⏳ *Never measured on real hardware — no
+   record exists in `docs/build-history.md` either. Folded into the stage-3.5 device
+   pass; the pre-rendered-video approach makes a failure unlikely but unproven.*
+3. Reduced-motion and reduced-data still frames verified. ✅ *Reduced-motion is
+   e2e-tested (`tests/hero-coin.spec.ts`, green). Reduced-data shares the same
+   still-frame path in `components/HeroCoin.tsx` (media query + `saveData`); code
+   path only, no automated test.*
+4. CLS measured at 0; LCP still the H1. ⏳ *Not instrumented at 1.6. The layout
+   reserves the coin's box and the fonts ship size-adjusted fallbacks, but the
+   numbers themselves land with the stage-3.5 Lighthouse pass.*
+5. `npm run build` — every route statically generated, no `ƒ` markers. ✅ *Verified
+   on the final Ibarra build: exit 0, fully static, zero `ƒ` markers.*
+6. New e2e test: hero headline and CTAs present with JavaScript disabled. ✅
+   *`tests/hero-coin.spec.ts` — green.*
+7. Turkish glyph rendering unaffected at 390 and 1440. ✅ *Canvas fallback probe: all
+   of ı İ ğ ş ç ö ü drawn by Ibarra Real Nova in every probed heading at both widths;
+   also asserted in `tests/fonts.spec.ts`.*
+8. Soner has approved the design. Explicitly, in writing. ✅ **Approved 2026-08-29**
+   *("match the monogram to 500, design approved"). The monogram was matched to
+   weight 500 in the same breath — see D8.*
+
+Other 1.6 measurements, for the record: heading contrast 14.55:1 (`#E8E3DA` on
+`#17120E`); hero h1 and both CTAs inside the first 440px at 390×844 (D15); zero
+horizontal overflow at 320px; homepage eyebrows fully absent with headings sitting
+exactly on their section padding; `/urunler` keeps its `Koleksiyonlar` eyebrow.
+41 unit + 150 e2e tests green; `tsc --noEmit` clean.
 
 ## Risks
 

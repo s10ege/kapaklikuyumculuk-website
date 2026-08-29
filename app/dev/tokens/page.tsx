@@ -108,7 +108,7 @@ export default function TokensPage() {
           </div>
         </Section>
 
-        <Section title="Display — Bodoni Moda, yalnız ≥32px (D8)">
+        <Section title="Display — Ibarra Real Nova, yalnız ≥32px (D8)">
           <div className="flex flex-col gap-4">
             <p className="display-lg">Trakya Kapaklı Kuyumculuk</p>
             <p className="display-md">Özel Tasarım Takılar</p>
@@ -117,8 +117,8 @@ export default function TokensPage() {
               {GLYPHS}
             </p>
             <p className="text-sm text-muted">
-              32px altında Bodoni yok — ince çizgileri koyu zeminde kaybolur.
-              Kalanı Jost taşır.
+              32px altında Ibarra yok — display yüzü yalnız başlık
+              ölçeğinde. Kalanı Jost taşır.
             </p>
           </div>
         </Section>

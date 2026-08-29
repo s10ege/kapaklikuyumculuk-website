@@ -56,7 +56,7 @@ export default function NotFound() {
             Ürünlerimiz
             <ArrowRightIcon className="h-4 w-4" />
           </Link>
-          {/* Jost — D8 keeps Bodoni ≥32px; the number is 20px. */}
+          {/* Jost — D8 keeps Ibarra ≥32px; the number is 20px. */}
           <a
             href={phoneHref}
             className="inline-flex min-h-11 items-center border border-gold-soft/50 px-6 py-3 text-xl text-gold-soft transition-colors hover:bg-gold/15"

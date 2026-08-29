@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Jost } from "next/font/google";
+import { Ibarra_Real_Nova, Jost } from "next/font/google";
 import "./globals.css";
 
 import { Header } from "@/components/Header";
@@ -10,39 +10,39 @@ import { categoryLinks, PAGE_LINKS } from "@/lib/nav";
 import { addressOneLine, phoneDisplay, shop } from "@/lib/config";
 import { jewelryStoreSchema } from "@/lib/schema";
 
-/* Display: Bodoni Moda. Body: Jost.
+/* Display: Ibarra Real Nova. Body: Jost.
  *
  * §3 named Cormorant Garamond and Inter. Replaced deliberately: Cormorant with
  * a neutral grotesque is documented as the "safe luxury default" pairing, and
  * it is the exact combination that reads as templated rather than chosen.
  *
- * Bodoni Moda is a true Didone, which is the typographic language luxury
- * jewellery actually speaks — Cartier, Tiffany and Bulgari all sit in Didone or
- * classical-serif territory, and Bodoni is the Italian cut: high thick/thin
- * contrast that reads as cut stone and polished metal rather than as a wedding
- * invitation. Its optical-size axis is the reason it can carry 48px headlines
- * without the hairlines thinning out.
+ * Ibarra Real Nova is Soner's pick at the 1.6 review, at the end of a real
+ * selection: Bodoni Moda fell first — its Didone hairlines read as lost on
+ * the espresso ground at 400 and at 600, so the thick/thin contrast was the
+ * problem, not the weight — then Marcellus in situ, then live in-site trials
+ * against EB Garamond and Cormorant Garamond, both judged too ornate. Ibarra
+ * revives the face cut for the Spanish royal press: a formal, dignified
+ * transitional serif whose moderate stroke contrast and large x-height hold
+ * on dark at weight 500 without reading bold.
  *
  * Jost is a geometric sans in the Futura line. Futura is the Art Deco
  * geometric, and the shop's mark is a monogram inside a double oval — a Deco
- * medallion. Didone plus geometric sans is how jewellery was actually
- * advertised when that mark's visual language was set.
+ * medallion.
  *
  * `latin-ext` is mandatory, not optional. Without it the Turkish glyphs
  * ı İ ğ ş ç ö ü fall back to a different font mid-word, which reads as a font
  * choice rather than a bug — the single easiest thing to miss on this site.
  * Both faces were checked against next/font's own metadata before selection;
- * Prata was a strong candidate and was rejected for lacking latin-ext.
+ * Prata and Vidaloka were strong candidates rejected for lacking latin-ext.
  *
  * next/font downloads both at build time and serves them from our own origin,
  * so no request reaches Google from a visitor's browser. That is what §3 asks
  * for; it just gets there without an @fontsource dependency, and adds
  * size-adjusted fallback metrics so swapping in the real face shifts nothing.
  */
-const bodoni = Bodoni_Moda({
+const ibarra = Ibarra_Real_Nova({
   variable: "--font-display-face",
   subsets: ["latin", "latin-ext"],
-  axes: ["opsz"],
   display: "swap",
 });
 
@@ -87,7 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="tr"
-      className={`${bodoni.variable} ${jost.variable} h-full antialiased`}
+      className={`${ibarra.variable} ${jost.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <a

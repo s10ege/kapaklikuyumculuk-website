@@ -117,7 +117,7 @@ export function Header({
             <ul className="flex flex-col">
               {categories.map((link) => (
                 <li key={link.href} className="border-b border-line-light">
-                  {/* Jost, not Bodoni — D8 keeps the display face ≥32px. */}
+                  {/* Jost, not Ibarra — D8 keeps the display face ≥32px. */}
                   <Link
                     href={link.href}
                     className="flex min-h-[3.25rem] items-center px-5 text-xl text-ink-text transition-colors hover:text-gold-deep"

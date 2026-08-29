@@ -122,7 +122,7 @@ export function ProductGallery({ products }: { products: Product[] }) {
                 {index + 1} / {products.length}
               </p>
 
-              {/* Jost — D8 keeps Bodoni ≥32px and this tops out at 30px. */}
+              {/* Jost — D8 keeps Ibarra ≥32px and this tops out at 30px. */}
               <h2 className="mt-3 text-2xl leading-snug sm:text-3xl">
                 {active.name}
               </h2>

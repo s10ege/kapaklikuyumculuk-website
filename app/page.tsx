@@ -62,11 +62,7 @@ export default function Home() {
         />
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-10 px-5 py-20 lg:grid-cols-[1fr_auto] lg:gap-16">
           <div>
-            <p className="text-label uppercase text-gold-soft">
-              {address.locality} · {address.region}
-            </p>
-
-            <h1 className="mt-5 display-lg text-cream-text">
+            <h1 className="display-lg text-cream-text">
               Trakya Kapaklı
               <br />
               <span className="text-gold-soft">Kuyumculuk</span>
@@ -108,8 +104,7 @@ export default function Home() {
       {/* ── Kategoriler ──────────────────────────────────────── espresso ── */}
       <section>
         <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
-          <p className="text-label uppercase text-gold-soft">Koleksiyonlar</p>
-          <h2 className="mt-3 display-md">Ürünlerimiz</h2>
+          <h2 className="display-md">Ürünlerimiz</h2>
           <div className="mt-5 h-px w-11 bg-gold" />
 
           <div className="mt-10">
@@ -125,8 +120,7 @@ export default function Home() {
       {featured.length > 0 && (
         <section>
           <div className="mx-auto max-w-6xl px-5 pb-16 sm:pb-20">
-            <p className="text-label uppercase text-gold-soft">Öne Çıkanlar</p>
-            <h2 className="mt-3 display-md">Seçtiklerimiz</h2>
+            <h2 className="display-md">Seçtiklerimiz</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
             <div className="mt-10">
               <ProductGallery products={featured} />
@@ -140,14 +134,13 @@ export default function Home() {
           five reads as filler. */}
       <section>
         <div className="mx-auto max-w-6xl px-5 pb-16 sm:pb-20">
-          <p className="text-label uppercase text-gold-soft">Hizmetler</p>
-          <div className="mt-8 grid border-l border-t border-line-dark sm:grid-cols-2">
+          <div className="grid border-l border-t border-line-dark sm:grid-cols-2">
             {services.map((service) => (
               <div
                 key={service.slug}
                 className="border-b border-r border-line-dark bg-panel p-6 sm:p-8"
               >
-                {/* Jost — D8 keeps Bodoni ≥32px; this heading is 24px. */}
+                {/* Jost — D8 keeps Ibarra ≥32px; this heading is 24px. */}
                 <h3 className="text-2xl">{service.name}</h3>
                 <div className="mt-4 h-px w-11 bg-gold" />
                 <p className="mt-4 text-sm leading-relaxed text-muted">
@@ -174,8 +167,7 @@ export default function Home() {
       <section>
         <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
           <div className="max-w-2xl">
-            <p className="text-label uppercase text-gold-soft">Hakkımızda</p>
-            <h2 className="mt-3 display-md">{shop.claim}</h2>
+            <h2 className="display-md">{shop.claim}</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
 
             {/* D19 — two sentences and the link; the full argument lives on
@@ -199,8 +191,7 @@ export default function Home() {
       <section>
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:py-20 lg:grid-cols-2 lg:gap-14">
           <div>
-            <p className="text-label uppercase text-gold-soft">İletişim</p>
-            <h2 className="mt-3 display-md">Mağazamıza bekleriz</h2>
+            <h2 className="display-md">Mağazamıza bekleriz</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
             <p className="mt-6 max-w-md leading-relaxed text-muted">
               Aradığınız modeli tarif edin ya da uğrayın; vitrinde olmayan
@@ -209,7 +200,7 @@ export default function Home() {
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactButton variant="solid" />
-              {/* Jost — D8 keeps Bodoni ≥32px; the number is 24px. */}
+              {/* Jost — D8 keeps Ibarra ≥32px; the number is 24px. */}
               <a
                 href={phoneHref}
                 className="inline-flex min-h-11 items-center px-4 text-2xl text-gold-soft transition-colors hover:text-cream-text"

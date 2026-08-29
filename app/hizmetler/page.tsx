@@ -97,7 +97,7 @@ export default function ServicesPage() {
                   <div>
                     <h2 className="display-sm">{service.name}</h2>
                     <div className="mt-5 h-px w-11 bg-gold-deep" />
-                    {/* Jost — D8 keeps Bodoni ≥32px; the lede is 20px. */}
+                    {/* Jost — D8 keeps Ibarra ≥32px; the lede is 20px. */}
                     <p className="mt-5 text-xl leading-snug text-gold-deep">
                       {service.lede}
                     </p>

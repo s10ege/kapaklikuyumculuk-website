@@ -59,7 +59,7 @@ export function CategoryTiles({
             <div className="pointer-events-none absolute inset-0 opacity-0 outline outline-1 -outline-offset-[5px] outline-gold transition-opacity group-hover:opacity-100 motion-reduce:transition-none" />
 
             <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 sm:p-5">
-              {/* Gold label (D16), Jost — D8 keeps Bodoni ≥32px. */}
+              {/* Gold label (D16), Jost — D8 keeps Ibarra ≥32px. */}
               <span className="text-xl leading-tight text-gold-soft sm:text-2xl">
                 {category.name}
               </span>

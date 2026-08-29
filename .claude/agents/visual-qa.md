@@ -20,8 +20,8 @@ actually true on the page, with evidence.
 ## What to check, every time
 
 - **Turkish glyphs.** `ı İ ğ ş ç ö ü` must render in the same face as their neighbours.
-  Mid-word fallback is a bug that looks like a font choice. Check both Bodoni Moda
-  (display) and Jost (body).
+  Mid-word fallback is a bug that looks like a font choice. Check both Ibarra Real
+  Nova (display) and Jost (body).
 - **Horizontal overflow at 320px**, on every route. The most common regression after a
   redesign.
 - **Contrast**, measured not eyeballed. Body text is `#E8E3DA` on `#17120E`; secondary is

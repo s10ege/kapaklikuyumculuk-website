@@ -128,7 +128,7 @@ export default async function CategoryPage({
                   href={`/urunler/${sibling.slug}`}
                   className="flex min-h-[3.5rem] items-center justify-between gap-4 py-2 transition-colors hover:text-gold-soft"
                 >
-                  {/* Jost — D8 keeps Bodoni ≥32px; row titles are 20px. */}
+                  {/* Jost — D8 keeps Ibarra ≥32px; row titles are 20px. */}
                   <span className="text-xl">{sibling.name}</span>
                   <span className="text-label uppercase text-muted">
                     İncele

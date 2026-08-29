@@ -36,8 +36,9 @@ Never name a token `base` — it collides with Tailwind's `text-base`.
 - **Gold is a hairline accent, never a fill** — except primary buttons, one per section (D12).
 - **No shadows.** Only exception: the warm radial glow under the hero coin (D7).
 - Radius 0–2px. Grid gaps are 1px of `line` showing through, not margins.
-- **Bodoni Moda: display only, ≥32px.** Its thick/thin contrast makes hairlines vanish on
-  dark below that (D8). **Jost** carries all body text.
+- **Ibarra Real Nova: display only, ≥32px, weight 500** (D8). **Jost** carries all body
+  text. Chosen at the 1.6 review after Bodoni Moda (Didone hairlines lost on dark) and
+  Marcellus were rejected.
 - No gold gradient text, no bevels. The hero coin carries the richness.
 - No full-bleed product photography — it exposes flaws in amateur source material. Images
   sit in hairline-bordered cards at fixed sizes.

@@ -28,7 +28,7 @@ export function EmptyState({
     >
       <p className="text-label uppercase text-gold-soft">Yakında</p>
 
-      {/* Jost — D8 keeps Bodoni ≥32px and this line tops out at 30px. */}
+      {/* Jost — D8 keeps Ibarra ≥32px and this line tops out at 30px. */}
       <p className="mx-auto mt-4 max-w-md text-2xl leading-snug sm:text-3xl">
         {headline ?? `${subject} vitrinimizde — fotoğraflarını hazırlıyoruz.`}
       </p>

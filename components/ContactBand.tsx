@@ -23,7 +23,7 @@ export function ContactBand({
     <section className="bg-panel">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-14 sm:py-16 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-xl">
-          {/* Jost — D8 keeps Bodoni ≥32px and this heading tops out at 30px. */}
+          {/* Jost — D8 keeps Ibarra ≥32px and this heading tops out at 30px. */}
           <h2 className="text-2xl leading-snug text-cream-text sm:text-3xl">
             {heading}
           </h2>

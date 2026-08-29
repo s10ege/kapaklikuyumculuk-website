@@ -25,7 +25,7 @@ concretely why it reads as unconsidered.
 - **D12** — gold is a hairline accent. The only permitted fill is a primary button, one per
   section. Gold-filled badges, chips, borders-as-fills and gradient text are violations.
 - **D7** — no shadows anywhere except the warm radial glow under the hero coin.
-- **D8** — Bodoni Moda only at ≥32px. Below that its hairlines disappear on dark.
+- **D8** — Ibarra Real Nova (the display face) only at ≥32px, weight 500; Jost carries everything smaller.
 - **D9** — body text `#E8E3DA`, never pure white.
 - **D11** — the panel colour appears 3–4 times per page maximum, not on every section.
 - **D14** — the coin is ≈1.2× the headline block height. Visibly larger, not dominant.
