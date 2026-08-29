@@ -6,39 +6,42 @@
 
 ## 1 · Photography brief
 
-**The principle: shoot light, display dark.**
+> **Revised 2026-08-29.** No professional photographer, and no cut-out step. The
+> photographs ship as they are, polished — cropped, straightened and exposure-corrected
+> with Claude — with their backgrounds kept. That makes these rules the entire quality
+> bar: what the phone captures is what the visitor sees.
 
-A phone's auto-exposure meters the whole frame. Point it at gold on a dark cloth and it
-decides the scene is underexposed, brightens everything, and blows out exactly the
-highlights that make gold look like gold — you get a pale yellow blob with no detail.
-Photographed against a light neutral background, the same phone exposes the metal correctly
-and holds the reflections that read as shine.
-
-So: photograph on white or light grey, and let the site composite onto espresso. The
-photography happens in the easiest possible conditions; the site stays dark.
-
-**Equipment** — the phone you already have · a sheet of A3 white or light grey paper,
-curved up the back so there is no visible corner · a window · a stack of books to brace the
-phone · something small to lift the piece off the paper so its own shadow does not touch it.
+**Equipment** — the phone you already have · a window · a stack of books to brace the
+phone · something to shoot on that you can reuse every time.
 
 **Rules, in order of how much they matter:**
 
 1. **Take the piece out of the vitrin.** Shooting through display glass is unfixable in
-   software — reflections, colour cast, soft focus. This one thing costs more quality than
-   everything else combined.
-2. **No flash.** It burns a white hotspot into gold and flattens the form. Window light,
+   software — reflections, colour cast, soft focus. Still the single most expensive
+   mistake available.
+2. **The background ships now. Choose it once.** Same spot, same surface, same backdrop
+   for every photo in a sitting. A sheet of light paper still works best — see why below —
+   but whatever it is, keep it consistent and uncluttered: no price tags, no till, no
+   stray tools.
+3. **No flash.** It burns a white hotspot into gold and flattens the form. Window light,
    out of direct sun.
-3. **One light source.** Shop LEDs mixed with daylight gives a split colour cast that
-   cannot be corrected in a single step. Either shoot during the day with the shop lights
+4. **One light source.** Shop LEDs mixed with daylight gives a split colour cast that
+   cannot be corrected in a single pass. Either shoot during the day with the shop lights
    off, or after hours with them on — pick one and never mix.
-4. **Same distance, same angle, every time.** Consistency across fifty photos reads as
+5. **Same distance, same angle, every time.** Consistency across fifty photos reads as
    professional far more than any single photo does.
-5. **Leave a clear margin** around the piece in frame. Tight crops give the cut-out model
-   no edge to find.
-6. **Clean the piece first.** Fingerprints and dust are invisible at arm's length and
+6. **Leave a clear margin** around the piece in frame — the square crop needs room on
+   every side.
+7. **Clean the piece first.** Fingerprints and dust are invisible at arm's length and
    glaring at 1200px.
-7. **Stand slightly off-axis.** Polished gold mirrors the room, including the photographer.
-   Dark clothing, and do not shoot straight down over the piece.
+8. **Stand slightly off-axis.** Polished gold mirrors the room, including the
+   photographer. Dark clothing, and do not shoot straight down over the piece.
+
+**Why a light background still wins.** A phone's auto-exposure meters the whole frame.
+Point it at gold on something dark and it brightens the scene, blowing out exactly the
+highlights that make gold look like gold. Against a light neutral surface the metal
+exposes correctly and keeps the reflections that read as shine. The *shoot light* half of
+the old principle survives on its own merits; the *composite onto espresso* half is dead.
 
 **Shot list.** One photo per product is the requirement. A second angle is welcome but
 optional. Scale shots on a hand are a phase-two nicety.
@@ -68,36 +71,71 @@ retires itself automatically once products exist.
 
 ## 2 · The processing pipeline
 
-Local, free, offline. No API keys, no per-image cost, no third-party service in the loop.
-`scripts/catalogue.mjs` plus a `catalogue.bat` so it is a double-click.
+> **Revised 2026-08-29.** Background removal is gone — no rembg, no BiRefNet, no venv, no
+> ~3.5 minutes per image. What remains is mechanical preparation by the script plus a
+> polish pass done with Claude. The rembg design and its measurements stay in this file's
+> git history.
+
+The folders and the loop are unchanged:
 
 ```
 catalogue/raw/     ← phone photos, named as above (git-ignored; originals stay yours)
-catalogue/fixed/   ← manual repairs, if any
+catalogue/fixed/   ← polished repairs from the Claude pass
 public/urunler/    ← finished images, committed
 ```
 
-Per image: EXIF orientation corrected · white balance normalised · background removed with
-**rembg + BiRefNet** (the model that survives thin chains and filigree, where older cut-out
-tools smear them into a blob) · alpha matting on the edges · square crop with consistent
-padding · exported at three sizes — 1200px for the lightbox, 600px for cards, 300px for
-thumbnails — as **WebP with transparency**.
+**The script** (`scripts/catalogue.mjs`, `catalogue.bat`, or `npm run catalogue`), per
+image: EXIF orientation corrected · centred square crop with consistent padding ·
+exported as one **1200px opaque WebP** master. Still idempotent — keyed on the source
+bytes, `--force` overrides — and still emits the **contact sheet**, which is now the
+review surface for the polish pass rather than a cut-out failure detector.
 
-**Transparent, never pre-composited onto the panel colour.** The glow and the background
-come from CSS, so a palette change needs no re-export, and the same image works on the cream
-reading bands if it is ever wanted there.
+**The polish pass, with Claude.** After a batch runs, review the contact sheet in a
+Cowork session with this folder connected. Claude fixes what needs fixing, per image:
 
-The script is **idempotent** — same input, same output, safe to re-run — and emits a
-**contact sheet**: every processed image on one page at card size, so failures are visible
-in ten seconds rather than by clicking through fifty files.
+- **Crop placement** — re-centring the square on the piece. This is the manual version of
+  the CMS hotspot idea, done once at ingest.
+- **Straightening** and small rotations.
+- **Exposure and white balance**, normalised across the batch so tiles match. The old
+  paper-border auto-correction is gone with the paper guarantee, so this is a judged,
+  per-sitting correction now — which is also why rule 4 (one light source) matters more
+  than ever.
+- Occasionally, cloning out a distraction at the edge of frame.
 
-**Setup:** Python, then `pip install "rembg[cli]"`. The model downloads itself on first run.
-A few seconds per image on CPU.
+Fixed files land in `catalogue/fixed/`; the script prefers a fixed file over the raw one,
+and the loop re-runs. The same repair mechanic as before, with Claude in Photopea's chair.
 
-**The repair loop.** Roughly one in ten cut-outs needs a hand, usually a thin chain crossing
-a highlight. Fix that one file in [Photopea](https://www.photopea.com) — free, browser,
-works like Photoshop — drop it in `catalogue/fixed/`, run again. The script prefers a fixed
-file over the raw one.
+**One master, not three sizes** — unchanged. `next/image` derives every delivered size
+from the single 1200px source; the ≤80 KB card / ≤250 KB lightbox budgets are met on
+delivery.
+
+**Nothing here is in the repo.** `catalogue/raw/`, `catalogue/fixed/`, the `images/` drop
+folder and `/public/urunler/` are all gitignored, so the masters and the originals live on
+Soner's machine and nowhere else. That is the trial-state guard described in §5, and it
+holds until the contact sheet is approved — which means a deploy made today would show
+`Yakında` on all five categories regardless of what the local build shows.
+
+**Opaque, not transparent.** The old rule — *transparent, never pre-composited* — existed
+so cut-outs could float on any panel colour. With backgrounds kept it is moot. Masters
+are ordinary opaque WebPs, and the espresso ground shows around them as the card frame,
+not through them.
+
+### Pending rework (code, not this document)
+
+1. ✅ **2026-08-29.** `scripts/catalogue.mjs` — rembg step and its flags (`--alpha`,
+   `--fast`, `--model`, `--no-wb`) removed along with the venv discovery, the working-size
+   cap, the scratch-PNG handoff and the paper-border white balance; `PIPELINE_VERSION`
+   bumped to 3. `squareFrame` is now a centred `fit: "cover"` crop — an opaque photograph
+   has no transparent margin to trim, so crop placement moves to the polish pass.
+2. ✅ **2026-08-29.** `components/CategoryTiles.tsx` + the `withCover` comment in
+   `lib/content.ts` — revised D16: the tile is filled by the photograph (`object-cover`),
+   with the smallest scrim that keeps the gold label legible. Measured behind the label:
+   4.6–8.1:1 against the 3:1 bar for text this size.
+   `.claude/skills/catalogue-pipeline/SKILL.md` was rewritten with it — it is the
+   operational mirror of §2 and still described the cut-out flow end to end.
+3. Cleanup, optional and **still outstanding**: delete the rembg venv
+   (`%LOCALAPPDATA%\kk-catalogue`) and the BiRefNet weights (`~/.rembg`) — roughly 3 GB
+   back. Nothing in the repo reads either any more.
 
 ## 3 · Content model
 
@@ -115,11 +153,21 @@ Anything a filename cannot carry goes in one small `catalogue.json` beside the f
 only for the products that need it:
 
 ```
+name       "Tek Taş Yüzük"        — the display name
 spec       "22 ayar · 38.5 gr"   — ayar and gram only
 alt        Turkish alt text, written by hand
+note       a short line under the spec
 featured   true | false          — max four appear on the homepage
 order      optional sort override
 ```
+
+**`name` is not optional in practice.** The slug is ASCII, and no transformation restores
+`ş`, `ü` or `ı` — `tektas-yuzuk` cannot become `Tek Taş Yüzük` by rule. A Title-Cased slug is
+the fallback so a freshly dropped-in image still appears rather than being silently skipped,
+but anything a customer reads gets a real name here.
+
+A malformed `catalogue.json` costs the display names and the featured flags, not the build:
+it is parsed defensively and a bad file logs a warning and is ignored.
 
 **No prices, ever.** They track the gold rate; the lightbox already says so.
 
@@ -141,21 +189,37 @@ the moment a piece sells.
 
 ## 5 · Done when
 
+> **Status 2026-08-29 — paused, awaiting photographs.** The first real batch is through:
+> twelve photographs, eight products, four categories. It is not the launch catalogue and
+> was never meant to be — Soner has more to shoot and will add them later. Three items
+> below are green, one is measured and green, and the rest wait on pictures or on Soner.
+> Nothing is committed: the masters and the originals all stay on Soner's machine.
+
 - Contact sheet reviewed and approved by Soner.
-- Every image has Turkish alt text.
-- Card images ≤80 KB; lightbox masters ≤250 KB.
-- Lightbox verified with real images at 390 / 768 / 1440 — arrows, Esc, focus return, and
-  swipe on touch.
-- `npm run build` — all routes still statically generated.
-- Homepage LCP unchanged with real images in place.
+- **The temporary `/public/urunler/` line removed from `.gitignore`.** It was added in 2.1 so
+  the six trial photographs could not be published by accident, and it hides the real
+  catalogue just as effectively — the images are not in the repo until it comes out.
+- ✅ Every image has Turkish alt text. *(Written by hand for all eight; `spec` stays absent
+  until Soner gives the ayar and gram.)*
+- ◐ Card images ≤80 KB as delivered by `next/image`; the 1200px masters ≤250 KB on disk.
+  *✅ card side — measured 2026-08-29, worst case 54 KB (`pirlanta-set_02` at w=750), most
+  6–37 KB. ❌ one master at 272 KB: `pirlanta_pirlanta-set_02`, all blown suede and shop
+  background. A tighter crop fixes it; more compression should not have to.*
+- ❌ Lightbox verified with real images at 390 / 768 / 1440 — arrows, Esc, focus return, and
+  swipe on touch. *Never exercised with photographs; until this batch the catalogue was
+  empty.*
+- ✅ `npm run build` — all routes still statically generated.
+- ❌ Homepage LCP unchanged with real images in place.
 
 ## 6 · Risks
 
 1. **Stock churn.** Photographed pieces get sold. Mitigation: shoot representative pieces
    you can re-make or usually carry, and frame the catalogue as *vitrinimizden örnekler*
    rather than an inventory.
-2. **Inconsistency between sessions.** The single biggest quality risk. Mitigation: shoot
-   each category in one sitting, same spot, same time of day.
+2. **Inconsistency between sittings — now the single biggest quality risk.** With
+   backgrounds kept, every difference in surface, light and framing ships to the visitor.
+   Mitigation: shoot each category in one sitting, same spot, same surface, same time of
+   day; Claude's batch exposure pass narrows what remains.
 3. **Supplier images.** Rights plus duplicate content. Worth repeating because it is the
    tempting shortcut.
 4. **Scope creep into a shop.** No cart, no prices, no accounts. The catalogue's job is to

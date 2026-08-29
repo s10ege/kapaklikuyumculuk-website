@@ -28,8 +28,8 @@ Priority order. Each stage has its own file.
 | # | File | Covers | Status |
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
-| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | **← next** — not started; begins only on Soner's explicit go |
-| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | blocked on 2 |
+| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ⏸ **paused 2026-08-29, awaiting photographs.** 2.1 and 2.2 done; 2.3–2.5 partial. The pipeline and the content model are finished — what is missing is pictures |
+| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next** — prepared 2026-08-29, not opened. 3.1 is a ⛔ gate |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
 ## Roadmap
@@ -38,7 +38,7 @@ Every iteration ends somewhere you can look at or run — no iteration finishes 
 whose only proof is "the code exists". Iterations are sequential within a stage. The detail
 behind each one lives in that stage's file; this is the execution order.
 
-### Stage 1 — design.md  ← current
+### Stage 1 — design.md
 
 | # | Iteration | Ends when |
 |---|---|---|
@@ -56,19 +56,31 @@ depends on the final panel colour and image treatment.
 
 | # | Iteration | Ends when |
 |---|---|---|
-| 2.1 | **Build the pipeline** — `scripts/catalogue.mjs` + `catalogue.bat`, rembg + BiRefNet, transparent WebP at three sizes, contact sheet | Three sample photos go in and three usable images come out |
-| 2.2 | **Photograph** — per the brief, one category per sitting | Raw photos exist in `catalogue/raw/` |
-| 2.3 | **Process and repair** — run the batch, fix failures in Photopea, re-run | Contact sheet approved by Soner |
-| 2.4 | **Folder-driven content** — `lib/content.ts` reads `public/urunler/`, `catalogue.json` for specs and `featured` | Categories show real products; `Yakında` retires itself; Öne Çıkanlar appears, capped at four |
-| 2.5 | **Verify with real images** — lightbox, `/galeri`, alt text, file sizes, LCP | `CATALOGUE.md` § Done when is green |
+| 2.1 | **Build the pipeline** — `scripts/catalogue.mjs` + `catalogue.bat`, one 1200px opaque WebP master (three sizes dropped — `next/image` derives them), contact sheet | ✅ **2026-08-29** — six trial photos through end to end; the 2.4 folder reader came forward so they render on the real pages (local-only, gitignored until 2.3). *Revised and reworked 2026-08-29: cut-outs dropped — photos ship polished with backgrounds kept (Claude does crop, straighten, exposure). rembg stripped, `PIPELINE_VERSION` 3, revised D16 built; all twelve re-run as opaque masters* |
+| 2.2 | **Photograph** — per the brief, one category per sitting | ✅ **2026-08-29** — first real batch: 12 photos in `catalogue/raw/` (6 rings from 2.1 plus 4 kolye and 2 bilezik), 8 products across 4 categories |
+| 2.3 | **Process and polish** — run the batch, polish with Claude (crop, straighten, exposure), re-run | ⏸ **paused.** Batch run 2026-08-29 and the contact sheet emitted — but **not reviewed**, and the polish pass into `catalogue/fixed/` was never run. Known from the sheet: the centred crop keeps shop background on the box shots, `2176` has a "10K" hangtag in frame, and `pirlanta_pirlanta-set_02` is 272 KB against a 250 KB budget. **`/public/urunler/` therefore stays in `.gitignore`** — it comes out when this gate is passed, and it has not been |
+| 2.4 | **Folder-driven content** — `lib/content.ts` reads `public/urunler/`, `catalogue.json` for specs and `featured` | ◐ **partial.** Reader built during 2.1 and working: four categories retired `Yakında`, `/galeri` fills, Öne Çıkanlar shows four. Turkish `name` and hand-written `alt` exist for all eight products. Outstanding, and **all of it needs Soner**: `spec` (ayar · gram) is deliberately absent on every entry, `featured` is still the four original ring-collection picks, and nobody has checked the names against the actual pieces |
+| 2.5 | **Verify with real images** — lightbox, `/galeri`, alt text, file sizes, LCP | ◐ **partial.** Green: build fully static, Turkish alt text on every image, and **card delivery ≤80 KB — measured, 54 KB worst case** (`pirlanta-set_02` at w=750; most are 6–37 KB). Outstanding: the lightbox with real images at 390 / 768 / 1440 (arrows, Esc, focus return, swipe), homepage LCP, and the one over-budget master |
 
-**Gate 2→3:** the catalogue is approved before any directory or Google work starts.
+**Resuming stage 2, when the photographs arrive.** The catalogue is a partial eight-product
+set; `kupe-modelleri` has none and keeps its `Yakında`, and `CATALOGUE.md` §1 warns that a
+category under roughly six pieces still reads as empty — four of them are. The loop for new
+photographs: drop them in `images/`, agree a rename table against the five published slugs,
+copy into `catalogue/raw/`, `npm run catalogue`, review the contact sheet. Three things then
+need Soner and nothing else can substitute for them: **approving the contact sheet**, the
+**ayar and gram** per piece, and the **`featured` four**.
+
+**Gate 2→3.** Crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2
+paused and the catalogue unapproved. The gate's actual concern is that *"the catalogue is
+approved before any directory or Google work starts"* — that work is stage 4, so preparing
+and running stage 3 does not breach it. What it does mean is that stage 3.3 cannot finish:
+see the note under the stage-3 table.
 
 ### Stage 3 — TECHNICAL.md
 
 | # | Iteration | Ends when |
 |---|---|---|
-| 3.1 | **⛔ Confirmation gate** — the six facts in `TECHNICAL.md` §1, confirmed in writing by Soner. **Claude stops here and asks.** | Facts confirmed; `whatsapp.pending` flipped; hours and phones correct in `lib/config.ts` |
+| 3.1 | **⛔ Confirmation gate** — **Claude stops here and asks**, in the session that writes the code. The six facts, named so they cannot be skimmed past: **(1)** the canonical name, character-for-character · **(2)** the full address block, character-for-character · **(3)** WhatsApp `0554 915 77 90` — correct? · **(4)** `0282 717 55 62` — still in use? · **(5)** opening hours including the winter closing time · **(6)** that the Altın Alım–Satım copy on `/hizmetler` matches how the shop actually operates | Facts confirmed; `whatsapp.pending` flipped; hours and phones correct in `lib/config.ts` |
 | 3.2 | **Copy** — Soner's real Turkish text replaces the filler; filler build gate added | The gate fails a build containing filler, and passes on the real copy |
 | 3.3 | **SEO** — metadata, JSON-LD with real product images, sitemap from the folders, `/studio` disallow removed, **OG images** for the homepage and five categories | Rich Results Test passes locally; a shared link previews correctly |
 | 3.4 | **Redirects re-verified** after the redesign | All 24 rules 301 correctly; the five reclaimed paths return 200 |
@@ -77,6 +89,22 @@ depends on the final panel colour and image treatment.
 | 3.7 | **Repo hygiene** — `.gitattributes`, delete `sanity/`, gitignore, dev routes 404 in production | `git status` is clean of line-ending noise |
 | 3.8 | **Analytics plumbing** — `/wa`, `/yol-tarifi`, `/telefon` routes so clicks count on the free tier | Each records as a page view and forwards correctly |
 | 3.9 | **Runbook proven** — add one product end to end following `TECHNICAL.md` §11 | The runbook works as written, without improvisation |
+
+**Two things the stage-3 session should know before it starts** (recorded 2026-08-29, when
+the stage was prepared but deliberately not opened):
+
+1. **The paused catalogue blocks part of 3.3 and only 3.3.** Two items there need product
+   images that exist *in the repo*, and none do — `/public/urunler/` is gitignored: the
+   per-category `ItemList` "carrying real image URLs", and the per-category OG cards built
+   from a product image. Everything else in 3.3 — the title pattern, `JewelryStore`
+   JSON-LD, `BreadcrumbList`, the homepage OG card, the sitemap from the folders, dropping
+   the `/studio` disallow — is unaffected. So are 3.2 and 3.4 through 3.8, entirely. 3.9 can
+   be *written* but not *proven*, since proving it means publishing a product.
+2. **3.7 is mostly already done, uncommitted work from earlier sessions.** `.gitattributes`
+   exists with `* text=auto eol=lf`; `sanity/` is gone; `catalogue/raw/`, `images/` and
+   `/public/urunler/` are gitignored; all four `app/dev/*` routes guard on
+   `NODE_ENV === "production"` and call `notFound()`. Treat 3.7 as verify-and-tidy, not
+   build.
 
 **Gate 3→4:** nothing is deployed and nothing on Google is touched until stage 3 is approved.
 

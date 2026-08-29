@@ -201,8 +201,9 @@ Written for six months from now, when the details have been forgotten.
 1. Photograph the piece per the brief in `CATALOGUE.md` — white paper, window light, out of
    the vitrin.
 2. Drop the photo into `catalogue/raw/` and run `catalogue.bat`.
-3. Check the contact sheet. If a cut-out is wrong, fix that one file in Photopea, put it in
-   `catalogue/fixed/`, run again.
+3. Check the contact sheet. If a crop is off centre, the frame is crooked or the exposure
+   does not match the rest of the sitting, fix that one file, put it in `catalogue/fixed/`
+   under the same name, and run again — a fixed file wins over the raw one.
 4. Move the finished image into `public/urunler/<kategori>/`, add a line to `catalogue.json`
    if it needs a spec or a `featured` flag, then commit and push. Vercel rebuilds on its own,
    usually in under two minutes.
