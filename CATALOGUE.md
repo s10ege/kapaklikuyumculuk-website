@@ -133,9 +133,13 @@ not through them.
    4.6–8.1:1 against the 3:1 bar for text this size.
    `.claude/skills/catalogue-pipeline/SKILL.md` was rewritten with it — it is the
    operational mirror of §2 and still described the cut-out flow end to end.
-3. Cleanup, optional and **still outstanding**: delete the rembg venv
-   (`%LOCALAPPDATA%\kk-catalogue`) and the BiRefNet weights (`~/.rembg`) — roughly 3 GB
-   back. Nothing in the repo reads either any more.
+3. ✅ **2026-08-29.** Cleanup done: the rembg venv (`%LOCALAPPDATA%\kk-catalogue`, 618 MB)
+   and the four ONNX model files under `~/.rembg` — `birefnet-general`,
+   `birefnet-general-lite`, `bria-rmbg`, `isnet-general-use` — deleted. **2.84 GB back.**
+   Verified afterwards by forcing a real re-encode with no venv present: identical output,
+   no Python involved anywhere. Recoverable if it is ever wanted again — the venv is one
+   `pip install "rembg[cli,cpu]"` and the weights re-download on first run — but nothing in
+   this repo reads either path any more.
 
 ## 3 · Content model
 
