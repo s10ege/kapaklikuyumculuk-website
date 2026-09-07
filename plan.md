@@ -28,7 +28,7 @@ Priority order. Each stage has its own file.
 | # | File | Covers | Status |
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
-| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ⏸ **paused 2026-08-29, awaiting photographs.** 2.1 and 2.2 done; 2.3–2.5 partial. The pipeline and the content model are finished — what is missing is pictures |
+| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **over 2026-09-07 — not sealed.** 61 frames triaged with Soner (30 dropped), 57 products across all five categories processed, polished and **committed** (`/public/urunler/` un-ignored on Soner's word). Hakkımızda photographs placed — founder, owner, shopfront. Soner is still adjusting layout and copy, and three items stay his to supply: ayar · gram, the featured four, a last look at the contact-sheet flags |
 | 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next** — prepared 2026-08-29, not opened. 3.1 is a ⛔ gate |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
@@ -58,17 +58,19 @@ depends on the final panel colour and image treatment.
 |---|---|---|
 | 2.1 | **Build the pipeline** — `scripts/catalogue.mjs` + `catalogue.bat`, one 1200px opaque WebP master (three sizes dropped — `next/image` derives them), contact sheet | ✅ **2026-08-29** — six trial photos through end to end; the 2.4 folder reader came forward so they render on the real pages (local-only, gitignored until 2.3). *Revised and reworked 2026-08-29: cut-outs dropped — photos ship polished with backgrounds kept (Claude does crop, straighten, exposure). rembg stripped, `PIPELINE_VERSION` 3, revised D16 built; all twelve re-run as opaque masters* |
 | 2.2 | **Photograph** — per the brief, one category per sitting | ✅ **2026-08-29** — first real batch: 12 photos in `catalogue/raw/` (6 rings from 2.1 plus 4 kolye and 2 bilezik), 8 products across 4 categories |
-| 2.3 | **Process and polish** — run the batch, polish with Claude (crop, straighten, exposure), re-run | ⏸ **paused.** Batch run 2026-08-29 and the contact sheet emitted — but **not reviewed**, and the polish pass into `catalogue/fixed/` was never run. Known from the sheet: the centred crop keeps shop background on the box shots, `2176` has a "10K" hangtag in frame, and `pirlanta_pirlanta-set_02` is 272 KB against a 250 KB budget. **`/public/urunler/` therefore stays in `.gitignore`** — it comes out when this gate is passed, and it has not been |
-| 2.4 | **Folder-driven content** — `lib/content.ts` reads `public/urunler/`, `catalogue.json` for specs and `featured` | ◐ **partial.** Reader built during 2.1 and working: four categories retired `Yakında`, `/galeri` fills, Öne Çıkanlar shows four. Turkish `name` and hand-written `alt` exist for all eight products. Outstanding, and **all of it needs Soner**: `spec` (ayar · gram) is deliberately absent on every entry, `featured` is still the four original ring-collection picks, and nobody has checked the names against the actual pieces |
-| 2.5 | **Verify with real images** — lightbox, `/galeri`, alt text, file sizes, LCP | ◐ **partial.** Green: build fully static, Turkish alt text on every image, and **card delivery ≤80 KB — measured, 54 KB worst case** (`pirlanta-set_02` at w=750; most are 6–37 KB). Outstanding: the lightbox with real images at 390 / 768 / 1440 (arrows, Esc, focus return, swipe), homepage LCP, and the one over-budget master |
+| 2.3 | **Process and polish** — run the batch, polish with Claude (crop, straighten, exposure), re-run | ✅ **2026-09-07**, on a new machine (the first batch's raws, masters and `catalogue.json` stayed gitignored on the old one, so the catalogue was rebuilt from the full 61-frame shoot). Soner triaged a numbered artifact and kept 31 frames; multi-piece frames were cropped into single products, so 31 frames became **60 masters, 57 products, all ≤250 KB**. Polish pass into `catalogue/fixed/`: nine re-crops, four exposure lifts on the underexposed thin-bangle frame, one hangtag blurred out (`tek-tas-modelleri/yuzuk-04`), one tagged angle dropped. Left for Soner on the contact sheet: shop background still shows around the 29 Aug box shots (decided: tight crop, keep), hangtags remain visible on about six frames, and the red-velvet ring sitting is soft-focus. **`/public/urunler/` came out of `.gitignore` 2026-09-07** on Soner's word that stage 2 is over; the 60 masters and `catalogue.json` are committed. The contact-sheet flags above stand as notes for him, not blockers |
+| 2.4 | **Folder-driven content** — `lib/content.ts` reads `public/urunler/`, `catalogue.json` for specs and `featured` | ◐ **reader unchanged; `catalogue.json` rewritten 2026-09-07** for all 57 products — a plain-Turkish `name` per Soner's instruction (simple terms: Bilezik, Kolye, Küpe, Yüzük, Takım, one qualifier at most) and a hand-written `alt`. All five categories retired `Yakında`; `/galeri` fills with 58 images. Outstanding, and **all of it needs Soner**: `spec` is absent on every entry (the gram tags in frame 165453 read 4.53 · 3.97 · 4.10 gr / 14K, and one bangle carries a 22 SEN hallmark — noted, not entered), `featured` is unset so Öne Çıkanlar stays hidden, and the names have not been checked against the pieces |
+| 2.5 | **Verify with real images** — lightbox, `/galeri`, alt text, file sizes, LCP | ◐ **measured 2026-09-07 on a production build.** ✅ build fully static (20 routes, no `ƒ`), 46 unit tests green, Turkish alt on every image. ✅ **Lightbox with real images at 390 / 768 / 1440**: opens from the card, arrows step (`2 / 12`), Esc closes, focus returns to the card, the image loads in the dialog. ❌ **Card delivery: 11 of 60 masters exceed 80 KB at w=750** (worst 129 KB, `pirlanta/takim-01`) — every one a box/suede background; paper-sitting shots are 12–50 KB. Fix belongs to stage 3: a lower card `quality`, or tighter crops on those eleven. Outstanding: swipe on real touch hardware, homepage LCP |
 
-**Resuming stage 2, when the photographs arrive.** The catalogue is a partial eight-product
-set; `kupe-modelleri` has none and keeps its `Yakında`, and `CATALOGUE.md` §1 warns that a
-category under roughly six pieces still reads as empty — four of them are. The loop for new
-photographs: drop them in `images/`, agree a rename table against the five published slugs,
-copy into `catalogue/raw/`, `npm run catalogue`, review the contact sheet. Three things then
-need Soner and nothing else can substitute for them: **approving the contact sheet**, the
-**ayar and gram** per piece, and the **`featured` four**.
+**Stage 2 is over but not sealed (2026-09-07).** The catalogue is in the repo — 57 products,
+all five categories — and the Hakkımızda page carries the founder, the owner and the
+shopfront (`scripts/hakkimizda-photos.mjs`; originals in gitignored `images/hakkimizda/`).
+Soner will keep playing with layout and text, so page-level changes are expected and do not
+reopen the stage. The loop for further photographs is unchanged: drop them in `images/`,
+agree a rename table against the five published slugs, copy into `catalogue/raw/`,
+`npm run catalogue`, review the contact sheet. Three things still need Soner and nothing
+else can substitute for them: the **ayar and gram** per piece, the **`featured` four**, and
+a decision on the contact-sheet flags (hangtags, the soft-focus velvet rings).
 
 **Gate 2→3.** Crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2
 paused and the catalogue unapproved. The gate's actual concern is that *"the catalogue is

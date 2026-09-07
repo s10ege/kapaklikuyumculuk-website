@@ -109,11 +109,11 @@ and the loop re-runs. The same repair mechanic as before, with Claude in Photope
 from the single 1200px source; the ≤80 KB card / ≤250 KB lightbox budgets are met on
 delivery.
 
-**Nothing here is in the repo.** `catalogue/raw/`, `catalogue/fixed/`, the `images/` drop
-folder and `/public/urunler/` are all gitignored, so the masters and the originals live on
-Soner's machine and nowhere else. That is the trial-state guard described in §5, and it
-holds until the contact sheet is approved — which means a deploy made today would show
-`Yakında` on all five categories regardless of what the local build shows.
+**What is in the repo.** `/public/urunler/` — the masters and `catalogue.json` — has been
+committed since 2026-09-07, when Soner called stage 2 over and the temporary ignore came
+out. `catalogue/raw/`, `catalogue/fixed/` and the `images/` drop folder stay gitignored: the
+originals and the polished repairs live on Soner's machine and nowhere else. A deploy now
+shows the full catalogue.
 
 **Opaque, not transparent.** The old rule — *transparent, never pre-composited* — existed
 so cut-outs could float on any panel colour. With backgrounds kept it is moot. Masters
@@ -193,25 +193,38 @@ the moment a piece sells.
 
 ## 5 · Done when
 
-> **Status 2026-08-29 — paused, awaiting photographs.** The first real batch is through:
-> twelve photographs, eight products, four categories. It is not the launch catalogue and
-> was never meant to be — Soner has more to shoot and will add them later. Three items
-> below are green, one is measured and green, and the rest wait on pictures or on Soner.
-> Nothing is committed: the masters and the originals all stay on Soner's machine.
+> **Status 2026-09-07 — stage 2 over, not sealed.** Soner called the stage done and the
+> catalogue was committed: `/public/urunler/` left `.gitignore`, **60 masters, 57 products,
+> all five categories populated**, `catalogue.json` with plain-Turkish names and
+> hand-written alt. The Hakkımızda page carries the founder, the owner and the shopfront.
+> "Not sealed": Soner will keep adjusting layout and text, and `spec` (ayar · gram) and the
+> `featured` four are still his to supply. Earlier the same day: 61 frames from the 28–29 Aug
+> shoot arrived on a new machine (the first batch had stayed gitignored on the old one),
+> Soner triaged a numbered artifact and dropped 30, multi-piece frames were cropped into
+> single products, polish pass in `catalogue/fixed/`; decisions — simple product names
+> (Bilezik, Kolye, Küpe, Yüzük, Takım), the 29 Aug box shots shipped with a tight crop.
+>
+> *(Previous status 2026-08-29 — paused, awaiting photographs: twelve photographs, eight
+> products, four categories, masters and originals on Soner's machine only.)*
 
-- Contact sheet reviewed and approved by Soner.
-- **The temporary `/public/urunler/` line removed from `.gitignore`.** It was added in 2.1 so
-  the six trial photographs could not be published by accident, and it hides the real
-  catalogue just as effectively — the images are not in the repo until it comes out.
-- ✅ Every image has Turkish alt text. *(Written by hand for all eight; `spec` stays absent
-  until Soner gives the ayar and gram.)*
+- ✅ Contact sheet accepted by Soner 2026-09-07 — he called stage 2 over. *(Flags left on
+  it as notes, not blockers: hangtags still visible on about six frames, shop background
+  around the box shots, the red-velvet rings soft-focus, one blurred-out tag on
+  `tek-tas-modelleri/yuzuk-04`.)*
+- ✅ **The temporary `/public/urunler/` line removed from `.gitignore` 2026-09-07.** It was
+  added in 2.1 so the six trial photographs could not be published by accident; the real
+  catalogue is in the repo from this commit on.
+- ✅ Every image has Turkish alt text. *(Written by hand for all 57 products, 2026-09-07;
+  `spec` stays absent until Soner gives the ayar and gram.)*
 - ◐ Card images ≤80 KB as delivered by `next/image`; the 1200px masters ≤250 KB on disk.
-  *✅ card side — measured 2026-08-29, worst case 54 KB (`pirlanta-set_02` at w=750), most
-  6–37 KB. ❌ one master at 272 KB: `pirlanta_pirlanta-set_02`, all blown suede and shop
-  background. A tighter crop fixes it; more compression should not have to.*
-- ❌ Lightbox verified with real images at 390 / 768 / 1440 — arrows, Esc, focus return, and
-  swipe on touch. *Never exercised with photographs; until this batch the catalogue was
-  empty.*
+  *✅ masters — all 60 within 250 KB (the script steps quality down). ❌ card side — measured
+  2026-09-07 at w=750: 11 of 60 exceed 80 KB, worst 129 KB (`pirlanta/takim-01`), every one
+  a box/suede background; the paper-sitting shots are 12–50 KB. Stage 3 decides between a
+  lower card `quality` and tighter crops on those eleven.*
+- ◐ Lightbox verified with real images at 390 / 768 / 1440 — arrows, Esc, focus return, and
+  swipe on touch. *✅ 2026-09-07 on a production build: opens from the card, arrows step,
+  Esc closes, focus returns to the card, the image loads in the dialog at every width.
+  ❌ swipe — needs real touch hardware (stage 3.5).*
 - ✅ `npm run build` — all routes still statically generated.
 - ❌ Homepage LCP unchanged with real images in place.
 
