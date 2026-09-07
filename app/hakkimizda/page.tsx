@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactBand } from "@/components/ContactBand";
 import { ArrowRightIcon } from "@/components/icons";
-import { address, shop } from "@/lib/config";
+import { address, people, shop } from "@/lib/config";
 import { pageTitle } from "@/lib/content";
 import { FILLER } from "@/lib/filler";
 
@@ -21,6 +22,12 @@ import { FILLER } from "@/lib/filler";
  * (docs/old-site-map.md) and is verifiable. Its "iki şube ile" line is
  * deliberately NOT revived: the partnership ended and there is one shop now.
  * Nothing about the former partner belongs on a customer-facing page.
+ *
+ * Photographs (2026-09-07): the shopfront leads the cream band, and the
+ * founder and the owner who runs the shop today sit side by side under the
+ * prose — the two faces are the proof behind "aynı ailenin elinde". Masters
+ * come from scripts/hakkimizda-photos.mjs; the originals never enter the
+ * repo. Names and roles are config, not literals (hard rule 1).
  */
 
 export const metadata: Metadata = {
@@ -34,6 +41,21 @@ export const metadata: Metadata = {
 const FACTS = [
   { label: "Kuruluş", value: "2000" },
   { label: "Konum", value: `${address.locality} / ${address.region}` },
+];
+
+/* Alt text describes the picture; the figcaption already carries the name,
+ * so repeating it would read the name twice to a screen reader. */
+const PORTRAITS = [
+  {
+    ...people.founder,
+    src: "/hakkimizda/nuri-eroglu.webp",
+    alt: "Koyu takım elbise ve çizgili kravatla stüdyo portresi.",
+  },
+  {
+    ...people.owner,
+    src: "/hakkimizda/filiz-eroglu.webp",
+    alt: "Lacivert ceketle, eli çenesinde, gülümseyen portre.",
+  },
 ];
 
 export default function AboutPage() {
@@ -59,17 +81,23 @@ export default function AboutPage() {
       <section className="bg-frame text-ink-text">
         <div className="mx-auto max-w-6xl px-5 py-12 sm:py-16">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1fr] lg:gap-14">
-            {/* Portrait slot, per §6.6 — a shop photograph reads as proof in
-                a way a product shot does not. Until stage 2 shoots it, this
-                is an honest placeholder in the band's own idiom rather than
-                the retired diamond motif, which opened the band as a huge
-                dark block at 768/390 (1.5 review). Height-capped so the
-                band still leads with prose on phones. */}
-            <div className="flex max-h-56 items-center justify-center border border-line-light lg:aspect-[3/4] lg:max-h-none">
-              <p className="p-6 text-center text-label uppercase text-ink-muted">
-                Mağaza fotoğrafı hazırlanıyor
-              </p>
-            </div>
+            {/* The shopfront, per §6.6 — a shop photograph reads as proof in
+                a way a product shot does not. The 1.5-review height cap that
+                guarded the old placeholder is gone: a real photograph leading
+                the band on phones is what the section wanted. 3:4 by default;
+                a touch taller at lg so it keeps pace with the prose column,
+                and self-start so the grid's stretch cannot distort it. It is
+                the page's LCP element, hence priority. */}
+            <figure className="relative aspect-[3/4] overflow-hidden border border-line-light lg:aspect-[2/3] lg:self-start">
+              <Image
+                src="/hakkimizda/magaza.webp"
+                alt={`${shop.name} mağazasının cephesi: tabela, tente ve vitrin.`}
+                fill
+                priority
+                sizes="(min-width: 1024px) 28rem, 100vw"
+                className="object-cover"
+              />
+            </figure>
 
             <div>
               <div className="flex flex-col gap-5 leading-relaxed">
@@ -83,6 +111,37 @@ export default function AboutPage() {
                 </p>
                 <p className="text-ink-muted">{FILLER.aboutBody[1]}</p>
               </div>
+
+              {/* Founder and owner, side by side at every width — two faces
+                  read fine at half of 390. Fact-grid idiom: 1px line-light
+                  hairlines, no shadow, no radius (D-rules). Names and roles
+                  come from lib/config.ts. */}
+              <ul className="mt-10 grid grid-cols-2 border-l border-t border-line-light">
+                {PORTRAITS.map((person) => (
+                  <li
+                    key={person.name}
+                    className="border-b border-r border-line-light"
+                  >
+                    <figure>
+                      <div className="relative aspect-[4/5] overflow-hidden">
+                        <Image
+                          src={person.src}
+                          alt={person.alt}
+                          fill
+                          sizes="(min-width: 1024px) 18rem, 50vw"
+                          className="object-cover object-top"
+                        />
+                      </div>
+                      <figcaption className="px-4 py-4 sm:px-5">
+                        <p>{person.name}</p>
+                        <p className="mt-1 text-label uppercase text-ink-muted">
+                          {person.role}
+                        </p>
+                      </figcaption>
+                    </figure>
+                  </li>
+                ))}
+              </ul>
 
               {/* Two-cell fact grid (§6.6). Two, because two verified facts
                   are worth more than six padded ones. */}

@@ -54,6 +54,15 @@ export const shop = {
   claim: "Kapaklı'nın ilk kuyumcusu",
 } as const;
 
+/* The family. Both names are verified (docs/business-facts.md ✅). They are
+ * the captions under the two portraits on /hakkimizda and nothing else —
+ * never a byline, never a contact. Roles are captions too, so they read as
+ * short as a label: "Kurucu", not a sentence. */
+export const people = {
+  founder: { name: "Nuri Eroğlu", role: "Kurucu" },
+  owner: { name: "Filiz Eroğlu", role: "Mağaza sahibi" },
+} as const;
+
 /* ------------------------------------------------------------------------- */
 /* Contact                                                                    */
 /* ------------------------------------------------------------------------- */
