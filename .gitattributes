@@ -12,6 +12,7 @@
 *.jpeg binary
 *.webp binary
 *.ico  binary
+*.mp4  binary
 *.glb  binary
 *.woff  binary
 *.woff2 binary

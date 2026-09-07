@@ -49,16 +49,41 @@ export function HeroCoin({ className = "" }: { className?: string }) {
     }
 
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let inView = false;
+
+    // Autoplay can be refused even past the gates above — Safari suspends it
+    // in Low Power Mode, and some embedded webviews demand a gesture. The
+    // poster stays visible, which is still the correct fallback, but these
+    // visitors may look at it indefinitely, so it gets the same sharp-still
+    // upgrade as the reduced path (the LCP concern above does not apply: a
+    // refused play() lands long after the LCP candidates are settled). One
+    // gesture then retries, because a user gesture is exactly what lifts the
+    // restriction in those browsers.
+    const removeGestureListeners = () => {
+      window.removeEventListener("pointerdown", retryOnGesture);
+      window.removeEventListener("keydown", retryOnGesture);
+    };
+    const retryOnGesture = () => {
+      removeGestureListeners();
+      if (inView) video.play().catch(() => {});
+    };
+    const onRefusedAutoplay = () => {
+      console.debug("HeroCoin: autoplay refused, waiting for a gesture");
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        video.poster = "/hero/coin-still-800.webp";
+      }
+      removeGestureListeners();
+      window.addEventListener("pointerdown", retryOnGesture, { passive: true });
+      window.addEventListener("keydown", retryOnGesture, { passive: true });
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) {
+        inView = Boolean(entry?.isIntersecting);
+        if (inView) {
           timer = setTimeout(() => {
             video.muted = true;
-            video.play().catch(() => {
-              // Autoplay can still be refused in some embedded contexts; the
-              // poster stays visible, which is the correct fallback here too.
-            });
+            video.play().catch(onRefusedAutoplay);
           }, 500);
         } else {
           clearTimeout(timer);
@@ -71,6 +96,7 @@ export function HeroCoin({ className = "" }: { className?: string }) {
     observer.observe(video);
     return () => {
       clearTimeout(timer);
+      removeGestureListeners();
       observer.disconnect();
     };
   }, []);
