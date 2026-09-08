@@ -147,7 +147,13 @@ test.describe("the page CSP", () => {
        Asserting the production string from here would be a test that passes by
        describing an environment it is not running in. */
     const csp = (await request.get("/")).headers()["content-security-policy"];
-    const dev = process.env.NODE_ENV !== "production";
+
+    /* E2E_TARGET, not NODE_ENV. NODE_ENV in the *test* process says nothing
+       about the server the test is talking to — it was unset here, so this
+       read as "dev" and demanded 'unsafe-eval' from a production build. The
+       production project caught it on its first run, which is a fair summary
+       of why the project exists. */
+    const dev = process.env.E2E_TARGET !== "prod";
 
     if (dev) {
       expect(csp).toContain("'unsafe-eval'");

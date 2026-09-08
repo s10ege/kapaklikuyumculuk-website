@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { stayOnHopPage } from "./hop-pages";
+
 /* §7 — accessibility on a dark ground, in a browser.
  *
  * tests/contrast.test.mts does the arithmetic on the palette; this does the
@@ -122,14 +124,10 @@ test.describe("tap targets at 390px", () => {
   });
 
   test("/yol-tarifi is usable with a thumb", async ({ page }) => {
-    /* The outbound hop is aborted first. This page forwards to Google Maps on
-       load, and under a full parallel run the navigation lands in the middle
-       of the measurement — the elements being measured are on their way out.
-       directions.spec.ts blocks it the same way, for the same reason. */
-    await page.route(/maps\.(apple|google)\.com|google\.[a-z.]+\/maps/, (route) =>
-      route.abort(),
-    );
-
+    /* This page forwards to Google Maps on load, so it has to be held still
+       before anything can be measured on it. Aborting the request is not
+       enough — the navigation destroys the execution context either way. */
+    await stayOnHopPage(page);
     await page.goto("/yol-tarifi");
     const bad = await undersized(page, "#icerik a");
     expect(bad, bad.join(" | ")).toEqual([]);

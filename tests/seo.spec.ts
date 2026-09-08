@@ -1,6 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 import { getProducts } from "../lib/content.ts";
+import { stayOnHopPage } from "./hop-pages";
 
 /* Gate for iteration 14 of plan.md.
  *
@@ -415,6 +416,7 @@ for (const path of INDEXED) {
  * while /yol-tarifi inherited the layout's `canonical: "/"`, was the homepage.
  * The homepage owns that canonical now; this route should have none. */
 test("/yol-tarifi is noindex and names no canonical", async ({ page }) => {
+  await stayOnHopPage(page);
   await page.goto("/yol-tarifi");
 
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(

@@ -27,9 +27,22 @@ const ROUTES = [
 ];
 
 export default async function globalSetup() {
-  const base = "http://localhost:3000";
+  /* Same resolution as playwright.config.ts. Warming localhost while the suite
+     runs against a deployed URL would warm nothing and hide nothing. */
+  const base =
+    process.env.E2E_BASE_URL ?? `http://localhost:${process.env.E2E_PORT ?? "3000"}`;
 
-  for (const route of ROUTES) {
+  /* A production build 404s the dev routes by design; warming them there would
+     be fetching four 404s on purpose. And a production build compiles nothing
+     on demand, so warming is only actually needed for `next dev` — it is left
+     running for both because a first-request warm costs nothing and keeps the
+     two paths identical. */
+  const routes =
+    process.env.E2E_TARGET === "prod"
+      ? ROUTES.filter((r) => !r.startsWith("/dev/"))
+      : ROUTES;
+
+  for (const route of routes) {
     try {
       await fetch(`${base}${route}`);
     } catch {

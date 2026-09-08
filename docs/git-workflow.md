@@ -111,6 +111,33 @@ Neither is needed today.
    `node_modules/`, `.next/` and `.git/` from Drive sync — or move the project out of the
    Drive folder entirely.
 
+## Running the tests
+
+```bash
+npm run test:unit       # node:test — config, content, copy, contrast, invariants
+npm run test:e2e        # Playwright against `next dev`
+npm run test:e2e:prod   # Playwright against `next build && next start`
+```
+
+**Two projects since 2026-09-08.** Everything used to run against the dev server, which
+meant "the redirects work" and "the build is static" — both claims about production — were
+proven on a dev server. The CSP pass made the gap concrete in both directions at once: a
+policy correct in production took the whole dev site down, and a clean production sweep sat
+beside thirteen red dev tests.
+
+`prod` skips `lightbox.spec.ts`, which drives `/dev/grid`, and filters the `app/dev/*`
+routes out of the overflow suite — those routes `notFound()` in production by design.
+
+`E2E_BASE_URL` points either project at an already-running server and turns the managed one
+off:
+
+```bash
+E2E_BASE_URL=https://www.kapaklikuyumculuk.com npx playwright test --project=prod tests/redirects.spec.ts
+```
+
+That is how `FINAL.md` 4.2 verifies the redirect map against the live domain, which was not
+possible before.
+
 ## Large files
 
 `ata_animation/` is 6.4 MB, including a 3.2 MB `.glb`. That is committed as source, which is

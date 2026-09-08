@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { stayOnHopPage } from "./hop-pages";
 
 /* Horizontal overflow is the layout bug that survives review: it looks fine on
  * a desktop browser and silently clips copy on the phone that 80%+ of visitors
@@ -16,7 +17,7 @@ const WIDTHS = [320, 360, 390, 768, 1440] as const;
 
 /* Routes are listed explicitly rather than crawled so a page that fails to
  * render at all shows up as a failure instead of silently not being tested. */
-const ROUTES = [
+const ALL_ROUTES = [
   "/",
   "/urunler",
   "/urunler/yuzuk",
@@ -31,6 +32,15 @@ const ROUTES = [
   "/dev/placeholders",
   "/dev/grid",
 ] as const;
+
+/* The app/dev/* routes call notFound() when NODE_ENV is production, so against
+ * a production build they are 404s and every width would fail. They are still
+ * worth checking in dev — /dev/grid and /dev/tokens are where a layout
+ * regression shows up first, because they render every token and every grid
+ * state on one page. So they are filtered, not deleted. */
+const ROUTES = process.env.E2E_TARGET === "prod"
+  ? ALL_ROUTES.filter((r) => !r.startsWith("/dev/"))
+  : ALL_ROUTES;
 
 async function horizontalOverflow(page: Page) {
   return page.evaluate(() => {
@@ -68,6 +78,12 @@ for (const route of ROUTES) {
        * chattering, so networkidle never fires and the test spent 15–26s
        * waiting out the timeout before passing on luck. Layout depends on
        * fonts, not on map tiles — so wait for exactly that. */
+      /* /yol-tarifi and /telefon navigate away from themselves on load, so
+         they are held still before measuring. Harmless on every other route:
+         the stub only replaces two methods nothing else calls. Needed only
+         against a production build, where hydration wins the race — which is
+         exactly why the dev-only suite never caught it. */
+      await stayOnHopPage(page);
       await page.goto(route, { waitUntil: "domcontentloaded" });
       await page.evaluate(() => document.fonts.ready);
 
