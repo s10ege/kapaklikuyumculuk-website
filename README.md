@@ -3,14 +3,27 @@
 Planning workspace for taking over and relaunching the web presence of the family
 jewelry shop in Kapaklı, Tekirdağ.
 
-**Stage:** holding page live. Domain healthy, site up on Vercel, index cleanup shipped
-and waiting on Search Console verification. Real build not started — by design.
+**Stage:** the site is built and technically ready to deploy — **stages 1–3 of 4 complete**
+(design, catalogue, technical), stage 3 finished 2026-09-08 and awaiting written approval.
+21 routes, all statically prerendered; 78 unit tests and two end-to-end suites, one of them
+against a real production build. **Nothing is deployed yet:** the domain still serves the
+holding page, and nothing on Google has been touched. That is [`FINAL.md`](FINAL.md),
+stage 4.
+
+*(This line said "real build not started — by design" until 2026-09-08, which had been wrong
+for about three weeks.)*
+
+Run `npm run verify` to check the repo: every gate, by exit code.
 
 ---
 
 ## Start here
 
-**→ [`roadmap.md`](docs/roadmap.md)** — the ordered plan. Read this first.
+**→ [`plan.md`](plan.md)** — the index, the stage table and the roadmap. Read this first.
+The four stage files it points at are [`design.md`](design.md),
+[`CATALOGUE.md`](CATALOGUE.md), [`TECHNICAL.md`](TECHNICAL.md) and [`FINAL.md`](FINAL.md).
+
+[`roadmap.md`](docs/roadmap.md) is the earlier, pre-build plan and is kept as a record.
 
 ### Ready to use right now
 

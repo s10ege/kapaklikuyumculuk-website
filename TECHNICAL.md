@@ -548,6 +548,9 @@ To remove a product: delete the image, commit, push.
 
 ## 12 · Done when
 
+> **Walked 2026-09-08 at the stage close.** Result per line below. Two items are honestly
+> not met and are recorded as such rather than reworded until they pass.
+
 - ~~Canonical name applied to every directory Soner controls~~ — **stage 4.** §2's own last
   paragraph says so: the repo half is enforced by `tests/source-invariants.test.mts`, and the
   directories are manual work `FINAL.md` owns. Stage 3 cannot satisfy this line and should
@@ -559,11 +562,33 @@ To remove a product: delete the image, commit, push.
 - Redirect suite green locally against a **production build**; reclaimed paths return 200.
 - OG images present for the homepage and all **four** categories. *(Five until the 2026-09-08
   restructure retired `pirlanta`.)*
-- Lighthouse mobile ≥90 performance / 100 accessibility on the homepage and one category —
-  **stage 4.2**, per §6's split.
-- `npm run build` — every route static, no `ƒ`.
-- Full unit and e2e suite green.
-- NAP block diffed character-by-character against `lib/config.ts` and the canonical block.
+- ❌ **Lighthouse mobile ≥90 / a11y 100 — accessibility yes, performance no.** Measured
+  locally: `/` **89**, `/urunler/yuzuk` 93; accessibility **100** on both. LCP 3.6 s and
+  3.2 s against a ≤2.5 s target. The formal number is 4.2's, on the deployed site with a
+  CDN — but this is short today and is written down as short. See §6 for the breakdown,
+  including the part that is not environmental: on the homepage the LCP element is the coin
+  `<video>`, where `design.md`'s budget says it should be the H1.
+- ✅ `npm run build` — 21 routes, every one static, no `ƒ`. Verified by exit code and by the
+  route table being present, not by grepping for the absence of a character.
+- ✅ Full suite green: **78 unit** (including the retired-terms gate), **310 e2e dev**,
+  **286 e2e prod**. `npm run verify` runs all six gates and exits 0.
+- ✅ **NAP block diffed character-by-character**, three ways: the canonical block in §2
+  against the `JewelryStore` JSON-LD on the built homepage — all five lines identical, 25 /
+  39 / 24 / 14 / 33 characters — and against the visible text on `/` and `/iletisim`. No
+  rival spelling anywhere in the built markup: no `56/A`, no `Blv.`, no `Kapaklı/Tekirdağ`
+  without spaces, no Ziraat landmark, neither of the former partner's numbers.
+
+### Not done, by decision rather than oversight
+
+- **Öne Çıkanlar does not render.** `catalogue.json` sets `featured` on none of its 57
+  products, so `getFeaturedProducts()` returns `[]` and the homepage section is absent. No
+  product card carries an ayar/gram line either, for the same reason: `spec` is unset
+  throughout. Both need Soner, and the stage-3 scope decision was that the frontend is
+  frozen — "this stage only fixes the technical stuff". Naming it here so the stage does not
+  close with a hidden homepage section counted as finished.
+- **`/urunler/pirlanta` and the other retired paths** stay redirect sources, correctly.
+- **The real-device pass** is 4.2's by the same decision. Everything measurable locally was
+  done in 3.5 and 3.6.
 
 ## 13 · Risks
 
