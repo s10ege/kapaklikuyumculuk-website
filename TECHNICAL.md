@@ -379,6 +379,33 @@ position and impressions over 16 months. That is in `FINAL.md`.
 
 ## 10 · Domain and infrastructure
 
+> **Security headers — added 2026-09-08, and not previously scoped.** There were none at
+> all: no HSTS, no `X-Content-Type-Options`, no `Referrer-Policy`, nothing. `next.config.ts`
+> now sets five on every path.
+>
+> `Referrer-Policy` is `strict-origin-when-cross-origin` rather than the tidier-looking
+> `no-referrer`, deliberately: referrer is the one analytics dimension §9 calls genuinely
+> useful for this shop — Instagram versus Google — and `no-referrer` would throw away the
+> measurement the project wants. `X-Content-Type-Options` earns its place because
+> `next.config.ts` already lets SVG through `next/image`, and MIME sniffing is how an SVG
+> becomes a script. HSTS does nothing until the domain points at Vercel in 4.1, which is
+> what makes it safe to land now.
+>
+> **Found while testing: `headers()` does not apply to redirect responses.** A 308 arrives
+> with none of the five. That matters more here than on most sites — 26 of this domain's
+> URLs *are* redirects, and they are what an old inbound link hits first, so a returning
+> visitor's very first response carries no HSTS. The cost is one hop: the destination is the
+> same origin and does carry it. `tests/headers.spec.ts` pins the behaviour so it is known
+> rather than assumed, and fails if it ever changes. Measured against `next dev` — **Vercel's
+> routing layer may apply headers to redirects itself, which is 4.2's to check against the
+> live domain** rather than something to guess at from here.
+>
+> The **Content-Security-Policy is deliberately not in that set.** It has to account for the
+> inline JSON-LD, the Maps iframe on `/iletisim`, the analytics script and `_next/image`, and
+> its failure mode is a silently blank map on a page that otherwise looks perfect. Separate
+> pass, landing report-only first.
+
+
 `docs/domain-security-plan.md` is the reference. Landing in this stage: registrar lock and
 contact accuracy at Natro, DNS pointing correctly, and confirming there are still no MX
 records — the site asserts the shop has no email address, and a test enforces the absence of

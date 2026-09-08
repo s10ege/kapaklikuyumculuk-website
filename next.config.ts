@@ -109,6 +109,68 @@ const nextConfig: NextConfig = {
     qualities: [60, 75],
   },
 
+  /* Security headers (§10-adjacent, added in stage 3).
+   *
+   * There were none at all before 2026-09-08. These are the mechanical half —
+   * every one is a fixed string with no per-page reasoning behind it. The
+   * Content-Security-Policy is deliberately NOT here: it has to account for
+   * the inline JSON-LD, the Google Maps iframe on /iletisim, the Vercel
+   * analytics script and _next/image, and its failure mode is a silently blank
+   * map on a page that otherwise looks perfect. It gets its own pass.
+   *
+   * Applied to every path including the redirect sources: a 308 carries these
+   * too, and a header that stops at the edge of the "real" pages is a header
+   * with a hole in it.
+   */
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          /* Two years, with subdomains, and preload-eligible. The site is
+             HTTPS-only on Vercel and the domain runs no other service — there
+             is no http-only subdomain this can break. It does nothing until
+             the domain is actually pointed at Vercel (stage 4.1), which is why
+             it is safe to land now. */
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+
+          /* Stops a browser second-guessing a declared Content-Type. Matters
+             here because next.config.ts already allows SVG through
+             next/image, and MIME sniffing is how an SVG becomes a script. */
+          { key: "X-Content-Type-Options", value: "nosniff" },
+
+          /* Nobody should be framing this site. frame-ancestors in a CSP is
+             the modern spelling and will arrive with it; this is the header
+             that older browsers actually honour, and the two agree. */
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+
+          /* Full URL to same-origin, origin only cross-origin. Referrer is
+             the one analytics dimension §9 says is genuinely useful for this
+             shop — Instagram versus Google — so `no-referrer` would throw
+             away the measurement the project wants. */
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+
+          /* The site asks for none of these. Denying them means a future
+             dependency cannot quietly start asking either. Geolocation is
+             named explicitly rather than left out: a jeweller's site is
+             exactly the kind of page a visitor would not expect to be asked,
+             and the map is an iframe that does not need it. */
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+          },
+        ],
+      },
+    ];
+  },
+
   async redirects() {
     return [
       /* §4 rule 5 — the preview host must never be indexed as a duplicate of
