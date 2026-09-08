@@ -8,12 +8,32 @@ import type { Product } from "@/lib/content";
  * the static grid renders. One card, one appearance, two contexts.
  */
 
+/* 60, not the default 75.
+ *
+ * Measured at w=750 on a production build: nine of the 60 masters exceed 80 KB
+ * on the WebP path at q=75, the worst at 148 KB. AVIF-capable browsers were
+ * never the problem — every image is under 66 KB there — but Safari before 16
+ * and older Android get WebP, and they are not a rounding error for a shop in
+ * Kapaklı. A card renders at a quarter of the viewport inside a hairline
+ * border; 60 is invisible at that size and is not invisible on the wire.
+ *
+ * The lightbox deliberately does NOT use this: that image is the one somebody
+ * has chosen to look at closely, which is the whole point of opening it. */
+const CARD_QUALITY = 60;
+
 export function ProductCard({
   product,
   sizes = "(min-width: 1024px) 25vw, 50vw",
+  eager = false,
 }: {
   product: Product;
   sizes?: string;
+  /* The first card in a grid is the LCP element on every category page, and
+     was lazy-loaded — Next names the file in the dev log every time. Only the
+     caller knows which card is first, so it is a prop rather than a guess.
+     Requires `images.qualities` in next.config.ts to include CARD_QUALITY;
+     Next 16 rejects an unlisted value with a 400. */
+  eager?: boolean;
 }) {
   const image = product.images[0];
 
@@ -26,6 +46,8 @@ export function ProductCard({
             alt={product.alt ?? product.name}
             fill
             sizes={sizes}
+            quality={CARD_QUALITY}
+            loading={eager ? "eager" : "lazy"}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         )}

@@ -74,8 +74,39 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 
     /* Product photography will be amateur phone shots (§11). AVIF first cuts
-     * those down hard; WebP covers anything that cannot take AVIF. */
+     * those down hard; WebP covers anything that cannot take AVIF.
+     *
+     * The gap between those two is bigger than it looks, and it is the whole
+     * reason for the `qualities` entry below. Measured on a production build,
+     * at w=750: every one of the 60 masters lands under 80 KB as AVIF, worst
+     * 66 KB. On the WebP path the same set has nine over 80 KB, worst 148 KB —
+     * 2.67 MB against AVIF's 1.61 MB across the catalogue. Stage 2.5's
+     * "11 of 60 exceed 80 KB" was measuring WebP; the finding was real and
+     * still is, for Safari before 16 and older Android. */
     formats: ["image/avif", "image/webp"],
+
+    /* Next 16 requires this allowlist: a `quality` prop naming a value that is
+     * not here is refused with a 400, so the prop alone silently does nothing
+     * — verified against a production build before relying on it.
+     *
+     * 75 stays for everything that is not a product card. 60 is for the cards,
+     * where the image is rendered at a quarter of the viewport behind a
+     * hairline border and the difference is not visible at that size, but the
+     * bytes are — on the WebP path, on a phone, on mobile data.
+     *
+     * Measured across all 60 masters at w=750, WebP path / AVIF path:
+     *
+     *     q=75   9 over 80 KB, worst 148 KB, 2.67 MB / 1.61 MB
+     *     q=60   6 over 80 KB, worst 125 KB, 2.23 MB / 1.05 MB
+     *     q=50   4 over 80 KB, worst 115 KB, 1.98 MB / 0.80 MB
+     *
+     * 50 was measured and deliberately not shipped: the remaining offenders
+     * are busy frames — suede, chain, a boxed bangle — and those are exactly
+     * the images where a low quality shows first. The six that stay over 80 KB
+     * are a cropping problem, not a compression one, and cropping changes what
+     * the photograph shows, which is Soner's call and not a build setting.
+     * Do not add 50 back without a decision recorded beside it. */
+    qualities: [60, 75],
   },
 
   async redirects() {

@@ -75,7 +75,11 @@ export function ProductGallery({ products }: { products: Product[] }) {
               aria-haspopup="dialog"
               className="block w-full cursor-pointer text-left"
             >
-              <ProductCard product={product} />
+              {/* The first card is the LCP element on every category page and
+                  on /galeri. It was lazy-loaded until 2026-09-08 — Next warned
+                  about it by filename on every dev render — so the paint the
+                  page is measured by waited for the lazy-load to trigger. */}
+              <ProductCard product={product} eager={i === 0} />
               <span className="sr-only">büyüt</span>
             </button>
           </div>
