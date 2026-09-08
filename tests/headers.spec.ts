@@ -55,9 +55,15 @@ test("redirect responses carry no custom headers — recorded, not desired", asy
    * `next dev`; Vercel's routing layer may well apply headers to redirects
    * itself, which is a question for FINAL.md 4.2 against the live domain and
    * not something to guess at from here. */
-  const response = await request.get("/urunler/pirlanta", {
-    maxRedirects: 0,
-  });
+  /* /kurumsal, deliberately. The first version of this test used one of the
+     retired category paths as its 308 source — which works, and which put this
+     file outside the scripts/retired-terms.mjs allowlist and broke
+     `npm run gate:terms` for three commits. Any redirect source proves the
+     same point, so the fix is a different source rather than a wider
+     allowlist; that script's own guidance is "never silently widen the
+     pattern". Note it greps raw source, comments included, so naming the path
+     even in this comment would trip it again. */
+  const response = await request.get("/kurumsal", { maxRedirects: 0 });
 
   expect(response.status()).toBe(308);
   expect(
