@@ -5,6 +5,7 @@ import { DirectionsButton } from "@/components/DirectionsButton";
 import { ArrowRightIcon } from "@/components/icons";
 import { addressLines, phoneDisplay, phoneHref, shop } from "@/lib/config";
 import { COPY } from "@/lib/copy";
+import { openGraph } from "@/lib/metadata";
 
 /* §6.8 — 404.
  *
@@ -24,6 +25,13 @@ import { COPY } from "@/lib/copy";
 export const metadata: Metadata = {
   title: `Sayfa bulunamadı | ${shop.name}`,
   robots: { index: false, follow: true },
+  /* noindex, and still the page most worth giving a card to. 309 dead URLs
+     from the old site land here, and the ones that survive do so by being
+     pasted into a message — where, without this, they previewed blank. That
+     is the exact failure the OG work was done to fix, on the one route it had
+     been left off. No canonical: pairing one with noindex asks Google to
+     consolidate this page's signals onto whatever it names. */
+  openGraph: openGraph("/404"),
 };
 
 export default function NotFound() {

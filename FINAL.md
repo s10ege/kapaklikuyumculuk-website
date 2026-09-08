@@ -50,8 +50,19 @@ The sequence matters more than any individual step.
 - `/urunler/pirlanta`, `/urunler/tek-tas-modelleri` → **308 to `/urunler/yuzuk`**, and that
   destination returns 200. Both were live pages until the 2026-09-08 category restructure.
 - `/wp-admin`, `/author/x`, `/?p=1` → 404, landing on the branded Turkish page.
-- `npm run test:e2e -- tests/redirects.spec.ts` against the live domain. It proves the map
-  locally today; production is the real test.
+- The redirect suite against the live domain:
+
+  ```bash
+  E2E_BASE_URL=https://www.kapaklikuyumculuk.com \
+    npx playwright test --project=prod tests/redirects.spec.ts
+  ```
+
+  **This was not possible until 2026-09-08.** The line here used to read
+  `npm run test:e2e -- tests/redirects.spec.ts`, which would have started a local dev server
+  and tested that instead of the live domain — a command that looks like it verifies
+  production and does not. `E2E_BASE_URL` points the suite at a running host and turns the
+  managed server off. The map is proven against a local production build already; this is
+  the real test.
 - Rich Results Test on `/` and one category: `JewelryStore` + `BreadcrumbList` + `ItemList`
   valid, **`geo` and `hasMap` present and pointing at the shop's own Maps listing**.
   *(Corrected 2026-09-08: this line said "no `geo` emitted", written while the coordinates

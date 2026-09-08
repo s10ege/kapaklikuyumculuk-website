@@ -1,3 +1,5 @@
+import { readdir } from "node:fs/promises";
+
 import { test, expect, type Page } from "@playwright/test";
 
 import { getProducts } from "../lib/content.ts";
@@ -285,10 +287,18 @@ for (const [path, last] of TRAILS) {
  * page previewed blank — and sharing a link is how this shop's customers pass
  * it on, whatever they share it in.
  *
- * The assertion is deliberately "every indexed route", not "the six that have
- * cards": app/opengraph-image.png is a root-segment file, so pages without
- * their own card inherit it. If that inheritance ever breaks, this catches the
- * pages nobody remembered to wire up rather than only the ones we did. */
+ * This comment used to justify the breadth by saying app/opengraph-image.png
+ * was a root-segment file that pages inherit. That file does not exist — the
+ * convention was dropped the same day, because openGraph is REPLACED wholesale
+ * by any page that declares one, and every page has to declare one to get its
+ * own og:url right. Nothing inherits anything; every route names its card
+ * through openGraph() in lib/metadata.ts.
+ *
+ * Which makes the list below the only thing standing between a new route and a
+ * blank preview. It is hand-maintained, and it was short by three
+ * (/telefon, /yol-tarifi and the 404) until the stage-3 close audit found
+ * them. The test directly after this loop closes that gap by walking the
+ * routes rather than the list. */
 const INDEXED = [
   "/",
   "/urunler",
@@ -385,6 +395,45 @@ for (const path of INDEXED) {
   });
 }
 
+/* The list above is hand-maintained, which is how /telefon, /yol-tarifi and
+ * the 404 sat outside it emitting no card at all. This walks the app directory
+ * instead, so a route added next year is covered by existing itself.
+ *
+ * The 404 is the one that earns this: 309 dead URLs from the old site land
+ * there, and the ones that still circulate do so by being pasted into a
+ * message. app/dev/* is excluded — those routes notFound() in production. */
+test("every real route emits an og:image, including the ones nobody lists", async ({
+  request,
+}) => {
+  const files = await readdir("app", { recursive: true });
+  const routes = files
+    .filter((f) => /(^|\/)page\.tsx$/.test(String(f)))
+    .map((f) => `/${String(f).replace(/\/?page\.tsx$/, "")}`)
+    .filter((r) => !r.startsWith("/dev"))
+    /* The dynamic segment is covered by the per-category tests above. */
+    .filter((r) => !r.includes("["))
+    .map((r) => (r === "/" ? "/" : r.replace(/\/$/, "")));
+
+  /* Plus the 404, which has no page.tsx of its own. */
+  const all = [...new Set([...routes, "/bir-sey-yok-burada"])];
+  expect(all.length, "found suspiciously few routes").toBeGreaterThan(8);
+
+  /* request, not page. og:image is server-rendered, so fetching the markup
+     answers the question — and it avoids driving a browser through a dozen
+     navigations inside one 30s budget, which timed out against a production
+     build. It also sidesteps the hop pages entirely: nothing forwards when
+     nothing executes. */
+  const blank: string[] = [];
+  for (const route of all) {
+    const html = await (await request.get(route)).text();
+    if (!/<meta property="og:image"/.test(html)) blank.push(route);
+  }
+
+  expect(blank, `these routes preview blank when shared: ${blank.join(", ")}`).toEqual(
+    [],
+  );
+});
+
 /* Nothing asserted og:url before 2026-09-08, which is exactly why five pages
  * shipped announcing themselves as the homepage: openGraph is inherited
  * wholesale from the layout, the layout set `url: shop.url`, and only the
@@ -426,13 +475,17 @@ test("/yol-tarifi is noindex and names no canonical", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 });
 
-/* The JewelryStore image and the homepage og:image must be the same URL.
- * They are declared in two modules — lib/schema.ts cannot import
- * lib/metadata.ts, which pulls in next's Metadata types while schema.ts is
- * walked by node:test with type-stripping only — so nothing but this stops
- * them drifting. A search result and a shared link showing different pictures
- * of the same shop is exactly the inconsistency this project is about. */
-test("the JewelryStore image is the card the homepage shares", async ({
+/* This test used to assert the JewelryStore image and the homepage og:image
+ * were the SAME URL. That was wrong, and the test was locking the mistake in:
+ * `image` on a LocalBusiness feeds the local pack and knowledge panel, where
+ * Google wants a photograph of the business and discourages logos and text
+ * overlays. The OG card is a lockup, a claim in type and a stock coin — right
+ * for a share preview, wrong for a search result.
+ *
+ * So they must now DIFFER, and both must resolve. Asserting the difference and
+ * not just the values, because "make them the same" is the tidy-looking change
+ * somebody will otherwise make again. */
+test("the JewelryStore image is a photograph, not the share card", async ({
   page,
   request,
 }) => {
@@ -446,10 +499,19 @@ test("the JewelryStore image is the card the homepage shares", async ({
     .first()
     .getAttribute("content");
 
-  expect(new URL(shopSchema.image).pathname).toBe(new URL(og!).pathname);
+  const schemaPath = new URL(shopSchema.image).pathname;
+  const ogPath = new URL(og!).pathname;
 
-  const response = await request.get(new URL(shopSchema.image).pathname);
-  expect(response.status(), "the schema image does not resolve").toBe(200);
+  expect(
+    schemaPath,
+    "the schema image is the OG card again — see lib/schema.ts for why these differ",
+  ).not.toBe(ogPath);
+  expect(schemaPath).not.toContain("/og/");
+
+  for (const path of [schemaPath, ogPath]) {
+    const response = await request.get(path);
+    expect(response.status(), `${path} does not resolve`).toBe(200);
+  }
 });
 
 test("each category overrides the site-wide card with its own", async ({
@@ -520,6 +582,10 @@ for (const route of VISITOR_ROUTES) {
   test(`${route} carries no retired term, anywhere in its markup`, async ({
     page,
   }) => {
+    /* /yol-tarifi and /telefon forward on load, and page.content() then fails
+       with "the page is navigating and changing the content" — against a
+       production build, where hydration is fast enough to win. Held still. */
+    await stayOnHopPage(page);
     await page.goto(route, { waitUntil: "domcontentloaded" });
 
     /* The whole document, not just visible text: this has to cover the title,

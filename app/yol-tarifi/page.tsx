@@ -2,8 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AppleMapsIcon, GoogleMapsIcon } from "@/components/icons";
-import { addressLines, directions, shop } from "@/lib/config";
+import {
+  addressLines,
+  directions,
+  directionsPath,
+  shop,
+} from "@/lib/config";
 import { DirectionsForward } from "./DirectionsForward";
+import { openGraph } from "@/lib/metadata";
 
 /* The analytics hop for the directions button (TECHNICAL.md §9).
  *
@@ -26,6 +32,10 @@ import { DirectionsForward } from "./DirectionsForward";
 export const metadata: Metadata = {
   title: `Yol tarifi - ${shop.name}`,
   robots: { index: false, follow: false },
+  /* Same as /telefon: hand-written metadata inherited the layout's imageless
+     openGraph block and previewed blank. A directions link is exactly the kind
+     of thing somebody forwards. */
+  openGraph: openGraph(directionsPath),
 };
 
 const APPS = [

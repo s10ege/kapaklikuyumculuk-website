@@ -29,7 +29,7 @@ Priority order. Each stage has its own file.
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
 | 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **approved 2026-09-08 — closed.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned, **WhatsApp removed — the phone is the only channel**. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. Approved in writing by Soner; `spec`, the `featured` four and the contact-sheet flags stay outstanding as content, not as gates |
-| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | ◐ **open 2026-09-08.** The ⛔ 3.1 gate was read out loud and **all five facts confirmed in writing** — answers recorded in `TECHNICAL.md` §1, no `lib/config.ts` change fell out. Running as 14 PRs, none longer than a 40-minute session, each ending somewhere Soner can look. Two scope decisions taken at the open: the frontend is frozen (no `spec`, no `featured` — Öne Çıkanlar stays hidden by decision, not by oversight), and the real-device pass moves to 4.2 |
+| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | ✅ **complete 2026-09-08 — awaiting Soner's written approval.** Ran as 14 PRs. The ⛔ gate passed with all five facts confirmed. Two things are deliberately not done and are named as such: **Öne Çıkanlar does not render** (no `featured` set — the frontend was frozen for this stage) and **Lighthouse mobile performance is 89 against a ≥90 target**. Four extra items taken in beyond scope: security headers, CSP, production-build e2e, CI |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
 ## Roadmap
@@ -133,15 +133,16 @@ and 3.3's per-category `ItemList` and OG cards have real product images to work 
 
 | # | Iteration | Ends when |
 |---|---|---|
-| 3.1 | **⛔ Confirmation gate** — **Claude stops here and asks**, in the session that writes the code. The five facts, named so they cannot be skimmed past: **(1)** the canonical name, character-for-character · **(2)** the full address block, character-for-character · **(3)** `0282 717 55 62` — still in use? · **(4)** opening hours including the winter closing time · **(5)** that the Altın Alım–Satım copy on `/hizmetler` matches how the shop actually operates. *(Six until 2026-09-08; the WhatsApp item went with the channel.)* | Facts confirmed; hours and phones correct in `lib/config.ts` |
-| 3.2 | **Copy** — Soner's real Turkish text replaces the filler; filler build gate added | The gate fails a build containing filler, and passes on the real copy |
-| 3.3 | **SEO** — metadata, JSON-LD with real product images, sitemap from the folders, `/studio` disallow removed, **OG images** for the homepage and four categories | Rich Results Test passes locally; a shared link previews correctly |
-| 3.4 | **Redirects re-verified** after the redesign | All 26 rules 308 correctly, against a production build; the five reclaimed paths return 200 |
-| 3.5 | **Mobile device pass** — one Android, one iPhone, real hardware | Findings logged and fixed; no horizontal scroll at 320px; Lighthouse mobile ≥90 / a11y 100 |
-| 3.6 | **Accessibility on dark** — contrast, focus, reduced motion and reduced data | Measured, not assumed |
-| 3.7 | **Repo hygiene** — `.gitattributes`, delete `sanity/`, gitignore, dev routes 404 in production | `git status` is clean of line-ending noise |
-| 3.8 | **Analytics plumbing** — `/telefon` so clicks count on the free tier (`/yol-tarifi` is built; `/wa` is not needed since WhatsApp was removed) | Each records as a page view and forwards correctly |
-| 3.9 | **Runbook proven** — add one product end to end following `TECHNICAL.md` §11 | The runbook works as written, without improvisation |
+| 3.1 | ✅ **⛔ Confirmation gate — passed 2026-09-08.** All five facts confirmed in writing and recorded in `TECHNICAL.md` §1. No `lib/config.ts` change fell out: every fact was already stored correctly, which is what a well-maintained file should produce and is not a reason to skip the gate |
+| 3.2 | ✅ **Done in stage 2.** `lib/copy.ts` + `tests/copy.test.mts` |
+| 3.3 | ✅ **SEO.** `BreadcrumbList` on all nine indexed pages, from the same `trail` as the visible strip. `/studio` disallow gone — robots now has no `Disallow` at all. Five OG cards, committed PNGs from `scripts/og.mjs`. `JewelryStore` gained `image`. Facebook moved into `lib/config.ts`, the last business fact outside it. **Two bugs found by audit:** five pages were emitting `og:url` = the homepage, and the noindex hop pages were inheriting the homepage canonical |
+| 3.4 | ✅ **Redirects re-verified against a production build** — first time possible. All 26 rules 308 to the right place, one hop to 200, five reclaimed paths 200, deliberate 404s branded. Three coverage gaps closed, including the host rule, which protects against a preview deployment being indexed as a duplicate of the whole site and had no assertion anywhere |
+| 3.5 | ◐ **Local half done; hardware half is 4.2** by decision. `dvh` hero, `viewportFit` (which made `CallFab`'s already-correct safe-area insets actually resolve), the coin no longer shipping 1.3 MB to tablets, 320px in the overflow suite for the first time, card images at q=60. **Lighthouse mobile is 89 on the homepage against a ≥90 target** — recorded as short, not reworded |
+| 3.6 | ✅ **Accessibility measured, not assumed.** Every text pairing clears AA; focus rings verified on both grounds in a browser; two real failures found and fixed, including a 20px tap target on both hop pages. Hairlines measured at 1.30:1 and 1.18:1 and deliberately *not* graded — D11 separates by spacing first, and daylight on a phone is 4.2's |
+| 3.7 | ✅ **Verify-and-tidy, as expected.** One real defect: three tracked `.pyc` files under a hand-vendored skill |
+| 3.8 | ✅ **`/telefon` built**, twin of `/yol-tarifi`, and `@vercel/analytics` installed. Only the label-bearing buttons take the hop; every printed number keeps a direct `tel:` so it stays selectable where `tel:` is a dead end |
+| 3.9 | ✅ **Runbook rehearsed and corrected.** Three of its steps did not survive contact — most importantly "move the finished image into `public/urunler/`", where there is nothing to move |
+| — | ✅ **Beyond the original scope, at Soner's direction:** security headers, an enforcing CSP, e2e against a production build, and CI |
 
 **Two things the stage-3 session should know before it starts** (recorded 2026-08-29, when
 the stage was prepared but deliberately not opened):
@@ -159,7 +160,40 @@ the stage was prepared but deliberately not opened):
    `NODE_ENV === "production"` and call `notFound()`. Treat 3.7 as verify-and-tidy, not
    build.
 
-**Gate 3→4:** nothing is deployed and nothing on Google is touched until stage 3 is approved.
+**Gate 3→4.** Nothing is deployed and nothing on Google is touched until stage 3 is
+approved in writing.
+
+**What stage 4 inherits, written down so it is not rediscovered:**
+
+0. **Everything this project exists to fix is live right now, on the canonical URL.**
+   Confirmed 2026-09-08 by fetching the domain: it returns the holding page, byte-identical
+   to `holding-page/index.html`. That page publishes the retired bare name as the business
+   name, **`No: 56/A`** in the visible address *and* in its JSON-LD, a **20:00** closing
+   time, and **pırlanta** as a stock claim — in structured data, signed by us, at the URL
+   every listing points at. Stage 3 finishing changes none of it. **4.1 does**, and this is
+   the argument for not letting the deploy drift: every week it stays up is another week of
+   Google being told the wrong name, the wrong door and the wrong hours by the most
+   authoritative source available. *(`holding-page/README.md` claimed the page was no longer
+   deployed. It was wrong, and is corrected.)*
+
+1. **Lighthouse mobile is 89 on the homepage** (≥90 wanted) with LCP 3.6 s against 2.5 s.
+   Measured locally without a CDN, so 4.2 re-measures — but one part is environmental and
+   one is not: **the homepage LCP element is the coin `<video>`, and `design.md`'s budget
+   says it should be the H1.** That needs a hero change, which the stage-3 frontend freeze
+   ruled out.
+2. **The analytics beacon is unverified.** `connect-src 'self'` covers it only if it posts
+   to the deployment's own origin. That code lives in a remote script that loads only on a
+   real Vercel deployment. **A CSP that blocks the beacon fails silently** — no data, and a
+   site that looks perfect.
+3. **Security headers do not reach redirect responses.** A 308 arrives with none of them,
+   and 26 of this domain's URLs *are* redirects. Vercel's routing layer may add them itself;
+   `tests/headers.spec.ts` pins the local behaviour so a change is visible.
+4. **`E2E_BASE_URL` exists now**, so `redirects.spec.ts` can run against the live domain —
+   which 4.2 asks for and which was previously impossible.
+5. **`spec`, the `featured` four, and the contact-sheet flags** still need Soner. Until
+   `featured` is set, the homepage has no Öne Çıkanlar section at all.
+6. **Re-run `npm run og`** if the lockup, the palette or a category cover ever changes.
+   Nothing regenerates the OG cards automatically.
 
 ### Stage 4 — FINAL.md
 
