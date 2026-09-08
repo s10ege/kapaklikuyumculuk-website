@@ -119,6 +119,26 @@
   font-weight: 500;
 }
 
+/* The hero's height (D4 — ~78vh, no pin, no scroll linkage).
+ *
+ * Two declarations, and the order is the whole point: a browser that does not
+ * understand `dvh` ignores the second and keeps the first, and one that does
+ * overrides it. §6.3 asks for exactly this.
+ *
+ * Why it is here rather than `min-h-[78dvh]` on the element: Tailwind emits
+ * arbitrary-value utilities in an order it decides, so stacking two of them
+ * and hoping the dvh one wins is a bet on generated-CSS ordering. Written out,
+ * the cascade is stated rather than inferred.
+ *
+ * What it fixes: `vh` on iOS Safari is the height with the URL bar *collapsed*,
+ * so a `vh` hero is taller than the visible viewport on load and then jumps
+ * when the bar retracts mid-scroll. `dvh` tracks the bar. This was the only
+ * viewport-height unit anywhere in the codebase. */
+@utility hero-height {
+  min-height: 78vh;
+  min-height: 78dvh;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

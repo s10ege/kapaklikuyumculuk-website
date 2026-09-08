@@ -188,12 +188,16 @@ end. Proven locally here; proven live in `FINAL.md`.
   §0 and `lib/schema.ts`. `sameAs`: Instagram + Facebook.
 - `BreadcrumbList` on every page; `ItemList` of `Product` per category, **now carrying real
   image URLs**, which it could not before.
-- **OG images** — new requirement from the redesign. A dark card with the coin and the
-  lockup as the site-wide default, plus per-category cards using a product image. There is
-  currently nothing, so every share of the link looks broken — and sharing a link is
-  still how this shop's customers pass it on, whatever they share it in.
+- ✅ **OG images — built 2026-09-08.** Five 1200×630 cards: the coin and the claim as the
+  site-wide default, and one per category using that category's own cover, so the card and
+  the page a visitor lands on show the same piece. Committed PNGs in `public/og/`,
+  photographed from `app/dev/og` by `scripts/og.mjs`. Not `next/og` — the fonts come from
+  `next/font/google`, nothing here is a font binary, and `ImageResponse` would put a Google
+  Fonts fetch inside `next build`. **Re-run `npm run og` if the lockup, the palette or a
+  category cover ever changes; nothing regenerates them automatically.**
 - `sitemap.ts` regenerated from the folder-driven catalogue, so a new product needs no
-  sitemap edit. **Drop the `/studio` disallow** — there is no Studio.
+  sitemap edit. ✅ **The `/studio` disallow is gone (2026-09-08)** — `robots.txt` now carries
+  no `Disallow` at all, and a test asserts the absence rather than the rule.
 - Targets stay local: **`kapaklı kuyumcu`, `kapaklı altın`, `tekirdağ altın seti`**. Not
   `altın bilezik` on its own — that is competing nationally against chains with budgets.
   (`tekirdağ pırlanta` was a target until 2026-09-08. The pırlanta category was retired —
@@ -204,26 +208,45 @@ end. Proven locally here; proven live in `FINAL.md`.
 Layout decisions for phones live in `design.md` (D15). This section is device-level
 correctness and the things only real hardware reveals.
 
-Baseline carried over: Tailwind mobile-first, breakpoints proven at 390 / 768 / 1440,
-hamburger panel listing the four categories first, tap targets ≥44px (§7).
+Baseline carried over: Tailwind mobile-first, breakpoints proven at **320 / 360 / 390 /
+768 / 1440** since 2026-09-08, hamburger panel listing the four categories first, tap
+targets ≥44px (§7).
 
 1. **Real-device pass, not emulator.** Minimum: one mid-range Android (Chrome and Samsung
    Internet) and one iPhone (Safari — Chrome for iOS is Safari underneath, so it is not a
    second engine). Emulators do not reproduce URL-bar behaviour, touch latency or font
    rendering.
 2. **The coin at phone size.** Budget ≤500 KB, rotation pauses off-screen, still frame under
-   `prefers-reduced-motion` and `prefers-reduced-data`.
-3. **`100dvh`, not `100vh`.** iOS Safari's collapsing URL bar makes a `vh` hero jump
-   mid-scroll. `dvh` with a `vh` fallback.
+   `prefers-reduced-motion` and `prefers-reduced-data`. ✅ **Fixed 2026-09-08:** the video
+   source switched encodes at 768px while the coin only grows at 1024px, so every
+   768–1023px viewport downloaded the 1326 KB encode to paint a 320px coin — over the
+   budget, on a tablet. The switch now tracks the size jump. The *poster* upgrade stays at
+   768px on purpose: the still is 117 KB, and the reduced-motion visitors who see it are
+   the ones who look at it indefinitely.
+3. ✅ **`dvh`, not `vh` — done 2026-09-08.** The `hero-height` utility in `app/globals.css`
+   declares `78vh` then `78dvh`, in that order, so an engine without `dvh` keeps the first.
+   Written as a utility rather than two Tailwind arbitrary classes because that would bet
+   on generated-CSS ordering. This was the only viewport-height unit in the codebase.
 4. **Safe-area insets.** The call FAB must clear the iOS home indicator
    (`env(safe-area-inset-bottom)`) and must never sit on the last row of a product grid.
+   ✅ **Half-fixed 2026-09-08:** `CallFab` had read the insets correctly since it was
+   written, but the viewport export carried no `viewportFit: "cover"`, so on iOS they
+   always resolved to `0px`. Correct code, inert — the hardest kind to spot, since nothing
+   is missing and nothing errors. `cover` is set now; whether the button actually clears
+   the home indicator is 4.2's, on a real phone.
 5. **Lightbox on touch.** Swipe to step through, close button in thumb reach, focus trap
    that does not fight the on-screen keyboard, pinch-zoom not blocked. Currently proven with
    keyboard and mouse only.
 6. **Sticky header height** on a 667px-tall screen — decide between shrink-on-scroll and
    accepting the cost.
-7. **No horizontal scroll at 320px**, on any route. The most common regression after a
-   redesign.
+7. ✅ **No horizontal scroll at 320px — now tested, 2026-09-08.** This was a done-when from
+   the day the section was written and never had a test; the narrowest width the suite
+   checked was 360. Adding it found one real failure: `/yol-tarifi` scrolled 39px because
+   "yönlendiriliyorsunuz" is a single 20-character word at 40px in a 280px content box.
+   Fixed with `hyphens-auto break-words` rather than by shortening the sentence — long
+   Turkish words are a permanent condition here, not an accident of that heading. Note the
+   overflow assertion reported *no offending element*: a wide text node leaves every box
+   inside the viewport, so only `scrollWidth` sees it.
 8. **Browser text scaling and 200% zoom.** Nothing in fixed px that ignores the user's
    setting — older customers are a real share of this shop's audience.
 9. **Turkish glyphs at 390px**, both faces, no mid-word fallback.

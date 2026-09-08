@@ -94,10 +94,24 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-/* Matches the sticky header, which is what sits under the browser's URL bar on
- * a phone — cream since D6 put the frame around the espresso body. */
+/* themeColor matches the sticky header, which is what sits under the browser's
+ * URL bar on a phone — cream since D6 put the frame around the espresso body.
+ *
+ * `viewportFit: "cover"` is what makes `env(safe-area-inset-*)` resolve to
+ * anything other than 0px on iOS. Without it the insets are defined but always
+ * zero, so components/CallFab.tsx — which has read them correctly since it was
+ * written — was positioning itself against a safe area the browser never
+ * reported. The code was right and inert, which is the hardest kind of bug to
+ * see: nothing is missing, nothing errors, and the button simply sits on the
+ * home indicator on the phones that have one. Found in the stage-3 audit.
+ *
+ * Deliberately NOT setting `maximumScale` or `userScalable`, which the Next
+ * docs show together in the same example: both disable pinch-zoom, and §6.8
+ * requires 200% zoom and browser text scaling to work. Older customers are a
+ * real share of this shop's audience. */
 export const viewport: Viewport = {
   themeColor: "#f4f0e8",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

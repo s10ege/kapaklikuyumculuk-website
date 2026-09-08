@@ -4,8 +4,15 @@ import { test, expect, type Page } from "@playwright/test";
  * a desktop browser and silently clips copy on the phone that 80%+ of visitors
  * arrive on (§7). Cheaper to assert than to spot.
  *
+ * 320 is §6.7's floor and the width this suite was missing until 2026-09-08 —
+ * "no horizontal scroll at 320px" was written into TECHNICAL.md as a done-when
+ * and never had a test, so the narrowest thing ever checked was 360. It is not
+ * a hypothetical size: it is an iPhone SE 1st gen, and it is also what any
+ * phone becomes when the visitor sets a larger system font and the browser
+ * scales down, which §6.8 says older customers do.
+ *
  * 360 is the narrow end of common Android; 390 is iPhone; 1440 is desktop. */
-const WIDTHS = [360, 390, 768, 1440] as const;
+const WIDTHS = [320, 360, 390, 768, 1440] as const;
 
 /* Routes are listed explicitly rather than crawled so a page that fails to
  * render at all shows up as a failure instead of silently not being tested. */

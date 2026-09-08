@@ -52,8 +52,14 @@ test.describe("/telefon", () => {
      * happening — that is the failure mode of routing a CTA through an extra
      * page, and the reason the forwarder carries a timeout. */
     await page.goto("/telefon");
+
+    /* Generous, and deliberately so. The component's timer is 2500ms, but it
+       starts at hydration, and hydration against a loaded dev server running
+       two workers is not bounded by anything this test controls — 6000ms
+       passed in isolation and failed once in a full run. The contract being
+       asserted is "the message arrives", not "it arrives within one budget". */
     await expect(page.getByText(/Telefon uygulaması açılmadı/)).toBeVisible({
-      timeout: 6000,
+      timeout: 20_000,
     });
   });
 

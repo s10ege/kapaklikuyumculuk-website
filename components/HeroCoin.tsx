@@ -19,6 +19,23 @@ import { useEffect, useRef } from "react";
  * battery, per design.md), and 500ms have passed since it entered view (the
  * "still, then it turns" first impression, D3).
  */
+/* Two thresholds, deliberately different — the pair used to be one 768px
+ * value in three places, which cost every tablet visitor about 900 KB.
+ *
+ * The coin renders at 280px, 320px at `sm`, and 580px at `lg` (1024px). The
+ * VIDEO switch has to track that last jump: at 768–1023px the coin is still
+ * 320px wide, so serving the 800px encode there meant downloading 1326 KB to
+ * paint a 320px element — against design.md's 500 KB mobile budget, and for a
+ * viewport that is a tablet, not a desktop. It switches at `lg` now, where the
+ * coin actually becomes large.
+ *
+ * The POSTER stays at 768px, and the difference is not an oversight. The still
+ * is 117 KB against the video's 1326, and the only visitors who see it for
+ * more than two seconds are the reduced-motion and reduced-data ones, who look
+ * at it indefinitely. Cheap, and it is the whole experience for them. */
+const LARGE_COIN = "(min-width: 1024px)";
+const SHARP_POSTER = "(min-width: 768px)";
+
 export function HeroCoin({ className = "" }: { className?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -42,7 +59,7 @@ export function HeroCoin({ className = "" }: { className?: string }) {
     // LCP candidate that tripled desktop LCP on slow networks (measured at
     // the 1.6 verification: 3472ms vs 1424ms).
     if (reduced) {
-      if (window.matchMedia("(min-width: 768px)").matches) {
+      if (window.matchMedia(SHARP_POSTER).matches) {
         video.poster = "/hero/coin-still-800.webp";
       }
       return;
@@ -69,7 +86,7 @@ export function HeroCoin({ className = "" }: { className?: string }) {
     };
     const onRefusedAutoplay = () => {
       console.debug("HeroCoin: autoplay refused, waiting for a gesture");
-      if (window.matchMedia("(min-width: 768px)").matches) {
+      if (window.matchMedia(SHARP_POSTER).matches) {
         video.poster = "/hero/coin-still-800.webp";
       }
       removeGestureListeners();
@@ -144,7 +161,7 @@ export function HeroCoin({ className = "" }: { className?: string }) {
             "radial-gradient(closest-side, black 90%, transparent 100%)",
         }}
       >
-        <source media="(min-width: 768px)" src="/hero/coin-800.mp4" type="video/mp4" />
+        <source media={LARGE_COIN} src="/hero/coin-800.mp4" type="video/mp4" />
         <source src="/hero/coin-420.mp4" type="video/mp4" />
       </video>
       {/* Opera injects its pop-out and Lucid-mode buttons when the element

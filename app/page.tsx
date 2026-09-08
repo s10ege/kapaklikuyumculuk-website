@@ -55,7 +55,7 @@ export default function Home() {
       {/* overflow-hidden: the coin's radial glow deliberately bleeds past its
           own box (D7) — this clips that bleed at the viewport edge instead of
           letting it cause horizontal scroll on narrow screens. */}
-      <section className="relative flex min-h-[78vh] items-center overflow-hidden bg-ground">
+      <section className="hero-height relative flex items-center overflow-hidden bg-ground">
         {/* Soner's direction at the 1.3 review: from the coin's left edge, a
             fade runs to the page's left edge — imperceptible where it starts,
             gently gaining warmth toward the far left, so the text half doesn't

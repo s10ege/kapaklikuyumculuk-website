@@ -39,7 +39,20 @@ export default function DirectionsPage() {
       <div className="mx-auto w-full max-w-lg px-5 py-20 sm:py-28">
         <p className="text-label uppercase text-gold-soft">Yol tarifi</p>
 
-        <h1 className="mt-4 display-md text-cream-text">
+        {/* `hyphens-auto` with `break-words` behind it. At 320px — §6.7's
+            floor — the padding leaves 280px, and "yönlendiriliyorsunuz" is a
+            single 20-character word at 40px, so it cannot fit however the box
+            is sized. The document scrolled sideways by 39px, which the
+            overflow suite never caught because this route was not in it and
+            because a wide *text node* leaves every element's own rect inside
+            the viewport. With `lang="tr"` on the document, `hyphens: auto`
+            breaks it at a real syllable and prints the hyphen; `break-words`
+            is the ugly fallback for engines with no Turkish dictionary.
+
+            Not solved by shortening the sentence: the copy is not what is
+            wrong, and long Turkish words are a permanent condition of this
+            site rather than an accident of this heading. */}
+        <h1 className="mt-4 display-md hyphens-auto break-words text-cream-text">
           Haritaya yönlendiriliyorsunuz
         </h1>
 
