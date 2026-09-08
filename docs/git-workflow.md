@@ -114,10 +114,23 @@ Neither is needed today.
 ## Running the tests
 
 ```bash
-npm run test:unit       # node:test — config, content, copy, contrast, invariants
-npm run test:e2e        # Playwright against `next dev`
-npm run test:e2e:prod   # Playwright against `next build && next start`
+npm run verify              # every gate, by exit code — use this one
+npm run verify -- --quick   # same, minus the two e2e suites
+
+npm run test:unit           # node:test + the retired-terms gate
+npm run test:e2e            # Playwright against `next dev`
+npm run test:e2e:prod       # Playwright against `next build && next start`
 ```
+
+**Use `npm run verify`.** It exists because of a mistake made twice in stage 3:
+gates were run individually and judged by reading their output. `npm run build | grep`
+for the dynamic-route marker prints "clean" for a build that *crashed*, and
+`npm run test:unit | grep "pass"` prints node:test's summary while dropping the
+retired-terms gate chained after it. Both reported green for three commits while
+exiting 1. `verify` reads exit codes and nothing else; its own exit code is the answer.
+
+The same gates run in CI (`.github/workflows/ci.yml`) on every push to `main` and every
+pull request.
 
 **Two projects since 2026-09-08.** Everything used to run against the dev server, which
 meant "the redirects work" and "the build is static" — both claims about production — were

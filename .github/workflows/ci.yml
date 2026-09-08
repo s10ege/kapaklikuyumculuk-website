@@ -1,0 +1,103 @@
+name: CI
+
+# Nothing here runs until the repo is pushed. It is written now because the
+# session that wrote it spent three commits reporting a green gate that was
+# exiting 1 — the output was being read through a grep that dropped the
+# failure. A machine reading exit codes cannot make that mistake.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A second push to the same branch cancels the first. Nothing here writes
+# anywhere, so an abandoned run is only wasted minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: types · lint · unit · static build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # `npm ci` and not `npm run setup`: setup also restores the third-party
+      # skills and Playwright browsers from skills-lock.json, which a CI run
+      # neither has credentials for nor needs.
+      - run: npm ci
+
+      - run: npm run typecheck
+      - run: npm run lint
+
+      # Runs node:test AND scripts/retired-terms.mjs — the gate that was
+      # silently failing. Chained with && in package.json, so a gate failure
+      # fails this step.
+      - run: npm run test:unit
+
+      - name: Build, and prove every route is static
+        run: |
+          set -euo pipefail
+          npm run build | tee build.log
+
+          # Hard rule 9: no server rendering, no ƒ markers. Checked AFTER the
+          # build's own exit code, because `grep -c ƒ` returns 0 for a build
+          # that crashed before printing a route table — which is precisely how
+          # a broken build got reported as "no ƒ" during stage 3.
+          if grep -q 'ƒ' build.log; then
+            echo "::error::Dynamic route found — the build must stay fully static"
+            grep 'ƒ' build.log
+            exit 1
+          fi
+
+          # And prove the route table was actually printed, so an empty log
+          # cannot pass this check by containing nothing.
+          grep -q '○  (Static)' build.log \
+            || { echo "::error::No route table in build output"; exit 1; }
+
+  e2e:
+    name: e2e (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # dev catches what only the dev server shows — React's eval under CSP,
+        # the app/dev/* routes. prod catches what only a real build shows: the
+        # redirect map, the static output, and the hop pages that forward
+        # before a slow dev server lets an assertion run.
+        project: [dev, prod]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # The config pins `channel: "chrome"` so local runs use the same browser
+      # a visitor would. Installing the real Chrome channel here keeps CI on
+      # that browser instead of quietly testing bundled Chromium.
+      - run: npx playwright install --with-deps chrome
+
+      - run: npm run test:e2e
+        if: matrix.project == 'dev'
+
+      - run: npm run test:e2e:prod
+        if: matrix.project == 'prod'
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
