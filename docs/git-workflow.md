@@ -54,6 +54,19 @@ commit, never mixed with content — otherwise the real change is invisible in t
   one commit per iteration, matching `plan.md`.
 - Delete the branch after merging.
 
+**Exception — a stage-closing pass gets a merge commit** (`--no-ff`), decided 2026-09-08
+when `final-tweaks` closed stage 2 with nine commits.
+
+The squash rule exists because branch history is usually working notes, and it usually is.
+A pass that closes a stage is the case where it is not: nine commits, each a distinct
+decision, each carrying the reasoning that will be wanted in six months — why a redirect was
+repointed, why one master was rebuilt and at what loss, why the pin-only embed replaced a
+route. Squashing turns that into one message that either runs to five hundred lines or drops
+what matters.
+
+`git log --first-parent main` still reads as one entry per pass, which is what the squash
+rule is actually asking for. The detail is one level down instead of gone.
+
 ## What Claude may and may not do
 
 1. **Claude never pushes without being asked**, and never force-pushes at all.
@@ -65,22 +78,25 @@ commit, never mixed with content — otherwise the real change is invisible in t
    `npx skills install`; `skills-lock.json` pins them. The two project-local skills
    (`kk-brand`, `catalogue-pipeline`) are explicitly unignored and **are** committed.
 
-## Pushing from this environment — currently not possible
+## Pushing from this environment
 
-Claude works on these files through a sandboxed shell on Soner's machine. That shell has
-**no network access to GitHub** (proxy returns 403) and **no stored credentials**, so it can
-stage and commit but cannot push, pull, clone or fetch.
+> **Corrected 2026-09-08.** This section used to say pushing was impossible — no network to
+> GitHub (403 from the proxy) and no stored credentials, so the split was "Claude commits,
+> Soner pushes". That is no longer true on the machine this now runs on: `git push` reaches
+> `origin` and authenticates. Verified with a dry run before the stage-2 merge.
 
-So the split is: **Claude commits, Soner pushes.**
+Rule 1 below still stands and matters more now, not less: **Claude never pushes without
+being asked.** Being able to push is not permission to push. Ask, then push, then say
+exactly what moved.
+
+If the old situation ever returns — a sandbox with no credentials — the fallback is
+unchanged:
 
 ```powershell
 cd C:\Users\soner\.vscode\projects\kapaklikuyumculuk_website
 git log --oneline -5      # check what Claude committed
 git push origin main      # or: git push -u origin <branch>
 ```
-
-If that ever needs to change, the options are a GitHub personal access token available to
-the shell, or moving the repo into Claude's own cloud workspace and pushing from there.
 Neither is needed today.
 
 ## Two environment gotchas
