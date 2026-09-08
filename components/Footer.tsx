@@ -5,13 +5,13 @@ import {
   addressLines,
   contact,
   instagramUrl,
-  mapsSearchUrl,
   phoneDisplay,
   phoneHref,
   shop,
 } from "@/lib/config";
 import { categoryLinks } from "@/lib/nav";
-import { InstagramIcon, PinIcon } from "./icons";
+import { DirectionsButton } from "./DirectionsButton";
+import { InstagramIcon } from "./icons";
 import { Lockup } from "./Lockup";
 import { OpeningHours } from "./OpeningHours";
 
@@ -97,15 +97,7 @@ export function Footer() {
           <div>
             <ColumnHeading>Çalışma Saatleri</ColumnHeading>
             <OpeningHours tone="cream" className="mt-4 text-sm" />
-            <a
-              href={mapsSearchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 border border-gold-deep/60 px-4 text-sm text-gold-deep transition-colors hover:bg-gold/15"
-            >
-              <PinIcon className="h-4 w-4" />
-              Yol Tarifi Al
-            </a>
+            <DirectionsButton variant="onCream" className="mt-5" />
           </div>
         </div>
 

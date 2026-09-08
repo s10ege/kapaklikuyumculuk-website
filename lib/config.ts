@@ -302,14 +302,59 @@ export const addressLines = [
   `${address.postalCode} ${address.locality} / ${address.region}`,
 ] as const;
 
-const mapsQuery = encodeURIComponent(`${shop.name} ${addressOneLine}`);
+/* §6.7 — the keyless embed, so no Maps API key is needed.
+ *
+ * Keyed on coordinates, not on the address string. The address-keyed form
+ * (`?q=<name> <address>&output=embed`) is what this was until 2026-09-08, and
+ * it rendered a *route* — Google resolved the query as a destination and drew
+ * a line to it from "Kapaklı", which is a direction card, not a shop location.
+ * A visitor looking for where the shop is got a trip planner starting from a
+ * town centre they had not asked about.
+ *
+ * `q=<lat>,<lng>` drops a single pin and nothing else. `z=17` is street level
+ * — close enough to see which side of the road it is on, wide enough to show
+ * the junction people navigate by. `hl=tr` keeps the map's own labels Turkish. */
+export const mapsEmbedUrl = `https://maps.google.com/maps?q=${geo.lat},${geo.lng}&z=17&hl=tr&output=embed`;
 
-/** "Yol Tarifi Al" — opens the maps app. */
-export const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+/* ------------------------------------------------------------------------- */
+/* Directions                                                                 */
+/* ------------------------------------------------------------------------- */
 
-/** §6.7 — the keyless embed form, so no Maps API key is needed. Keyed on the
- *  address string because the coordinates are ❌. */
-export const mapsEmbedUrl = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
+/* Both name the destination by coordinates rather than by a search string, so
+ * the app opens on this shop instead of resolving a name that — as
+ * docs/index-cleanup-plan.md documents at length — currently resolves to two
+ * different addresses.
+ *
+ * Google also takes the place ID, which is stronger still: it names the
+ * listing, so the destination card shows the shop's own name and hours rather
+ * than a dropped pin. Apple has no equivalent, so `q` carries the name for the
+ * label only; `daddr` is what it actually navigates to. */
+export const directions = {
+  google:
+    "https://www.google.com/maps/dir/?api=1" +
+    `&destination=${geo.lat},${geo.lng}` +
+    `&destination_place_id=${googlePlaceId}`,
+  apple:
+    `https://maps.apple.com/?daddr=${geo.lat},${geo.lng}` +
+    `&q=${encodeURIComponent(shop.name)}`,
+} as const;
+
+export type MapsApp = keyof typeof directions;
+
+/** The internal hop (TECHNICAL.md §9).
+ *
+ *  Vercel Web Analytics is on the free tier, where custom events are Pro-only —
+ *  so a click on an outbound link cannot be counted. Routing it through an
+ *  internal URL first turns that click into an ordinary page view, which is
+ *  free. This is the URL shape the analytics will count; `/yol-tarifi` itself
+ *  is a real prerendered page that forwards, not a redirect, because a redirect
+ *  renders nothing and would therefore never fire the analytics beacon it
+ *  exists to fire. */
+export const directionsPath = "/yol-tarifi";
+
+export function directionsHref(app: MapsApp): string {
+  return `${directionsPath}?app=${app}`;
+}
 
 /* ------------------------------------------------------------------------- */
 /* The contact CTA (§9)                                                       */

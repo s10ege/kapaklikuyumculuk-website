@@ -232,15 +232,44 @@ test.describe("/iletisim", () => {
     ).toEqual([expected, expected === "summer" ? "winter" : "summer"]);
   });
 
-  test("embeds a keyless map keyed on the address, not coordinates", async ({
-    page,
-  }) => {
+  test("embeds a keyless coordinate pin, not a route", async ({ page }) => {
     await page.goto("/iletisim");
 
-    const src = await page.locator("iframe").getAttribute("src");
+    const frame = page.locator("iframe");
+    const src = (await frame.getAttribute("src")) ?? "";
+
+    // Still keyless — no Maps API key anywhere on this site.
     expect(src).toContain("output=embed");
-    // Coordinates are graded ❌ (~150 m disagreement), so none may be emitted.
-    expect(src).not.toMatch(/@?4[01]\.\d{3,}/);
+
+    /* The pin, by coordinate. This was keyed on the address string until
+     * 2026-09-08, and Google resolved that as a *destination*: the embed drew
+     * a route from "Kapaklı" to the shop, which is a trip planner, not a
+     * location. Any of these params means the route is back. */
+    expect(src).toContain("q=41.326459,27.976502");
+    for (const routeParam of ["saddr", "daddr", "/dir/", "origin=", "&dir"]) {
+      expect(src, `${routeParam} means this is a route again`).not.toContain(
+        routeParam,
+      );
+    }
+
+    // D-rules: hairline border, no radius, and lazy so it never blocks paint.
+    await expect(frame).toHaveAttribute("loading", "lazy");
+    await expect(frame).toHaveAttribute(
+      "referrerpolicy",
+      "no-referrer-when-downgrade",
+    );
+    await expect(frame).toHaveAttribute(
+      "title",
+      "Trakya Kapaklı Kuyumculuk konumu",
+    );
+
+    const box = frame.locator("xpath=..");
+    expect(await box.evaluate((el) => getComputedStyle(el).borderRadius)).toBe(
+      "0px",
+    );
+    expect(await box.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe(
+      "1px",
+    );
   });
 });
 

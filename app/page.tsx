@@ -2,13 +2,13 @@ import Link from "next/link";
 
 import { AllProductsLink, CategoryTiles } from "@/components/CategoryTiles";
 import { ContactButton } from "@/components/ContactButton";
+import { DirectionsButton } from "@/components/DirectionsButton";
 import { HeroCoin } from "@/components/HeroCoin";
 import { OpeningHours } from "@/components/OpeningHours";
 import { ProductGallery } from "@/components/ProductGallery";
-import { ArrowRightIcon, PinIcon } from "@/components/icons";
+import { ArrowRightIcon } from "@/components/icons";
 import {
   addressLines,
-  mapsSearchUrl,
   phoneDisplay,
   phoneHref,
   services,
@@ -238,19 +238,13 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+              {/* "Konum", not "Yol tarifi" — the button says Yol Tarifi Al,
+                  and a row labelled the same thing stutters. */}
               <dt className="text-label uppercase text-muted sm:w-32 sm:flex-none">
-                Yol tarifi
+                Konum
               </dt>
               <dd>
-                <a
-                  href={mapsSearchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-2 text-gold-soft transition-colors hover:text-cream-text"
-                >
-                  <PinIcon className="h-4 w-4" />
-                  Haritada açın
-                </a>
+                <DirectionsButton variant="quiet" className="!px-0" />
               </dd>
             </div>
           </dl>

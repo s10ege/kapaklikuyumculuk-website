@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactButton } from "@/components/ContactButton";
+import { DirectionsButton } from "@/components/DirectionsButton";
 import { OpeningHours } from "@/components/OpeningHours";
-import { InstagramIcon, PinIcon } from "@/components/icons";
+import { InstagramIcon } from "@/components/icons";
 import {
   addressLines,
   contact,
   hours,
   instagramUrl,
   mapsEmbedUrl,
-  mapsSearchUrl,
   phoneAltDisplay,
   phoneDisplay,
   phoneHref,
@@ -140,6 +140,10 @@ export default function ContactPage() {
           </div>
 
           <div className="flex flex-col">
+            {/* Hairline border, no radius (D-rules). The embed is the
+                coordinate-pin form — the address-keyed one it replaced drew a
+                route from "Kapaklı" to the shop, which answers a question
+                nobody on this page asked. */}
             <div className="relative aspect-[4/3] w-full border border-line-dark bg-panel lg:aspect-auto lg:flex-1">
               <iframe
                 title={`${shop.name} konumu`}
@@ -150,15 +154,7 @@ export default function ContactPage() {
               />
             </div>
 
-            <a
-              href={mapsSearchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 border border-gold-soft/50 px-5 py-3 text-sm text-gold-soft transition-colors hover:bg-gold/15"
-            >
-              <PinIcon className="h-4 w-4" />
-              Yol Tarifi Al
-            </a>
+            <DirectionsButton className="mt-4 w-full" />
           </div>
         </div>
       </section>

@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ArrowRightIcon, PinIcon } from "@/components/icons";
-import {
-  addressLines,
-  mapsSearchUrl,
-  phoneDisplay,
-  phoneHref,
-} from "@/lib/config";
+import { DirectionsButton } from "@/components/DirectionsButton";
+import { ArrowRightIcon } from "@/components/icons";
+import { addressLines, phoneDisplay, phoneHref } from "@/lib/config";
 
 /* §6.8 — 404.
  *
@@ -73,15 +69,7 @@ export default function NotFound() {
             ))}
           </address>
 
-          <a
-            href={mapsSearchUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm text-gold-soft transition-colors hover:text-cream-text"
-          >
-            <PinIcon className="h-4 w-4" />
-            Yol Tarifi Al
-          </a>
+          <DirectionsButton variant="quiet" className="mt-4 !px-0" />
         </div>
 
         <p className="mt-10 text-sm text-muted">

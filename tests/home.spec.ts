@@ -126,7 +126,13 @@ test("contact block shows the canonical address, hours and directions", async ({
   await expect(main.getByText("09:00 – 18:00").first()).toBeVisible();
   await expect(main.getByText(/Yaz \(Mayıs–Eylül\)/).first()).toBeVisible();
   await expect(main.getByText(/Kış \(Ekim–Nisan\)/).first()).toBeVisible();
-  await expect(main.getByRole("link", { name: /Haritada açın/ })).toBeVisible();
+  /* "Haritada açın" until 2026-09-08. The row's own label said "Yol tarifi"
+   * and the link said something else, which is a stutter one way round and a
+   * mismatch the other; the row is "Konum" now and the button is the same
+   * "Yol Tarifi Al" that appears in the footer, on /iletisim and on the 404. */
+  await expect(
+    main.getByRole("link", { name: /Yol Tarifi Al/ }),
+  ).toBeVisible();
 });
 
 test("the former partner's phone numbers appear nowhere", async ({ page }) => {
