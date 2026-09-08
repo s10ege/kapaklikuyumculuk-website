@@ -4,16 +4,17 @@ import {
   address,
   addressLines,
   contact,
-  hours,
   instagramUrl,
-  mapsSearchUrl,
   phoneDisplay,
   phoneHref,
   shop,
 } from "@/lib/config";
+import { COPY } from "@/lib/copy";
 import { categoryLinks } from "@/lib/nav";
-import { InstagramIcon, PinIcon } from "./icons";
+import { DirectionsButton } from "./DirectionsButton";
+import { InstagramIcon } from "./icons";
 import { Lockup } from "./Lockup";
+import { OpeningHours } from "./OpeningHours";
 
 /* §5 — cream (D6), four columns, hairline, then copyright and legal entity.
  *
@@ -43,8 +44,7 @@ export function Footer() {
             {/* gold-deep — the on-cream gold; plain gold measures 2.46:1 here. */}
             <div className="mt-4 h-px w-11 bg-gold-deep" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
-              {shop.founded} yılından beri Kapaklı&apos;da. Altın, pırlanta ve
-              özel tasarım takılar; {shop.claim}.
+              {COPY.footer.blurb}
             </p>
           </div>
 
@@ -72,9 +72,6 @@ export function Footer() {
               {addressLines.map((line) => (
                 <span key={line}>{line}</span>
               ))}
-              <span className="text-ink-muted">
-                {address.landmark.value}
-              </span>
               <a
                 href={phoneHref}
                 className="inline-flex min-h-11 items-center text-xl text-gold-deep transition-colors hover:text-ink-text"
@@ -99,22 +96,8 @@ export function Footer() {
 
           <div>
             <ColumnHeading>Çalışma Saatleri</ColumnHeading>
-            <div className="mt-4 flex flex-col gap-1 text-sm">
-              <span>{hours.days}</span>
-              <span>
-                {hours.opens} – {hours.closes}
-              </span>
-              <span className="text-ink-muted">{hours.closedNote}</span>
-            </div>
-            <a
-              href={mapsSearchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-11 items-center gap-2 border border-gold-deep/60 px-4 text-sm text-gold-deep transition-colors hover:bg-gold/15"
-            >
-              <PinIcon className="h-4 w-4" />
-              Yol Tarifi Al
-            </a>
+            <OpeningHours tone="cream" className="mt-4 text-sm" />
+            <DirectionsButton variant="onCream" className="mt-5" />
           </div>
         </div>
 

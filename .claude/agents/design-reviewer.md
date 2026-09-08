@@ -35,7 +35,7 @@ concretely why it reads as unconsidered.
 ## What this site is for
 
 An eleven-page catalogue for a family shop in Kapaklı, Tekirdağ. Its only job is to make a
-visitor confident enough to walk in or send a WhatsApp message. No cart, no prices, no
+visitor confident enough to walk in or pick up the phone. No cart, no prices, no
 accounts. Judge every element against that: an interaction that delays the phone number is
 a cost, however elegant.
 

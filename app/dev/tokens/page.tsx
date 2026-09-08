@@ -29,7 +29,6 @@ const NEUTRALS = [
   ["muted", "#9A958D", "secondary text on dark"],
   ["line-dark", "#262B31", "hairlines on espresso"],
   ["line-light", "#E4DED2", "hairlines on cream"],
-  ["whatsapp", "#25D366", "WhatsApp only"],
 ] as const;
 
 /* Every Turkish-specific glyph, upper and lower. If latin-ext is missing,
@@ -42,10 +41,9 @@ const GLYPHS = "ı İ i I ğ Ğ ş Ş ç Ç ö Ö ü Ü â Â î Î û Û";
 const PANGRAM = "Pijamalı hasta yağız şoföre çabucak güvendi.";
 
 const CATEGORY_NAMES = [
-  "Pırlanta",
-  "Altın Seti",
+  "Altın Setleri",
   "Küpe Modelleri",
-  "Tek Taş Modelleri",
+  "Yüzük",
   "Özel Tasarım Takılar",
 ];
 
@@ -112,7 +110,7 @@ export default function TokensPage() {
           <div className="flex flex-col gap-4">
             <p className="display-lg">Trakya Kapaklı Kuyumculuk</p>
             <p className="display-md">Özel Tasarım Takılar</p>
-            <p className="display-sm">Tek Taş Modelleri</p>
+            <p className="display-sm">Küpe Modelleri</p>
             <p className="display-sm text-gold-soft">
               {GLYPHS}
             </p>

@@ -5,10 +5,13 @@ import {
   address,
   addressLines,
   addressOneLine,
-  buildContactCta,
   contact,
   contactCta,
   formatTrPhone,
+  geo,
+  getCurrentSeason,
+  googleMapsUrl,
+  googlePlaceId,
   hours,
   instagramUrl,
   phoneAltDisplay,
@@ -27,7 +30,12 @@ test("formats a Turkish landline", () => {
 });
 
 test("formats a Turkish mobile with the same rule", () => {
-  assert.equal(formatTrPhone("905549157790"), "0554 915 77 90");
+  /* Turkish mobiles and landlines share one shape — 0 + a three-digit code +
+   * 3-2-2 — so one formatter covers both. The fixture is deliberately not a
+   * number belonging to this business: the shop's own mobile used to be here,
+   * and a retired number sitting in a test is how it finds its way back into
+   * something real. */
+  assert.equal(formatTrPhone("905321234567"), "0532 123 45 67");
 });
 
 test("returns unknown shapes untouched rather than inventing a number", () => {
@@ -49,7 +57,6 @@ test("never emits the former partner's phone numbers", () => {
   const emitted = [
     contact.phone.value,
     contact.phoneAlt.value,
-    contact.whatsapp.value,
     phoneDisplay.replace(/\s/g, ""),
     phoneAltDisplay.replace(/\s/g, ""),
   ].join(" ");
@@ -60,81 +67,39 @@ test("never emits the former partner's phone numbers", () => {
 });
 
 /* ------------------------------------------------------------------ */
-/* The pending mechanism (§8, §9)                                      */
+/* The one call-to-action                                              */
 /* ------------------------------------------------------------------ */
 
-const PHONE_FALLBACK = "tel:+902827172131";
+/* Five tests lived here until 2026-09-08, exercising both sides of a switch:
+ * `buildContactCta` returned a `wa.me` link with the product name pre-filled,
+ * or fell back to `tel:` while the number was unconfirmed. It was never
+ * confirmed, and then WhatsApp was removed entirely. There is one channel now,
+ * so there is nothing to switch and nothing to prefill — a `tel:` link cannot
+ * carry a message.
+ *
+ * What survives is the part that still matters: every CTA on the site comes
+ * from this one function, and what it returns is the phone. */
 
-test("falls back to tel: while the WhatsApp number is pending", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: true },
-    phoneHref: PHONE_FALLBACK,
-    productName: "22 Ayar Burma Bilezik",
-  });
+test("the site's one CTA is the phone, and says so", () => {
+  const cta = contactCta();
 
-  assert.equal(cta.channel, "phone");
-  assert.equal(cta.href, PHONE_FALLBACK);
+  assert.equal(cta.href, "tel:+902827172131");
   assert.equal(cta.label, "Bizi Arayın");
-  assert.ok(!cta.href.includes("wa.me"), "must not emit a wa.me link");
 });
 
-test("switches every CTA to WhatsApp when the flag flips", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-    productName: "22 Ayar Burma Bilezik",
-  });
+test("the CTA can never become a wa.me link again", () => {
+  /* Belt and braces with tests/source-invariants.test.mts, which greps the
+   * source. This one asserts the value, so it would catch a link built at
+   * runtime from a string the grep could not see. */
+  const cta = contactCta();
 
-  assert.equal(cta.channel, "whatsapp");
-  assert.equal(cta.label, "WhatsApp'tan Sorun");
-  assert.ok(cta.href.startsWith("https://wa.me/905549157790?text="));
+  assert.ok(!cta.href.includes("wa.me"));
+  assert.ok(!cta.label.toLocaleLowerCase("tr").includes("whatsapp"));
 });
 
-test("prefills the product name, which is the point of the mechanic", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-    productName: "22 Ayar Burma Bilezik",
-  });
-
-  const text = new URL(cta.href).searchParams.get("text");
-  assert.equal(
-    text,
-    "Merhaba, 22 Ayar Burma Bilezik hakkında bilgi almak istiyorum.",
-  );
-});
-
-test("omitting a product name still produces a usable message", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-  });
-
-  const text = new URL(cta.href).searchParams.get("text");
-  assert.equal(text, "Merhaba, bilgi almak istiyorum.");
-});
-
-test("Turkish characters survive the round trip into the wa.me link", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-    productName: "Özel Tasarım Yüzük",
-  });
-
-  // Encoded on the wire...
-  assert.ok(!cta.href.includes("Özel"), "must be percent-encoded in the href");
-  // ...and correct once WhatsApp decodes it.
-  assert.equal(
-    new URL(cta.href).searchParams.get("text"),
-    "Merhaba, Özel Tasarım Yüzük hakkında bilgi almak istiyorum.",
-  );
-});
-
-test("the live config currently routes to the phone", () => {
-  // Mirrors today's state. When the family confirms the number and
-  // contact.whatsapp.pending flips to false, this expectation flips with it —
-  // which is the reminder to re-run the site-wide CTA check in plan.md §16.
-  assert.equal(contactCta("Tek Taş Yüzük").channel, "phone");
+test("the CTA is derived from the phone, not typed out beside it", () => {
+  // If the number in config changes, the button changes with it.
+  assert.equal(contactCta().href, phoneHref);
 });
 
 /* ------------------------------------------------------------------ */
@@ -148,12 +113,24 @@ test("uses the correct Instagram handle", () => {
 });
 
 test("address matches the canonical block character for character", () => {
-  assert.equal(address.street, "Cumhuriyet Mah., Pınar Bulvarı No: 56/A");
-  assert.equal(addressOneLine.includes("59510 Kapaklı / Tekirdağ"), true);
+  /* This is the string the Google Business Profile will carry. Every comma,
+   * every space and the door letter are part of it — docs/index-cleanup-plan.md
+   * blames exactly this class of difference for the ranking problem. */
+  assert.equal(address.street, "Cumhuriyet Mah., Pınar Bulvarı No: 56/C");
+  assert.equal(
+    address.formatted,
+    "Cumhuriyet Mah., Pınar Bulvarı No: 56/C, 59510 Kapaklı / Tekirdağ",
+  );
+  assert.equal(addressOneLine, address.formatted, "one line, one spelling");
   assert.deepEqual(addressLines, [
-    "Cumhuriyet Mah., Pınar Bulvarı No: 56/A",
+    "Cumhuriyet Mah., Pınar Bulvarı No: 56/C",
     "59510 Kapaklı / Tekirdağ",
   ]);
+});
+
+test("the door number is 56/C, not the 56/A carried from a directory", () => {
+  // The change that made this file's whole premise worth having.
+  assert.ok(!address.formatted.includes("56/A"));
 });
 
 test("uses the post-2012 district and postcode, not Çerkezköy/59500", () => {
@@ -163,22 +140,92 @@ test("uses the post-2012 district and postcode, not Çerkezköy/59500", () => {
   assert.ok(!addressOneLine.includes("59500"));
 });
 
-test("publishes no coordinates, because the sources disagree", () => {
-  assert.ok(!("latitude" in address), "coordinates are graded ❌");
-  assert.ok(!("geo" in address));
+test("publishes the shop's own coordinates, not a geocoded guess", () => {
+  /* Graded ❌ until 2026-09-08 — sources disagreed by ~150 m and the site
+   * published none. These come from the shop's Google Maps listing, so the pin
+   * and the street number describe the same door. The bounds below are Kapaklı;
+   * a transposed lat/lng or a stray digit lands outside them. */
+  assert.ok(geo.lat > 41.3 && geo.lat < 41.36, `lat ${geo.lat} is not Kapaklı`);
+  assert.ok(geo.lng > 27.9 && geo.lng < 28.05, `lng ${geo.lng} is not Kapaklı`);
+  assert.equal(geo.lat, 41.326459);
+  assert.equal(geo.lng, 27.976502);
+});
+
+test("the maps URL names the place rather than searching for it", () => {
+  assert.ok(googleMapsUrl.includes(`place_id:${googlePlaceId}`));
+  assert.ok(!googleMapsUrl.includes("/search"));
+});
+
+test("the Ziraat landmark is gone from the config, in every spelling", () => {
+  /* A landmark is a second address in everything but name, and this project
+   * exists because the shop already has two circulating. It also decays
+   * silently: a branch closes and the site is pointing at a bank that is not
+   * there. Removed 2026-09-08 — do not reintroduce it. */
+  const serialised = JSON.stringify({ address: { ...address }, addressLines });
+  for (const spelling of ["Ziraat", "ziraat", "karşısı", "karşısında"]) {
+    assert.ok(!serialised.includes(spelling), `leaked "${spelling}"`);
+  }
+  assert.ok(!("landmark" in address));
 });
 
 test("has no email address, so no page may offer one", () => {
   assert.equal(contact.email.value, null);
 });
 
-test("hours are the seasonal summer closing", () => {
-  assert.equal(hours.opens, "09:00");
-  assert.equal(hours.closes, "20:00");
+test("both seasons carry a full set of hours", () => {
+  assert.equal(hours.summer.open, "09:00");
+  assert.equal(hours.summer.close, "19:00");
+  assert.equal(hours.winter.open, "09:00");
+  assert.equal(hours.winter.close, "18:00");
+  assert.equal(hours.closed, "Pazar kapalı");
   assert.equal(hours.schemaDays.length, 6, "Sunday is closed");
   // Widened: the tuple's literal type would otherwise reject "Sunday" at
   // compile time, which is reassuring but does not prove the runtime value.
   assert.ok(!(hours.schemaDays as readonly string[]).includes("Sunday"));
+});
+
+test("the two seasons cover all twelve months, exactly once each", () => {
+  /* The gap this guards is silent: a month in neither list falls through to
+   * winter by getCurrentSeason's else-branch and nobody notices, and a month
+   * in both makes the label a lie. Twelve, once each, is the whole invariant. */
+  const covered = [...hours.summer.months, ...hours.winter.months].sort(
+    (a, b) => a - b,
+  );
+  assert.deepEqual(covered, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+});
+
+test("season labels name the months they cover", () => {
+  // The label is what a visitor reads without JavaScript, so it has to say
+  // which months it means rather than just "Yaz".
+  assert.match(hours.summer.label, /Mayıs.*Eylül/);
+  assert.match(hours.winter.label, /Ekim.*Nisan/);
+});
+
+test("getCurrentSeason switches on the right days, in Istanbul time", () => {
+  const on = (iso: string) => getCurrentSeason(new Date(`${iso}T12:00:00Z`));
+
+  assert.equal(on("2026-04-30"), "winter", "April is still winter");
+  assert.equal(on("2026-05-01"), "summer", "May opens the summer season");
+  assert.equal(on("2026-09-30"), "summer", "September is the last summer month");
+  assert.equal(on("2026-10-01"), "winter", "October opens the winter season");
+  assert.equal(on("2026-01-15"), "winter");
+  assert.equal(on("2026-12-31"), "winter");
+});
+
+test("the season is read in the shop's timezone, not the visitor's", () => {
+  /* 30 September 22:00 UTC is already 1 October in Istanbul (UTC+3), and a
+   * visitor in Los Angeles reading it as local time would still be in
+   * mid-September. The shop's hours belong to the shop's clock. */
+  assert.equal(
+    getCurrentSeason(new Date("2026-09-30T22:00:00Z")),
+    "winter",
+    "already 1 October in Kapaklı",
+  );
+  assert.equal(
+    getCurrentSeason(new Date("2026-04-30T22:00:00Z")),
+    "summer",
+    "already 1 May in Kapaklı",
+  );
 });
 
 test("legal name is kept distinct from the display name", () => {

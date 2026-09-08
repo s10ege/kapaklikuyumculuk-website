@@ -48,7 +48,7 @@ same abbreviations, same order, everywhere:
 
 ```
 Trakya Kapaklı Kuyumculuk
-Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+Cumhuriyet Mah., Pınar Bulvarı No: 56/C
 59510 Kapaklı / Tekirdağ
 0282 717 21 31
 https://www.kapaklikuyumculuk.com
@@ -57,8 +57,8 @@ https://www.kapaklikuyumculuk.com
 There is **one** location. Any listing showing a second address under your name is
 the former partner's shop and needs correcting, not reconciling.
 
-Details that seem petty and are not: `Bulvarı` vs `Blv.` vs `Bulv.` · `No: 56/A` vs
-`No:56/A` · `Kapaklı/Tekirdağ` vs `Kapaklı / Tekirdağ`. Pick one. Use it.
+Details that seem petty and are not: `Bulvarı` vs `Blv.` vs `Bulv.` · `No: 56/C` vs
+`No:56/C` · `Kapaklı/Tekirdağ` vs `Kapaklı / Tekirdağ`. Pick one. Use it.
 
 **AMENDED — the trade name is decided: `Trakya Kapaklı Kuyumculuk`.** This document
 originally recommended "Kapaklı Kuyumculuk" because it matches the domain and most

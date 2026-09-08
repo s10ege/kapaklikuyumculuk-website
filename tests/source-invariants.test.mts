@@ -64,11 +64,24 @@ function offenders(pattern: RegExp): string[] {
   return hits;
 }
 
-test("no component builds a wa.me link by hand", () => {
-  /* §9's promise is that flipping one boolean switches every CTA on the site.
-   * That is only true while every CTA goes through contactCta(). */
+test("no source file builds a wa.me link", () => {
+  /* This used to guard a seam: §9's promise was that flipping one boolean
+   * switched every CTA on the site, which held only while every CTA went
+   * through contactCta().
+   *
+   * Since 2026-09-08 it guards a removal instead, and it is the stronger job.
+   * WhatsApp is gone — the number, the branch, the icon, the colour token —
+   * and the shop takes calls. A `wa.me` link appearing anywhere in this
+   * codebase again would be someone reinstating a channel that was removed on
+   * purpose. */
   const hits = offenders(/["'`][^"'`]*wa\.me/);
-  assert.deepEqual(hits, [], `build wa.me links via contactCta():\n${hits.join("\n")}`);
+  assert.deepEqual(hits, [], `WhatsApp was removed on purpose:\n${hits.join("\n")}`);
+});
+
+test("no source file mentions WhatsApp at all", () => {
+  // Same reason as above, one level broader: no label, no aria-label, no alt.
+  const hits = offenders(/whatsapp/i);
+  assert.deepEqual(hits, [], `WhatsApp was removed on purpose:\n${hits.join("\n")}`);
 });
 
 test("no component builds a tel: link by hand", () => {
@@ -110,8 +123,12 @@ test("the Şanlıurfa lookalike Instagram handle is never linked", () => {
 });
 
 test("opening hours are never inlined outside config", () => {
-  // Seasonal, and owner-editable in phase two — one source only.
-  const hits = offenders(/\b09:00\b|\b20:00\b|\b08:00\b|\b19:00\b/);
+  /* Seasonal, and owner-editable in phase two — one source only. Two closing
+   * times now (19:00 summer, 18:00 winter), which doubles the chance of one
+   * being typed into a component; 08:00 and 20:00 stay in the pattern because
+   * both appeared in earlier drafts and in the directory listings the cleanup
+   * is correcting. */
+  const hits = offenders(/\b0[89]:00\b|\b(?:18|19|20):00\b/);
   assert.deepEqual(hits, [], `hours belong in lib/config.ts:\n${hits.join("\n")}`);
 });
 

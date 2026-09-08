@@ -78,10 +78,16 @@ export const contact = {
   /** ✅ 3 sources — worth confirming it is still in use. */
   phoneAlt: { value: "902827175562", pending: false } satisfies Fact<string>,
 
-  /** 🟡 Instagram bio only. Pending until the family confirms it, so every CTA
-   *  on the site falls back to tel: until then (§9). The number is filled in
-   *  already, so confirming it means flipping this one boolean. */
-  whatsapp: { value: "905549157790", pending: true } satisfies Fact<string>,
+  /* WhatsApp `0554 915 77 90` was here until 2026-09-08, graded 🟡 from the
+   * Instagram bio and `pending: true` for its whole life — so every CTA on the
+   * site always fell back to `tel:` and no `wa.me` link was ever emitted.
+   *
+   * Removed on Soner's instruction: the shop takes calls and does not want to
+   * be reachable on WhatsApp. That makes the fallback the only path, so the
+   * switch it was waiting on is gone rather than permanently off. See §9 in
+   * TECHNICAL.md, where this reverses a documented spec position, and
+   * docs/business-facts.md for the number itself. Do not reintroduce it
+   * without asking. */
 
   /** ✅ ⚠️ NOT @kapaklikuyumculuk. That handle matches our domain but belongs
    *  to a different jeweller in Şanlıurfa, and at least one directory already
@@ -106,19 +112,51 @@ export const contact = {
  * Kapaklı was part of Çerkezköy until 2012, so many listings still say
  * Çerkezköy and postal code 59500. The correct modern form is below. */
 export const address = {
-  street: "Cumhuriyet Mah., Pınar Bulvarı No: 56/A",
+  /* ✅ Confirmed 2026-09-08. The door number is 56/C — this file said 56/A
+   * until then, carried over from a directory listing. It is the number the
+   * Google Business Profile will use, so it has to be right here first. */
+  street: "Cumhuriyet Mah., Pınar Bulvarı No: 56/C",
   postalCode: "59510",
   locality: "Kapaklı",
   region: "Tekirdağ",
   country: "TR",
 
-  /** 🟡 Instagram bio. Useful to a visitor finding the shop on foot. */
-  landmark: { value: "Ziraat Bankası karşısı", pending: false },
-
-  /* Coordinates are deliberately absent. docs/business-facts.md grades them ❌:
-   * sources disagree by ~150 m. The maps embed keys on the address string
-   * instead, and the JSON-LD omits `geo` rather than asserting a wrong pin. */
+  /** The whole thing, one line, in the canonical spelling. Every other form on
+   *  the site is built from this or from the fields above — never typed. */
+  get formatted(): string {
+    return `${this.street}, ${this.postalCode} ${this.locality} / ${this.region}`;
+  },
 } as const;
+
+/* "Ziraat Bankası karşısı" was here until 2026-09-08, sourced from the
+ * Instagram bio and shown under the address in the footer, on /iletisim, on
+ * /hakkimizda and on the 404.
+ *
+ * It is gone, and not because it was wrong. A landmark is a second address in
+ * everything but name, and this project exists because the shop already has
+ * two addresses circulating. It also decays without telling anyone: branches
+ * close and move, and a jeweller's address that points at a bank which is no
+ * longer there is worse than one that points at nothing. The street number is
+ * exact and the map has a pin now (see `geo` below), which is what the
+ * landmark was standing in for while the coordinates were graded ❌.
+ *
+ * Do not reintroduce it, in any spelling. */
+
+/* ✅ Confirmed 2026-09-08 from the shop's own Google Maps listing.
+ *
+ * docs/business-facts.md graded the coordinates ❌ — sources disagreed by
+ * ~150 m — and the site published none rather than assert a wrong pin. That is
+ * resolved: these come from the listing for "Trakya Kapaklı Kuyumculuk" at
+ * Pınar Blv 56/C, so the pin, the address and the place ID all describe the
+ * same door. The JSON-LD can carry `geo` and `hasMap`, the İletişim embed can
+ * drop to a coordinate pin, and directions can name a destination rather than
+ * a search string. */
+export const geo = { lat: 41.326459, lng: 27.976502 } as const;
+
+export const googlePlaceId = "ChIJSQxn1KkptRQRLtfCCLZCYLk";
+
+/** The place itself, not a search for it — what `hasMap` should point at. */
+export const googleMapsUrl = `https://www.google.com/maps/place/?q=place_id:${googlePlaceId}`;
 
 export const areaServed = ["Kapaklı", "Çerkezköy", "Tekirdağ"] as const;
 
@@ -126,19 +164,59 @@ export const areaServed = ["Kapaklı", "Çerkezköy", "Tekirdağ"] as const;
 /* Hours                                                                      */
 /* ------------------------------------------------------------------------- */
 
-/* docs/business-facts.md grades hours ❌ — Google shows 09:00–20:00, two other
- * sources say 08:00–19:00. The owner resolved it: the closing time genuinely
- * moves between winter and summer. 20:00 is correct now.
+/* docs/business-facts.md graded hours ❌ — Google showed 09:00–20:00, two other
+ * sources said 08:00–19:00, and the disagreement was never a data-quality
+ * problem. The closing time genuinely moves between summer and winter, and
+ * every source had captured a different half of a true seasonal pattern.
  *
- * Because it is seasonal rather than unknown, it ships as a real value and
- * becomes owner-editable in phase two: the Sanity `siteSettings` document
- * (iteration 15) carries these fields so the switch needs no deploy. */
+ * So both seasons ship, both are published, and neither is hidden behind a
+ * "current" calculation the visitor cannot check. Soner confirmed the times on
+ * 2026-09-08: 19:00 in summer, 18:00 in winter. That supersedes the single
+ * 20:00 value this file carried, which was the summer figure rounded up from
+ * Google's listing.
+ *
+ * WHY BOTH ARE ALWAYS SHOWN. The site is statically generated, so a build in
+ * August would freeze "summer" into HTML that is still being served in
+ * December. Rendering both removes the failure mode entirely: the page is
+ * correct whenever it is read, and the only thing needing today's date is
+ * which of the two gets the emphasis. That is one small client component
+ * (components/OpeningHours.tsx), and if its JavaScript never runs, a visitor
+ * still sees both seasons with their months spelled out.
+ *
+ * Owner-editable in phase two: the Sanity `siteSettings` document (iteration
+ * 15) carries these fields so a change of hours needs no deploy. */
+
+export type Season = "summer" | "winter";
+
+export type SeasonHours = {
+  /** Rendered as-is, months included — this is what makes the static page
+   *  honest without JavaScript. */
+  readonly label: string;
+  readonly days: string;
+  readonly open: string;
+  readonly close: string;
+  /** Calendar months, 1–12. The two lists must cover all twelve exactly once. */
+  readonly months: readonly number[];
+};
+
 export const hours = {
-  days: "Pazartesi – Cumartesi",
-  opens: "09:00",
-  closes: "20:00",
-  closedNote: "Pazar kapalı",
-  /** Days matching openingHoursSpecification in schema.org terms. */
+  summer: {
+    label: "Yaz (Mayıs–Eylül)",
+    days: "Pazartesi–Cumartesi",
+    open: "09:00",
+    close: "19:00",
+    months: [5, 6, 7, 8, 9],
+  },
+  winter: {
+    label: "Kış (Ekim–Nisan)",
+    days: "Pazartesi–Cumartesi",
+    open: "09:00",
+    close: "18:00",
+    months: [10, 11, 12, 1, 2, 3, 4],
+  },
+  closed: "Pazar kapalı",
+  /** Days matching openingHoursSpecification in schema.org terms. Both seasons
+   *  keep the same six days; only the closing time moves. */
   schemaDays: [
     "Monday",
     "Tuesday",
@@ -147,8 +225,30 @@ export const hours = {
     "Friday",
     "Saturday",
   ],
-  seasonal: true,
 } as const;
+
+/** Summer first — the order both seasons are rendered in before hydration. */
+export const seasons: readonly Season[] = ["summer", "winter"];
+
+/* Istanbul, not the visitor's clock.
+ *
+ * `new Date().getMonth()` is the browser's local month, and the one day a year
+ * it matters — 30 September into 1 October — a visitor in Auckland would be
+ * told the shop keeps winter hours while Kapaklı is still on summer time. The
+ * shop is in one timezone and its hours belong to that timezone, so the month
+ * is read there. Takes an explicit date so the boundaries can be tested. */
+export function getCurrentSeason(date: Date = new Date()): Season {
+  const month = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/Istanbul",
+      month: "numeric",
+    }).format(date),
+  );
+
+  return (hours.summer.months as readonly number[]).includes(month)
+    ? "summer"
+    : "winter";
+}
 
 /* ------------------------------------------------------------------------- */
 /* Services (§2)                                                              */
@@ -197,8 +297,10 @@ export const phoneAltDisplay = formatTrPhone(contact.phoneAlt.value);
 
 export const instagramUrl = `https://www.instagram.com/${contact.instagram.value}/`;
 
-/** The full address on one line, for maps queries and meta descriptions. */
-export const addressOneLine = `${address.street}, ${address.postalCode} ${address.locality} / ${address.region}`;
+/** The full address on one line, for maps queries and meta descriptions.
+ *  Kept as a named export because half the site imports it; it is the getter
+ *  above and cannot drift from it. */
+export const addressOneLine: string = address.formatted;
 
 /** Address block as rendered in the footer and on İletişim. */
 export const addressLines = [
@@ -206,14 +308,59 @@ export const addressLines = [
   `${address.postalCode} ${address.locality} / ${address.region}`,
 ] as const;
 
-const mapsQuery = encodeURIComponent(`${shop.name} ${addressOneLine}`);
+/* §6.7 — the keyless embed, so no Maps API key is needed.
+ *
+ * Keyed on coordinates, not on the address string. The address-keyed form
+ * (`?q=<name> <address>&output=embed`) is what this was until 2026-09-08, and
+ * it rendered a *route* — Google resolved the query as a destination and drew
+ * a line to it from "Kapaklı", which is a direction card, not a shop location.
+ * A visitor looking for where the shop is got a trip planner starting from a
+ * town centre they had not asked about.
+ *
+ * `q=<lat>,<lng>` drops a single pin and nothing else. `z=17` is street level
+ * — close enough to see which side of the road it is on, wide enough to show
+ * the junction people navigate by. `hl=tr` keeps the map's own labels Turkish. */
+export const mapsEmbedUrl = `https://maps.google.com/maps?q=${geo.lat},${geo.lng}&z=17&hl=tr&output=embed`;
 
-/** "Yol Tarifi Al" — opens the maps app. */
-export const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+/* ------------------------------------------------------------------------- */
+/* Directions                                                                 */
+/* ------------------------------------------------------------------------- */
 
-/** §6.7 — the keyless embed form, so no Maps API key is needed. Keyed on the
- *  address string because the coordinates are ❌. */
-export const mapsEmbedUrl = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
+/* Both name the destination by coordinates rather than by a search string, so
+ * the app opens on this shop instead of resolving a name that — as
+ * docs/index-cleanup-plan.md documents at length — currently resolves to two
+ * different addresses.
+ *
+ * Google also takes the place ID, which is stronger still: it names the
+ * listing, so the destination card shows the shop's own name and hours rather
+ * than a dropped pin. Apple has no equivalent, so `q` carries the name for the
+ * label only; `daddr` is what it actually navigates to. */
+export const directions = {
+  google:
+    "https://www.google.com/maps/dir/?api=1" +
+    `&destination=${geo.lat},${geo.lng}` +
+    `&destination_place_id=${googlePlaceId}`,
+  apple:
+    `https://maps.apple.com/?daddr=${geo.lat},${geo.lng}` +
+    `&q=${encodeURIComponent(shop.name)}`,
+} as const;
+
+export type MapsApp = keyof typeof directions;
+
+/** The internal hop (TECHNICAL.md §9).
+ *
+ *  Vercel Web Analytics is on the free tier, where custom events are Pro-only —
+ *  so a click on an outbound link cannot be counted. Routing it through an
+ *  internal URL first turns that click into an ordinary page view, which is
+ *  free. This is the URL shape the analytics will count; `/yol-tarifi` itself
+ *  is a real prerendered page that forwards, not a redirect, because a redirect
+ *  renders nothing and would therefore never fire the analytics beacon it
+ *  exists to fire. */
+export const directionsPath = "/yol-tarifi";
+
+export function directionsHref(app: MapsApp): string {
+  return `${directionsPath}?app=${app}`;
+}
 
 /* ------------------------------------------------------------------------- */
 /* The contact CTA (§9)                                                       */
@@ -222,48 +369,24 @@ export const mapsEmbedUrl = `https://www.google.com/maps?q=${mapsQuery}&output=e
 export type ContactCta = {
   href: string;
   label: string;
-  channel: "whatsapp" | "phone";
 };
-
-/** The pure form, taking its inputs explicitly.
- *
- * Split out from `contactCta` so both sides of the pending switch can be tested
- * directly. The whole point of §8's mechanism is that flipping one boolean
- * changes every CTA on the site; a test that can only ever observe today's
- * value would not be testing that. */
-export function buildContactCta(opts: {
-  whatsapp: Fact<string>;
-  phoneHref: string;
-  productName?: string | undefined;
-}): ContactCta {
-  if (opts.whatsapp.pending) {
-    return { href: opts.phoneHref, label: "Bizi Arayın", channel: "phone" };
-  }
-
-  const message = opts.productName
-    ? `Merhaba, ${opts.productName} hakkında bilgi almak istiyorum.`
-    : "Merhaba, bilgi almak istiyorum.";
-
-  return {
-    href: `https://wa.me/${opts.whatsapp.value}?text=${encodeURIComponent(message)}`,
-    label: "WhatsApp'tan Sorun",
-    channel: "whatsapp",
-  };
-}
 
 /** Every product card, lightbox and call-to-action on the site routes through
  * this one function.
  *
- * Prefilling the product name is the entire trick (§9): the shop instantly
- * knows what the customer is looking at, and the customer types nothing.
+ * There is one channel, so there is nothing here to decide — and the seam is
+ * still worth keeping. It is the single place that answers "what does the
+ * site's call-to-action do", which is what makes
+ * tests/source-invariants.test.mts able to assert that no component builds a
+ * `tel:` link by hand.
  *
- * While `contact.whatsapp.pending` is true the site never emits a `wa.me` link
- * — it falls back to `tel:` with the label "Bizi Arayın", so no button is ever
- * dead. Switching the whole site over is one boolean above. */
-export function contactCta(productName?: string): ContactCta {
-  return buildContactCta({
-    whatsapp: contact.whatsapp,
-    phoneHref,
-    productName,
-  });
+ * WHAT THIS USED TO BE. Until 2026-09-08 it branched on
+ * `contact.whatsapp.pending`, returning a `wa.me` link with the product name
+ * pre-filled — "the shop opens a message that already says which piece" — and
+ * falling back to the phone until the number was confirmed. The number was
+ * never confirmed, and then it was removed. The `productName` argument went
+ * with it: a `tel:` link cannot carry a message, so keeping the parameter
+ * would have been four components passing a value that silently did nothing. */
+export function contactCta(): ContactCta {
+  return { href: phoneHref, label: "Bizi Arayın" };
 }

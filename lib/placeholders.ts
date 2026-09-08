@@ -12,10 +12,9 @@
 export const PLACEHOLDER = {
   /* Panel ground, for category tiles in the espresso room (D6). */
   kategori: {
-    pirlanta: "/placeholder/kategori-pirlanta.svg",
     "altin-seti": "/placeholder/kategori-altin-seti.svg",
     "kupe-modelleri": "/placeholder/kategori-kupe-modelleri.svg",
-    "tek-tas-modelleri": "/placeholder/kategori-tek-tas-modelleri.svg",
+    yuzuk: "/placeholder/kategori-yuzuk.svg",
     "ozel-tasarim-takilar": "/placeholder/kategori-ozel-tasarim-takilar.svg",
   },
 

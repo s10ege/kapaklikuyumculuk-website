@@ -34,7 +34,7 @@ test("arrow keys step through the category and wrap", async ({ page }) => {
   await page.keyboard.press("ArrowRight");
   await expect(dialog.getByText("2 / 6")).toBeVisible();
   await expect(
-    dialog.getByRole("heading", { name: "Tek Taş Pırlanta Yüzük" }),
+    dialog.getByRole("heading", { name: "Beyaz Altın Yüzük" }),
   ).toBeVisible();
 
   // Wrapping backwards from the first item must not dead-end.
@@ -129,12 +129,20 @@ test("the backdrop closes it", async ({ page }) => {
 test("states why no price is shown", async ({ page }) => {
   await page.locator(firstCard).first().click();
 
+  /* Prices are never published (hard rule 7) — they track the daily gold rate.
+   * Saying so where a price would be is more reassuring than a blank, and it
+   * is the single most common question the shop is asked. */
   await expect(
-    page.getByRole("dialog").getByText(/günlük altın kuruna göre/),
+    page.getByRole("dialog").getByText(/günün altın kuruna göre/),
+  ).toBeVisible();
+
+  // ...and it says what to do about it, on whichever channel is live.
+  await expect(
+    page.getByRole("dialog").getByText(/sorun/),
   ).toBeVisible();
 });
 
-test("carries a CTA that is never a dead wa.me link while pending", async ({
+test("carries a CTA that dials, and never a wa.me link", async ({
   page,
 }) => {
   await page.locator(firstCard).first().click();

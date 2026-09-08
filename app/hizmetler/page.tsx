@@ -3,21 +3,24 @@ import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactBand } from "@/components/ContactBand";
 import { pageTitle } from "@/lib/content";
-import { FILLER } from "@/lib/filler";
+import { COPY } from "@/lib/copy";
 
 /* §6.5 — Hizmetler.
  *
- * Two long-form panels on the D10 cream reading band. The two load-bearing
- * trust lines — the weighing promise and the no-surprise-deduction promise —
- * stay REAL through the filler stage (they are asserted by e2e and preserved
- * in docs/original-copy.md); the surrounding prose is FILLER until 3.2.
+ * Two long-form panels on the D10 cream reading band.
+ *
+ * The two load-bearing trust lines — the weighing promise and the
+ * no-surprise-deduction promise — are declared here rather than in lib/copy.ts
+ * and asserted by e2e. They are the two sentences the whole page exists to
+ * make, and keeping them at the use site means a rewrite of the prose around
+ * them cannot quietly drop one. Everything else on this page is copy.
  */
 
 export const metadata: Metadata = {
   title: pageTitle("Hizmetlerimiz"),
   description:
-    "Altın alım–satımı ve sipariş üzerine üretim. Tartım tezgâh üstünde, " +
-    "düşülecek pay işlem öncesinde açıklanır. Kapaklı / Tekirdağ.",
+    "Kapaklı'da altın alım–satımı ve sipariş üzerine takı üretimi. Tartı " +
+    "tezgâhta önünüzde, düşülecek pay işlemden önce söylenir.",
   alternates: { canonical: "/hizmetler" },
 };
 
@@ -43,21 +46,23 @@ const SERVICES: Service[] = [
   {
     slug: "altin-alim-satim",
     name: "Altın Alım–Satım",
-    lede: FILLER.services["altin-alim-satim"].lede,
-    body: `${WEIGHING_PROMISE} ${FILLER.services["altin-alim-satim"].body}`,
+    lede: COPY.hizmetler["altin-alim-satim"].lede,
+    /* The weighing promise opens the paragraph, so it is the first thing read
+       rather than a bullet further down. */
+    body: `${WEIGHING_PROMISE} ${COPY.hizmetler["altin-alim-satim"].body}`,
     points: [
       REAL_POINTS.weighing,
-      FILLER.services["altin-alim-satim"].points[0],
+      COPY.hizmetler["altin-alim-satim"].points[0],
       REAL_POINTS.deduction,
-      FILLER.services["altin-alim-satim"].points[1],
+      COPY.hizmetler["altin-alim-satim"].points[1],
     ],
   },
   {
     slug: "siparis-uzerine-uretim",
     name: "Sipariş Üzerine Üretim",
-    lede: FILLER.services["siparis-uzerine-uretim"].lede,
-    body: FILLER.services["siparis-uzerine-uretim"].body,
-    points: FILLER.services["siparis-uzerine-uretim"].points,
+    lede: COPY.hizmetler["siparis-uzerine-uretim"].lede,
+    body: COPY.hizmetler["siparis-uzerine-uretim"].body,
+    points: COPY.hizmetler["siparis-uzerine-uretim"].points,
   },
 ];
 
@@ -74,9 +79,7 @@ export default function ServicesPage() {
           <h1 className="mt-3 display-md">Ne yapıyoruz</h1>
           <div className="mt-5 h-px w-11 bg-gold" />
           <p className="mt-6 max-w-2xl leading-relaxed text-muted">
-            Vitrin dışında iki iş yapıyoruz, ve ikisi de güvene dayanıyor.
-            Nasıl çalıştığımızı baştan yazdık ki mağazaya gelmeden ne
-            olacağını bilin.
+            {COPY.hizmetler.lede}
           </p>
         </div>
       </section>
@@ -127,8 +130,8 @@ export default function ServicesPage() {
       </section>
 
       <ContactBand
-        heading="Önce bir sorun, sonra karar verin"
-        body="Kur, gramaj ya da süre — aklınıza takılanı telefonla da sorabilirsiniz. Bağlayıcı bir şey değil."
+        heading={COPY.hizmetler.contactBand.heading}
+        body={COPY.hizmetler.contactBand.body}
       />
     </>
   );

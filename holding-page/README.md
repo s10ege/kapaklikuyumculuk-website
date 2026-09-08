@@ -6,10 +6,12 @@ only as a record.
 
 ## Do not reapply `vercel.json` from this folder
 
-Its redirect map sends `/urunler`, `/urunler/pirlanta`,
-`/urunler/ozel-tasarim-takilar`, `/galeri`, `/hakkimizda` and `/iletisim`
-to `/` with a permanent redirect. Those are all **live pages on the new site**,
-and two of them are confirmed still in Google's index.
+Its redirect map sends `/urunler`, `/urunler/ozel-tasarim-takilar`, `/galeri`,
+`/hakkimizda`, `/iletisim` — and the retired `/urunler/pirlanta` — to `/` with a
+permanent redirect. All but the last are **live pages on the new site**, and two
+of them are confirmed still in Google's index. The last is a 301 to
+`/urunler/yuzuk` since the 2026-09-08 category restructure, which is still not
+what this file would do to it.
 
 Reapplying this file would throw away the index history the whole cleanup was
 meant to preserve — the single largest risk named in §4 of the spec.

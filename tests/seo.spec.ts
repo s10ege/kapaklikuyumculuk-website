@@ -34,21 +34,28 @@ test.describe("JewelryStore", () => {
     expect(shop.name).toBe("Trakya Kapaklı Kuyumculuk");
     expect(shop.telephone).toBe("+902827172131");
     expect(shop.address.streetAddress).toBe(
-      "Cumhuriyet Mah., Pınar Bulvarı No: 56/A",
+      "Cumhuriyet Mah., Pınar Bulvarı No: 56/C",
     );
     expect(shop.address.postalCode).toBe("59510");
     expect(shop.address.addressLocality).toBe("Kapaklı");
     expect(shop.address.addressRegion).toBe("Tekirdağ");
   });
 
-  test("omits geo, because the coordinates are graded ❌", async ({ page }) => {
+  test("carries the pin from the shop's own listing, and links to it", async ({
+    page,
+  }) => {
     await page.goto("/");
     const shop = await jsonLd(page, "JewelryStore");
 
-    /* Sources disagree by ~150 m. Asserting a pin we know may be wrong is worse
-     * than asserting none — Google geocodes the address block instead. */
-    expect(shop.geo).toBeUndefined();
-    expect(shop.latitude).toBeUndefined();
+    /* Absent until 2026-09-08, when the coordinates stopped being ❌ — they
+     * come from the shop's Google Maps listing now, so the pin, the street
+     * number and the place ID describe one door. */
+    expect(shop.geo["@type"]).toBe("GeoCoordinates");
+    expect(shop.geo.latitude).toBe(41.326459);
+    expect(shop.geo.longitude).toBe(27.976502);
+
+    // hasMap names the place; a search URL would ask Google to guess again.
+    expect(shop.hasMap).toContain("place_id:ChIJSQxn1KkptRQRLtfCCLZCYLk");
   });
 
   test("links only accounts that are genuinely ours", async ({ page }) => {
@@ -69,25 +76,60 @@ test.describe("JewelryStore", () => {
   test("publishes the six open days and never Sunday", async ({ page }) => {
     await page.goto("/");
     const shop = await jsonLd(page, "JewelryStore");
-    const spec = shop.openingHoursSpecification[0];
 
-    expect(spec.opens).toBe("09:00");
-    expect(spec.closes).toBe("20:00");
-    expect(spec.dayOfWeek).toHaveLength(6);
-    expect(spec.dayOfWeek).not.toContain("Sunday");
+    for (const spec of shop.openingHoursSpecification) {
+      expect(spec.opens).toBe("09:00");
+      expect(spec.dayOfWeek).toHaveLength(6);
+      /* A dayOfWeek list that omits a day means closed. An explicit Sunday
+       * entry with equal opens/closes is the other convention, and mixing the
+       * two is how a shop gets listed as open 00:00–00:00. */
+      expect(spec.dayOfWeek).not.toContain("Sunday");
+    }
+  });
+
+  test("publishes both seasons, with the winter span split at New Year", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const shop = await jsonLd(page, "JewelryStore");
+    const specs = shop.openingHoursSpecification;
+
+    /* Three, not two. validFrom/validThrough are dates rather than a
+     * recurrence rule, so October→April cannot be one range without asserting
+     * a span that runs backwards — it ships as the two calendar halves it
+     * actually occupies. */
+    expect(specs).toHaveLength(3);
+
+    const spans = specs.map(
+      (s: { opens: string; closes: string; validFrom: string; validThrough: string }) =>
+        `${s.validFrom.slice(5)}→${s.validThrough.slice(5)} ${s.closes}`,
+    );
+
+    expect(spans).toEqual([
+      "05-01→09-30 19:00",
+      "01-01→04-30 18:00",
+      "10-01→12-31 18:00",
+    ]);
+
+    // Every entry is stamped with the same year, and it is a real one.
+    const years = new Set(
+      specs.map((s: { validFrom: string }) => s.validFrom.slice(0, 4)),
+    );
+    expect(years.size).toBe(1);
+    expect(Number([...years][0])).toBeGreaterThanOrEqual(2026);
   });
 });
 
 test.describe("category pages", () => {
   test("emit a BreadcrumbList matching the visible trail", async ({ page }) => {
-    await page.goto("/urunler/pirlanta");
+    await page.goto("/urunler/yuzuk");
     const crumbs = await jsonLd(page, "BreadcrumbList");
 
     expect(crumbs).not.toBeNull();
     expect(crumbs.itemListElement).toHaveLength(3);
-    expect(crumbs.itemListElement[2].name).toBe("Pırlanta");
+    expect(crumbs.itemListElement[2].name).toBe("Yüzük");
     expect(crumbs.itemListElement[2].item).toBe(
-      "https://www.kapaklikuyumculuk.com/urunler/pirlanta",
+      "https://www.kapaklikuyumculuk.com/urunler/yuzuk",
     );
   });
 
@@ -98,9 +140,9 @@ test.describe("category pages", () => {
      * structured-data mismatch, not a rich result — and a populated grid
      * missing its ItemList wastes the category's whole search surface. The
      * expected state comes from the same reader the build uses. */
-    const products = getProducts("pirlanta");
+    const products = getProducts("yuzuk");
 
-    await page.goto("/urunler/pirlanta");
+    await page.goto("/urunler/yuzuk");
     const list = await jsonLd(page, "ItemList");
 
     if (products.length === 0) {
@@ -113,21 +155,19 @@ test.describe("category pages", () => {
   });
 
   test("carry their own canonical", async ({ page }) => {
-    await page.goto("/urunler/tek-tas-modelleri");
+    await page.goto("/urunler/yuzuk");
 
     const canonical = await page
       .locator('link[rel="canonical"]')
       .getAttribute("href");
 
-    expect(canonical).toBe(
-      "https://www.kapaklikuyumculuk.com/urunler/tek-tas-modelleri",
-    );
+    expect(canonical).toBe("https://www.kapaklikuyumculuk.com/urunler/yuzuk");
   });
 
   test("keep the title template the old site was indexed under", async ({
     page,
   }) => {
-    await page.goto("/urunler/pirlanta");
+    await page.goto("/urunler/yuzuk");
     await expect(page).toHaveTitle(/0282 717 21 31/);
   });
 });
@@ -145,7 +185,9 @@ test.describe("sitemap and robots", () => {
       "/hizmetler",
       "/hakkimizda",
       "/iletisim",
-      "/urunler/pirlanta",
+      "/urunler/altin-seti",
+      "/urunler/kupe-modelleri",
+      "/urunler/yuzuk",
       "/urunler/ozel-tasarim-takilar",
     ]) {
       expect(xml).toContain(`https://www.kapaklikuyumculuk.com${path}`);
@@ -155,6 +197,10 @@ test.describe("sitemap and robots", () => {
     expect(xml).not.toContain("/urun/");
     expect(xml).not.toContain("/kurumsal");
     expect(xml).not.toContain("/dev/");
+    // Retired 2026-09-08. Listing a URL that 301s asks Google to crawl a
+    // redirect it was about to drop, which is the opposite of the cleanup.
+    expect(xml).not.toContain("/urunler/pirlanta");
+    expect(xml).not.toContain("/urunler/tek-tas-modelleri");
   });
 
   test("robots does not block the old paths", async ({ request }) => {
@@ -172,4 +218,71 @@ test.describe("sitemap and robots", () => {
     expect(txt).toContain("Disallow: /studio");
     expect(txt).toContain("Sitemap: https://www.kapaklikuyumculuk.com/sitemap.xml");
   });
+});
+
+/* ------------------------------------------------------------------ */
+/* Retired terms never reach a visitor                                 */
+/* ------------------------------------------------------------------ */
+
+/* The source-level version of this is a grep with a list of exclusions —
+ * next.config.ts holds the redirect map, two specs assert it, and the comments
+ * explaining the retirement necessarily name what was retired. Exclusions
+ * weaken a gate, so this is the assertion that does not need any: whatever the
+ * source says, none of these words may be in what a visitor actually reads.
+ *
+ *   pirlanta   — the category was retired 2026-09-08 because the pieces are
+ *                white gold, not diamond. Claiming otherwise is the one thing
+ *                on this site that would be a lie.
+ *   tek taş    — the slug it replaced, in every spelling.
+ *   ziraat     — the landmark, removed the same day.
+ *   whatsapp   — removed the same day too. The shop takes calls, and a page
+ *                offering a channel nobody watches is worse than one that does
+ *                not offer it: the customer messages and hears nothing back.
+ */
+const RETIRED_TERMS =
+  /pırlanta|pirlanta|tek\s?ta[şs]|tekta[şs]|ziraat|whatsapp|wa\.me/i;
+
+const VISITOR_ROUTES = [
+  "/",
+  "/urunler",
+  "/urunler/altin-seti",
+  "/urunler/kupe-modelleri",
+  "/urunler/yuzuk",
+  "/urunler/ozel-tasarim-takilar",
+  "/galeri",
+  "/hizmetler",
+  "/hakkimizda",
+  "/iletisim",
+  "/yol-tarifi",
+];
+
+for (const route of VISITOR_ROUTES) {
+  test(`${route} carries no retired term, anywhere in its markup`, async ({
+    page,
+  }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+
+    /* The whole document, not just visible text: this has to cover the title,
+     * the meta description, the JSON-LD and every alt attribute — the places
+     * a stale claim survives a copy edit precisely because nobody looks. */
+    const html = await page.content();
+    const hit = RETIRED_TERMS.exec(html);
+
+    expect(
+      hit,
+      hit ? `"${hit[0]}" at …${html.slice(Math.max(0, hit.index - 90), hit.index + 90)}…` : "",
+    ).toBeNull();
+  });
+}
+
+test("the 404 carries no retired term either", async ({ page }) => {
+  await page.goto("/wp-admin");
+  expect(RETIRED_TERMS.exec(await page.content())).toBeNull();
+});
+
+test("the sitemap and robots carry no retired term", async ({ request }) => {
+  for (const path of ["/sitemap.xml", "/robots.txt"]) {
+    const body = await (await request.get(path)).text();
+    expect(RETIRED_TERMS.exec(body), `${path}`).toBeNull();
+  }
 });

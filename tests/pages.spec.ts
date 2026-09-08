@@ -5,10 +5,9 @@ import { getProducts } from "../lib/content.ts";
 /* Gates for iterations 10–12 of plan.md — the remaining pages. */
 
 const CATEGORY_NAMES = [
-  "Pırlanta",
-  "Altın Seti",
+  "Altın Setleri",
   "Küpe Modelleri",
-  "Tek Taş Modelleri",
+  "Yüzük",
   "Özel Tasarım Takılar",
 ];
 
@@ -28,7 +27,7 @@ test.describe("/urunler", () => {
     ).toBeVisible();
   });
 
-  test("lists all five categories and drops the Tüm Ürünler tile", async ({
+  test("lists all four categories and carries no filler tile", async ({
     page,
   }) => {
     await page.goto("/urunler");
@@ -36,12 +35,20 @@ test.describe("/urunler", () => {
 
     for (const name of CATEGORY_NAMES) {
       await expect(
-        main.getByRole("link", { name: new RegExp(name) }),
+        main.getByRole("link", { name: new RegExp(name) }).first(),
       ).toBeVisible();
     }
 
-    // This page is "all products", so the tile pointing here would be circular.
+    const tiles = main.locator('ul li a[href^="/urunler/"]');
+    await expect(tiles).toHaveCount(4);
+
+    // This page is "all products", so the tile pointing here would be circular
+    // — and the ask-cell that used to complete a six-cell grid retired with the
+    // fifth category, because four leaves no hole to plug.
     await expect(page.getByRole("link", { name: /Tüm Ürünler/ })).toHaveCount(0);
+    await expect(
+      main.getByRole("link", { name: /Aradığınız burada yoksa/ }),
+    ).toHaveCount(0);
   });
 });
 
@@ -152,6 +159,55 @@ test.describe("/hakkimizda", () => {
     const facts = page.locator("dl dt");
     expect(await facts.count()).toBe(2);
   });
+
+  test("names the founder and the owner under their portraits", async ({
+    page,
+  }) => {
+    await page.goto("/hakkimizda");
+
+    /* Two faces and two names — the proof behind "aynı ailenin elinde". Both
+     * come from lib/config.ts, so this also catches a caption that has been
+     * typed in by hand and can drift. */
+    const portraits = page.locator("figure figcaption");
+    await expect(portraits).toHaveCount(2);
+    await expect(portraits.nth(0)).toContainText("Nuri Eroğlu");
+    await expect(portraits.nth(0)).toContainText("Kurucu");
+    await expect(portraits.nth(1)).toContainText("Filiz Eroğlu");
+    await expect(portraits.nth(1)).toContainText("Mağaza sahibi");
+  });
+
+  for (const width of [1024, 1280, 1440]) {
+    test(`the photo and the prose end on the same line at ${width}px`, async ({
+      page,
+    }) => {
+      /* The bug this replaces: the shop photograph was taller than the prose
+       * beside it, so the cream band finished on a ragged edge. Padding cannot
+       * fix that — it can only be right at one viewport width, which is why
+       * this is asserted at three.
+       *
+       * The fix is structural: items-stretch plus h-full on the figure, so the
+       * photograph is exactly as tall as whatever is next to it. That holds
+       * when the copy changes, and this test is what says so. */
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/hakkimizda");
+      await page.evaluate(() => document.fonts.ready);
+
+      const delta = await page.evaluate(() => {
+        const figure = document.querySelector(
+          "section.bg-frame figure",
+        ) as HTMLElement;
+        const grid = figure.parentElement as HTMLElement;
+        const prose = grid.children[1] as HTMLElement;
+        return (
+          figure.getBoundingClientRect().bottom -
+          prose.getBoundingClientRect().bottom
+        );
+      });
+
+      // 1px of tolerance for sub-pixel rounding on fractional layouts.
+      expect(Math.abs(delta), `bottom edges differ by ${delta}px`).toBeLessThanOrEqual(1);
+    });
+  }
 });
 
 /* ------------------------------------------------------------------ */
@@ -177,23 +233,92 @@ test.describe("/iletisim", () => {
     const main = page.getByRole("main");
 
     await expect(
-      main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+      main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/C"),
     ).toBeVisible();
     await expect(main.getByText("0282 717 21 31").first()).toBeVisible();
     await expect(main.getByText("0282 717 55 62")).toBeVisible();
-    await expect(main.getByText("09:00 – 20:00")).toBeVisible();
+    /* Both seasons, always — the page is static, so publishing only the
+     * "current" one would freeze an August build's answer into a December
+     * visit. */
+    await expect(main.getByText("09:00 – 19:00").first()).toBeVisible();
+    await expect(main.getByText("09:00 – 18:00").first()).toBeVisible();
+    await expect(main.getByText(/Yaz \(Mayıs–Eylül\)/).first()).toBeVisible();
+    await expect(main.getByText(/Kış \(Ekim–Nisan\)/).first()).toBeVisible();
     await expect(main.getByText("@kuyumculukkapakli")).toBeVisible();
   });
 
-  test("embeds a keyless map keyed on the address, not coordinates", async ({
-    page,
-  }) => {
+  test("marks today's season, and only after hydration", async ({ page }) => {
     await page.goto("/iletisim");
 
-    const src = await page.locator("iframe").getAttribute("src");
+    /* The server cannot know the visitor's date, so nothing date-dependent may
+     * render on the first pass — that would be a hydration mismatch. The label
+     * arrives with the effect. */
+    // Scoped to main: the footer renders the same component, correctly.
+    const now = page.getByRole("main").getByText("Şu an geçerli");
+    await expect(now).toHaveCount(1);
+
+    /* And it lands on the season that actually covers today, in Istanbul. */
+    const month = Number(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Istanbul",
+        month: "numeric",
+      }).format(new Date()),
+    );
+    const expected = [5, 6, 7, 8, 9].includes(month) ? "summer" : "winter";
+
+    const rows = page.getByRole("main").locator("dd [data-season]");
+    await expect(rows).toHaveCount(2);
+
+    // Exactly one row is current, and it is the right one.
+    await expect(page.getByRole("main").locator('[data-current="true"]'))
+      .toHaveAttribute("data-season", expected);
+
+    // ...and it is listed first, once hydration has reordered them.
+    expect(
+      await rows.evaluateAll((els) =>
+        els.map((el) => el.getAttribute("data-season")),
+      ),
+    ).toEqual([expected, expected === "summer" ? "winter" : "summer"]);
+  });
+
+  test("embeds a keyless coordinate pin, not a route", async ({ page }) => {
+    await page.goto("/iletisim");
+
+    const frame = page.locator("iframe");
+    const src = (await frame.getAttribute("src")) ?? "";
+
+    // Still keyless — no Maps API key anywhere on this site.
     expect(src).toContain("output=embed");
-    // Coordinates are graded ❌ (~150 m disagreement), so none may be emitted.
-    expect(src).not.toMatch(/@?4[01]\.\d{3,}/);
+
+    /* The pin, by coordinate. This was keyed on the address string until
+     * 2026-09-08, and Google resolved that as a *destination*: the embed drew
+     * a route from "Kapaklı" to the shop, which is a trip planner, not a
+     * location. Any of these params means the route is back. */
+    expect(src).toContain("q=41.326459,27.976502");
+    for (const routeParam of ["saddr", "daddr", "/dir/", "origin=", "&dir"]) {
+      expect(src, `${routeParam} means this is a route again`).not.toContain(
+        routeParam,
+      );
+    }
+
+    // D-rules: hairline border, no radius, and lazy so it never blocks paint.
+    await expect(frame).toHaveAttribute("loading", "lazy");
+    await expect(frame).toHaveAttribute(
+      "referrerpolicy",
+      "no-referrer-when-downgrade",
+    );
+    await expect(frame).toHaveAttribute(
+      "title",
+      "Trakya Kapaklı Kuyumculuk konumu",
+    );
+
+    const box = frame.locator("xpath=..");
+    expect(await box.evaluate((el) => getComputedStyle(el).borderRadius)).toBe(
+      "0px",
+    );
+    expect(await box.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe(
+      "1px",
+    );
   });
 });
 
@@ -221,7 +346,7 @@ test.describe("404", () => {
     await expect(
       page
         .getByRole("main")
-        .getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+        .getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/C"),
     ).toBeVisible();
   });
 });

@@ -1,22 +1,21 @@
 import Link from "next/link";
 
-import { CategoryTiles } from "@/components/CategoryTiles";
+import { AllProductsLink, CategoryTiles } from "@/components/CategoryTiles";
 import { ContactButton } from "@/components/ContactButton";
+import { DirectionsButton } from "@/components/DirectionsButton";
 import { HeroCoin } from "@/components/HeroCoin";
+import { OpeningHours } from "@/components/OpeningHours";
 import { ProductGallery } from "@/components/ProductGallery";
-import { ArrowRightIcon, PinIcon } from "@/components/icons";
+import { ArrowRightIcon } from "@/components/icons";
 import {
-  address,
   addressLines,
-  hours,
-  mapsSearchUrl,
   phoneDisplay,
   phoneHref,
   services,
   shop,
 } from "@/lib/config";
 import { getCategories, getFeaturedProducts } from "@/lib/content";
-import { FILLER } from "@/lib/filler";
+import { COPY } from "@/lib/copy";
 
 /* Anasayfa (§6.1).
  *
@@ -27,8 +26,8 @@ import { FILLER } from "@/lib/filler";
  */
 
 /* D19 — one line per service panel on the homepage; the full copy lives on
- * /hizmetler. Filler until 3.2 (the originals are in docs/original-copy.md). */
-const SERVICE_COPY: Record<string, string> = FILLER.homeServices;
+ * /hizmetler. */
+const SERVICE_COPY: Record<string, string> = COPY.home.services;
 
 export default function Home() {
   const categories = getCategories();
@@ -71,7 +70,7 @@ export default function Home() {
             <div className="mt-6 h-px w-11 bg-gold" />
 
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              {FILLER.heroLede}
+              {COPY.home.heroLede}
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
@@ -110,6 +109,9 @@ export default function Home() {
           <div className="mt-10">
             <CategoryTiles categories={categories} />
           </div>
+
+          {/* The retired "Tüm Ürünler" tile's job, as a line of text. */}
+          <AllProductsLink className="mt-8" />
         </div>
       </section>
 
@@ -171,9 +173,9 @@ export default function Home() {
             <div className="mt-5 h-px w-11 bg-gold" />
 
             {/* D19 — two sentences and the link; the full argument lives on
-                /hakkimizda. Filler until 3.2. */}
+                /hakkimizda. */}
             <p className="mt-6 max-w-md leading-relaxed text-cream-text">
-              {FILLER.homeAbout}
+              {COPY.home.about}
             </p>
 
             <Link
@@ -194,8 +196,7 @@ export default function Home() {
             <h2 className="display-md">Mağazamıza bekleriz</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Aradığınız modeli tarif edin ya da uğrayın; vitrinde olmayan
-              modelleri de tedarik edebiliyoruz.
+              {COPY.home.contactLede}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -223,9 +224,6 @@ export default function Home() {
                     {line}
                   </span>
                 ))}
-                <span className="mt-1 block text-sm text-muted">
-                  {address.landmark.value}
-                </span>
               </dd>
             </div>
 
@@ -234,30 +232,18 @@ export default function Home() {
                 Saatler
               </dt>
               <dd>
-                <span className="block">{hours.days}</span>
-                <span className="block">
-                  {hours.opens} – {hours.closes}
-                </span>
-                <span className="block text-sm text-muted">
-                  {hours.closedNote}
-                </span>
+                <OpeningHours />
               </dd>
             </div>
 
             <div className="flex flex-col gap-1 border-b border-line-dark py-5 sm:flex-row sm:gap-6">
+              {/* "Konum", not "Yol tarifi" — the button says Yol Tarifi Al,
+                  and a row labelled the same thing stutters. */}
               <dt className="text-label uppercase text-muted sm:w-32 sm:flex-none">
-                Yol tarifi
+                Konum
               </dt>
               <dd>
-                <a
-                  href={mapsSearchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-2 text-gold-soft transition-colors hover:text-cream-text"
-                >
-                  <PinIcon className="h-4 w-4" />
-                  Haritada açın
-                </a>
+                <DirectionsButton variant="quiet" className="!px-0" />
               </dd>
             </div>
           </dl>

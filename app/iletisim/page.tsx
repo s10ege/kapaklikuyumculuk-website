@@ -2,21 +2,22 @@ import type { Metadata } from "next";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactButton } from "@/components/ContactButton";
-import { InstagramIcon, PinIcon } from "@/components/icons";
+import { DirectionsButton } from "@/components/DirectionsButton";
+import { OpeningHours } from "@/components/OpeningHours";
+import { InstagramIcon } from "@/components/icons";
 import {
-  address,
   addressLines,
   contact,
   hours,
   instagramUrl,
   mapsEmbedUrl,
-  mapsSearchUrl,
   phoneAltDisplay,
   phoneDisplay,
   phoneHref,
   shop,
 } from "@/lib/config";
 import { pageTitle } from "@/lib/content";
+import { COPY } from "@/lib/copy";
 
 /* §6.7 — İletişim.
  *
@@ -37,7 +38,8 @@ export const metadata: Metadata = {
   title: pageTitle("İletişim"),
   description:
     `${addressLines[0]}, ${addressLines[1]}. Tel: ${phoneDisplay}. ` +
-    `${hours.days} ${hours.opens}–${hours.closes}.`,
+    `Yaz ${hours.summer.open}–${hours.summer.close}, ` +
+    `kış ${hours.winter.open}–${hours.winter.close}; ${hours.closed.toLocaleLowerCase("tr")}.`,
   alternates: { canonical: "/iletisim" },
 };
 
@@ -55,11 +57,11 @@ export default function ContactPage() {
             <h1 className="mt-3 display-md">Bize ulaşın</h1>
             <div className="mt-5 h-px w-11 bg-gold" />
 
-            {/* No .toLowerCase(): "Ziraat Bankası" is a proper noun and keeps
-                its capitals mid-sentence (1.5 review, C5). */}
+            {/* The street belongs to lib/config.ts and to the grid below —
+                naming it here too would be a second copy of the one string
+                this project exists to keep single (tests/source-invariants). */}
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Mağazamız {address.landmark.value}nda. Aradığınız modeli önden
-              sorabilir, uygun olup olmadığını öğrenip öyle gelebilirsiniz.
+              {COPY.iletisim.lede}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -86,9 +88,6 @@ export default function ContactPage() {
                       </span>
                     ))}
                   </address>
-                  <span className="mt-1 block text-sm text-muted">
-                    {address.landmark.value}
-                  </span>
                 </dd>
               </div>
 
@@ -114,13 +113,7 @@ export default function ContactPage() {
                   Saatler
                 </dt>
                 <dd>
-                  <span className="block">{hours.days}</span>
-                  <span className="block">
-                    {hours.opens} – {hours.closes}
-                  </span>
-                  <span className="block text-sm text-muted">
-                    {hours.closedNote}
-                  </span>
+                  <OpeningHours />
                 </dd>
               </div>
 
@@ -147,6 +140,10 @@ export default function ContactPage() {
           </div>
 
           <div className="flex flex-col">
+            {/* Hairline border, no radius (D-rules). The embed is the
+                coordinate-pin form — the address-keyed one it replaced drew a
+                route from "Kapaklı" to the shop, which answers a question
+                nobody on this page asked. */}
             <div className="relative aspect-[4/3] w-full border border-line-dark bg-panel lg:aspect-auto lg:flex-1">
               <iframe
                 title={`${shop.name} konumu`}
@@ -157,15 +154,7 @@ export default function ContactPage() {
               />
             </div>
 
-            <a
-              href={mapsSearchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 border border-gold-soft/50 px-5 py-3 text-sm text-gold-soft transition-colors hover:bg-gold/15"
-            >
-              <PinIcon className="h-4 w-4" />
-              Yol Tarifi Al
-            </a>
+            <DirectionsButton className="mt-4 w-full" />
           </div>
         </div>
       </section>

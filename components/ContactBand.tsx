@@ -1,5 +1,6 @@
 import { ContactButton } from "./ContactButton";
 import { phoneDisplay, phoneHref } from "@/lib/config";
+import { COPY } from "@/lib/copy";
 
 /* The CTA band (§6.2, §6.5, §6.1).
  *
@@ -11,13 +12,11 @@ import { phoneDisplay, phoneHref } from "@/lib/config";
  * permitted panel uses per page.
  */
 export function ContactBand({
-  heading = "Vitrinde olmayan modelleri de bulabiliriz",
-  body = "Aradığınız modeli tarif edin ya da bir fotoğraf gönderin; tedarik edebiliyorsak size dönelim.",
-  productName,
+  heading = COPY.contactBand.heading,
+  body = COPY.contactBand.body,
 }: {
   heading?: string;
   body?: string;
-  productName?: string;
 }) {
   return (
     <section className="bg-panel">
@@ -32,7 +31,7 @@ export function ContactBand({
         </div>
 
         <div className="flex flex-none flex-wrap items-center gap-3">
-          <ContactButton productName={productName} variant="solid" />
+          <ContactButton variant="solid" />
           <a
             href={phoneHref}
             className="inline-flex min-h-11 items-center px-4 text-xl text-gold-soft transition-colors hover:text-cream-text"

@@ -3,6 +3,15 @@
 > **Stage 2 of 4.** Begins only after [`design.md`](design.md) is approved. Ends when the
 > catalogue is live, the `Yakında` panels have retired themselves, and Soner has signed off
 > on the contact sheet.
+>
+> **Status: ✅ approved 2026-09-08 — stage 2 is closed.** Soner approved it in writing after
+> the final iteration (§7 below). The catalogue is live, every `Yakında` panel has retired
+> itself, and the contact sheet is signed off. Stage 3 ([`TECHNICAL.md`](TECHNICAL.md)) is
+> unblocked and begins at its ⛔ confirmation gate.
+>
+> Three things remain Soner's to supply and **none of them reopens this stage** — they are
+> content, not gates: `spec` (ayar · gram) per piece, the `featured` four, and the
+> contact-sheet flags. See §7.
 
 ## 1 · Photography brief
 
@@ -49,13 +58,13 @@ optional. Scale shots on a hand are a phase-two nicety.
 **File naming** — this feeds the pipeline directly:
 
 ```
-pirlanta_tektas-yuzuk_01.jpg
+yuzuk_baget-yuzuk_01.jpg
 altin-seti_burma-bilezik_01.jpg
 kupe-modelleri_halka-kupe_01.jpg
 ```
 
-Category slug, piece, number. The five published slugs are `pirlanta`, `altin-seti`,
-`kupe-modelleri`, `tek-tas-modelleri`, `ozel-tasarim-takilar`.
+Category slug, piece, number. The four published slugs are `altin-seti`,
+`kupe-modelleri`, `yuzuk`, `ozel-tasarim-takilar`. *(Five until 2026-09-08 — see §5.)*
 
 **How many.** No minimum is set — decided as we go. Below roughly six pieces a category
 still reads as empty, and in that case the `Yakında` panel is the more honest state; it
@@ -146,18 +155,18 @@ not through them.
 **No CMS.** The catalogue is folder-driven:
 
 ```
-public/urunler/pirlanta/tektas-yuzuk_01.webp
+public/urunler/yuzuk/baget-yuzuk_01.webp
 public/urunler/altin-seti/burma-bilezik_01.webp
 ```
 
 The build reads the folders. Drop an image in and the product appears in that category, its
-name derived from the filename — `Tek Taş Yüzük` from `tektas-yuzuk`.
+name derived from the filename — `Baget Yuzuk` from `baget-yuzuk`.
 
 Anything a filename cannot carry goes in one small `catalogue.json` beside the folders, and
 only for the products that need it:
 
 ```
-name       "Tek Taş Yüzük"        — the display name
+name       "Baget Yüzük"         — the display name
 spec       "22 ayar · 38.5 gr"   — ayar and gram only
 alt        Turkish alt text, written by hand
 note       a short line under the spec
@@ -166,7 +175,7 @@ order      optional sort override
 ```
 
 **`name` is not optional in practice.** The slug is ASCII, and no transformation restores
-`ş`, `ü` or `ı` — `tektas-yuzuk` cannot become `Tek Taş Yüzük` by rule. A Title-Cased slug is
+`ş`, `ü` or `ı` — `baget-yuzuk` cannot become `Baget Yüzük` by rule. A Title-Cased slug is
 the fallback so a freshly dropped-in image still appears rather than being silently skipped,
 but anything a customer reads gets a real name here.
 
@@ -193,7 +202,12 @@ the moment a piece sells.
 
 ## 5 · Done when
 
-> **Status 2026-09-07 — stage 2 over, not sealed.** Soner called the stage done and the
+> **Status 2026-09-08 — ✅ approved, stage closed.** Soner approved the stage in writing
+> after the final iteration (§7): the category restructure, the copy rewrite and its gate,
+> seasonal hours, the canonical address, the map, the Hakkımızda layout, and the removal of
+> WhatsApp. Stage 3 is unblocked.
+>
+> *(Previous status 2026-09-07 — stage 2 over, not sealed.)* Soner called the stage done and the
 > catalogue was committed: `/public/urunler/` left `.gitignore`, **60 masters, 57 products,
 > all five categories populated**, `catalogue.json` with plain-Turkish names and
 > hand-written alt. The Hakkımızda page carries the founder, the owner and the shopfront.
@@ -240,4 +254,97 @@ the moment a piece sells.
 3. **Supplier images.** Rights plus duplicate content. Worth repeating because it is the
    tempting shortcut.
 4. **Scope creep into a shop.** No cart, no prices, no accounts. The catalogue's job is to
-   get someone to WhatsApp or walk in.
+   get someone to call or walk in.
+
+## 7 · Final iteration — 2026-09-08
+
+Branch `final-tweaks`, seven commits. `tsc`, lint, **66 unit** and **210 e2e** green; build
+fully static, 20 routes, no `ƒ`. Screenshots at 390 / 768 / 1440 in
+[`screenshots/final-tweaks/`](screenshots/final-tweaks/).
+
+### Category restructure — five became four
+
+`altin-seti` (now **Altın Setleri**) · `kupe-modelleri` · **`yuzuk`** · `ozel-tasarim-takilar`
+
+- **`pirlanta` is retired.** Every piece under it is white gold, not diamond, so the name
+  was a claim the shop cannot stand behind — and it was in the slug, the H1, the nav, the
+  footer, the sitemap and the JSON-LD. Its su yolu takımı moved to `altin-seti` as
+  `takim-05`; its five rings to `yuzuk` as `yuzuk-11`…`yuzuk-15`.
+- **`tek-tas-modelleri` became `yuzuk`.** The page carried ten rings and most were not
+  tek taş; the slug was naming a subset of its own contents. Everything stayed.
+- One product renamed with it: *Tektaş Yüzük* → **Çevre Taşlı Yüzük**. It is an oval with a
+  set halo, and the old name asserted the stone the category had just stopped asserting.
+- Sources renamed, `catalogue.json` rekeyed and reordered, pipeline re-run. **60 masters,
+  57 products.** `PIPELINE_VERSION` unchanged — the cache keys on the full stem, which
+  carries the category, so every renamed file was already a miss. 59 of 60 re-encoded
+  byte-identically.
+- ⚠️ **One master was rebuilt rather than moved.** A rename loop overwrote the raw for the
+  tek-taş *Örgü Yüzük*; the raws are hand-crops of multi-piece frames, not whole originals,
+  so it could not be found in `images/` by search. It was regenerated from the committed
+  1200px master — PSNR 44.7 dB, visually lossless, 12 KB smaller — which caps that one
+  source at 1200px if `MASTER` is ever raised. Both catalogue folders are gitignored, so
+  nothing about this is in the repo; drop the original hand-crop back into `catalogue/raw/`
+  whenever it suits.
+- Both retired paths **301 to `/urunler/yuzuk`**, and every rule that used to land on them
+  now names the final destination. `/urunler/pirlanta` left the reclaimed list — the only
+  path ever to make that trip.
+
+### Copy — one voice, and a gate behind it
+
+`lib/filler.ts` is deleted. `lib/copy.ts` holds every sentence a visitor reads, in
+*sade esnaf sesi*: the owner talking across the counter, first person plural, short
+sentences, concrete over evocative.
+
+`tests/copy.test.mts` is the gate `TECHNICAL.md` §3 specified and nobody had written. It
+walks the copy recursively and fails the build on a ~30-word banned list, exclamation marks,
+rhetorical questions, sentences opening `Biz,` or `Sizin için`, paragraphs over three
+sentences (four on Hakkımızda), the locality appearing other than exactly once per page,
+and meta descriptions outside 120–155 characters. It also asserts the copy still answers
+what customers actually ask: ayar and gram on the tag, why no price is printed, weighing in
+front of you, deductions said before, resizing and repair, how long an order takes.
+
+### Hours, address, map
+
+- **Two seasons, both published all year** — 09:00–19:00 May–September, 09:00–18:00
+  October–April, closed Sunday. Today's is emphasised client-side; the page is correct
+  whenever it is read, which a static build could not otherwise promise. JSON-LD emits three
+  `openingHoursSpecification` entries, because winter crosses New Year.
+- **`Cumhuriyet Mah., Pınar Bulvarı No: 56/C`** — the door number was 56/A, carried in from
+  a directory. The Ziraat landmark is gone: a landmark is a second address in everything but
+  name, and it decays silently when the branch moves.
+- **Coordinates published** from the shop's own Maps listing, so the pin, the street number
+  and the place ID describe one door. The embed drops to a coordinate pin — the address-keyed
+  one it replaced rendered a *route* from "Kapaklı", which is a trip planner where a location
+  belonged.
+- **Yol Tarifi** asks on Apple platforms and goes straight to Google elsewhere, through a
+  prerendered `/yol-tarifi` hop so the click counts as a page view.
+
+### Hakkımızda layout
+
+The shop photograph and the prose now end on the same line, structurally — `items-stretch`
+plus `h-full` and `object-cover`, asserted at 1024 / 1280 / 1440 rather than eyeballed. The
+portrait pair moved below the two-column grid; in the column it forced the shopfront into a
+0.53-aspect sliver. **Names stay under the faces** on Soner's instruction mid-pass.
+
+### What still needs Soner, unchanged from 2026-09-07
+
+- **`spec` — ayar and gram per piece.** Absent on all 57. The copy now promises the tag
+  carries it, which makes this the most visible gap on the site.
+- **The `featured` four.** Unset, so Öne Çıkanlar stays hidden.
+- **The contact-sheet flags** — hangtags on about six frames, the soft-focus velvet rings.
+
+### WhatsApp removed, same day
+
+This section closed on an outstanding boolean: the copy named WhatsApp, `whatsapp.pending`
+was still `true`, and confirming the number would have switched buttons and sentences
+together. **Soner's answer was to remove the channel — the shop takes calls.**
+
+The number is deleted from `lib/config.ts` rather than left pending, so nothing can render
+it and nobody finds a filled-in value that only needs a flag flipped. Out with it went the
+`wa.me` branch, the `productName` prefill, the WhatsApp icon, the `#25D366` token and the
+floating button's green state. The five copy lines that named a channel became the phone
+versions already written beside them — nothing was rewritten. Nothing on the page changed
+appearance, because the pending fallback *was* what shipped.
+
+Recorded in `plan.md` § 2.7, `TECHNICAL.md` (§1's gate drops to five facts), `design.md` D15
+and `docs/business-facts.md`. Two source invariants and a rendered-markup gate keep it out.

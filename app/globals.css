@@ -43,7 +43,10 @@
   --color-line-dark: #262b31; /* hairlines on espresso */
   --color-line-light: #e4ded2; /* hairlines on cream */
 
-  --color-whatsapp: #25d366; /* WhatsApp buttons only */
+  /* --color-whatsapp: #25d366 was here until 2026-09-08. It was the palette's
+     one borrowed brand colour, and it existed for a single element — the
+     floating button's green state, which never shipped because the number was
+     never confirmed. WhatsApp is gone, so the token is too. */
 
   /* Labels — uppercase, 11px, 0.18em tracking, weight 500. Sans by design,
      so this one stays a plain text token. */

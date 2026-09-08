@@ -81,7 +81,7 @@ the profile — then build.
 - Canonical address — use these exact characters everywhere:
   ```
   Kapaklı Kuyumculuk
-  Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+  Cumhuriyet Mah., Pınar Bulvarı No: 56/C
   59510 Kapaklı / Tekirdağ
   0282 717 21 31
   ```

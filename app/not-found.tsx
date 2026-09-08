@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { ArrowRightIcon, PinIcon } from "@/components/icons";
-import {
-  addressLines,
-  address,
-  mapsSearchUrl,
-  phoneDisplay,
-  phoneHref,
-} from "@/lib/config";
+import { DirectionsButton } from "@/components/DirectionsButton";
+import { ArrowRightIcon } from "@/components/icons";
+import { addressLines, phoneDisplay, phoneHref, shop } from "@/lib/config";
+import { COPY } from "@/lib/copy";
 
 /* §6.8 — 404.
  *
@@ -26,7 +22,7 @@ import {
  */
 
 export const metadata: Metadata = {
-  title: "Sayfa bulunamadı | Trakya Kapaklı Kuyumculuk",
+  title: `Sayfa bulunamadı | ${shop.name}`,
   robots: { index: false, follow: true },
 };
 
@@ -43,9 +39,7 @@ export default function NotFound() {
         <div className="mt-6 h-px w-11 bg-gold" />
 
         <p className="mt-6 leading-relaxed text-cream-text">
-          Web sitemiz yenilendi ve bazı eski adresler değişti. Muhtemelen eski
-          bir bağlantıyı ya da arama sonucunu takip ettiniz. Mağazamız yerinde
-          duruyor — aradığınızı aşağıdan bulabilirsiniz.
+          {COPY.notFound.body}
         </p>
 
         <div className="mt-9 flex flex-wrap gap-3">
@@ -72,20 +66,9 @@ export default function NotFound() {
                 {line}
               </span>
             ))}
-            <span className="mt-1 block text-muted/80">
-              {address.landmark.value}
-            </span>
           </address>
 
-          <a
-            href={mapsSearchUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm text-gold-soft transition-colors hover:text-cream-text"
-          >
-            <PinIcon className="h-4 w-4" />
-            Yol Tarifi Al
-          </a>
+          <DirectionsButton variant="quiet" className="mt-4 !px-0" />
         </div>
 
         <p className="mt-10 text-sm text-muted">

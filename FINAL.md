@@ -42,8 +42,10 @@ The sequence matters more than any individual step.
 ## Live verification
 
 - `curl -sI` every one of the 24 redirect rules: 301 with the correct `location`.
-- `/urunler/pirlanta`, `/urunler/ozel-tasarim-takilar`, `/galeri`, `/hakkimizda`,
+- `/urunler`, `/urunler/ozel-tasarim-takilar`, `/galeri`, `/hakkimizda`,
   `/iletisim` → **200**.
+- `/urunler/pirlanta`, `/urunler/tek-tas-modelleri` → **301 to `/urunler/yuzuk`**, and that
+  destination returns 200. Both were live pages until the 2026-09-08 category restructure.
 - `/wp-admin`, `/author/x`, `/?p=1` → 404, landing on the branded Turkish page.
 - `npm run test:e2e -- tests/redirects.spec.ts` against the live domain. It proves the map
   locally today; production is the real test.
@@ -146,8 +148,8 @@ his own name.
   months of history. If the name consolidation works, it shows up here first.
 - Step 8 of the cleanup plan: search the shop name monthly from a logged-out browser and
   record what appears. Fifteen minutes, forever.
-- Vercel Analytics for visitors and referrers, with `/wa` and `/yol-tarifi` giving click
-  counts on the free tier.
+- Vercel Analytics for visitors and referrers, with `/telefon` and `/yol-tarifi` giving
+  click counts on the free tier.
 
 ## Done when
 

@@ -198,9 +198,17 @@ hours = { days:'Pazartesi – Cumartesi', opens:'09:00', closes:'20:00',
           closed:'Pazar kapalı', seasonal:true }     // closing shifts winter↔summer
 ```
 
-Address punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/A` with the space,
+Address punctuation is load-bearing: `Bulvarı` not `Blv.`, the space after `No:`,
 `Kapaklı / Tekirdağ` with spaces. Must match the footer and the Google profile
 character-for-character (§10).
+
+> ⚠️ **Superseded 2026-09-08 — this block is a snapshot, not the current config.**
+> The door number is **56/C**, not 56/A. The `landmark` field is **gone**: a landmark is
+> a second address in everything but name, and it decays silently when the branch moves.
+> `hours` is two seasons now (19:00 summer, 18:00 winter), and coordinates are
+> **published** — 41.326459, 27.976502, from the shop's own Google Maps listing, so the
+> JSON-LD carries `geo` and `hasMap`. Read `lib/config.ts` for the live values; nothing
+> should ever be copied out of this section.
 
 **Done when:** unit tests cover the derived helpers — flipping `whatsapp.pending`
 switches the CTA href between `wa.me/…?text=…` and `tel:`, and the label between the

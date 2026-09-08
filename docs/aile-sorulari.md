@@ -13,8 +13,9 @@ kötü — sonradan düzeltmesi aylar sürüyor.
 ## 1. Adres ve iletişim
 
 - [ ] **Tam açık adres nedir?**
-      Elimdeki kayıt: *Cumhuriyet Mah., Pınar Bulvarı No: 56/A, 59510 Kapaklı / Tekirdağ*
-      Doğru mu? Kapı numarası **56** mı **56/A** mı?
+      ✅ **Cevaplandı 2026-09-08:** *Cumhuriyet Mah., Pınar Bulvarı No: 56/C,
+      59510 Kapaklı / Tekirdağ*. Kapı numarası **56/C**. (Eski kayıt 56/A idi;
+      Çerkezköy TSO sicili hâlâ 56/A diyor — `business-facts.md` notuna bakın.)
 
 - [ ] **Hangi telefon numaraları hâlâ kullanılıyor?**
       - 0282 717 21 31 → ✔ / ✘
@@ -27,7 +28,9 @@ kötü — sonradan düzeltmesi aylar sürüyor.
 - [ ] **Dükkânın kendine ait e-posta adresi var mı?**
       Yoksa `info@kapaklikuyumculuk.com` açalım — Google kaydı için gerekiyor.
 
-- [ ] **Tarif verirken hangi yeri söylüyorsunuz?** ("Ziraat Bankası karşısı" gibi)
+- [x] ~~**Tarif verirken hangi yeri söylüyorsunuz?**~~ ✅ **Karar 2026-09-08:** siteye
+      hiçbir tarif noktası yazılmıyor. Kapı numarası kesin ve haritada iğne var; bir
+      banka şubesi taşınırsa tarif sessizce yanlışa döner.
 
 ## 2. Çalışma saatleri
 

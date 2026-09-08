@@ -6,6 +6,12 @@
 >
 > Source commit: `a48f740`. Git history holds these files in full — this file exists so the
 > copy can be read without a checkout.
+>
+> ⚠️ **Do not copy the address or the landmark out of this file.** It quotes the pages as
+> they stood on 2026-08-27, so it still says `No: 56/A` and still carries
+> *"Ziraat Bankası karşısındayız"*. Both were retired on 2026-09-08 — the door number is
+> **56/C** and the site publishes no landmark at all. The quotations stay verbatim because
+> an archive that has been edited is not an archive; `lib/config.ts` is the live source.
 
 ## Why this matters
 

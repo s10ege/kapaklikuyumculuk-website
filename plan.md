@@ -4,14 +4,14 @@
 > order. The detailed record of the original build (iterations 0–16, milestones M1–M5)
 > is preserved in [`docs/build-history.md`](docs/build-history.md).
 >
-> Last updated 2026-08-29.
+> Last updated 2026-09-08.
 
 ## Context
 
 `kapaklikuyumculuk.com` currently serves a single static holding page from Vercel.
 The real site is a Turkish-language catalogue for a family jeweller in Kapaklı,
 Tekirdağ. Its only job is to make a visitor confident enough to walk into the shop
-or send a WhatsApp message — no cart, no payments, no accounts.
+or pick up the phone — no cart, no payments, no accounts.
 
 The project's root problem is not design. Per `docs/index-cleanup-plan.md`, the shop's
 name currently resolves to **two different addresses** across the web (a former
@@ -28,8 +28,8 @@ Priority order. Each stage has its own file.
 | # | File | Covers | Status |
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
-| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **over 2026-09-07 — not sealed.** 61 frames triaged with Soner (30 dropped), 57 products across all five categories processed, polished and **committed** (`/public/urunler/` un-ignored on Soner's word). Hakkımızda photographs placed — founder, owner, shopfront. Soner is still adjusting layout and copy, and three items stay his to supply: ayar · gram, the featured four, a last look at the contact-sheet flags |
-| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next** — prepared 2026-08-29, not opened. 3.1 is a ⛔ gate |
+| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **approved 2026-09-08 — closed.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned, **WhatsApp removed — the phone is the only channel**. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. Approved in writing by Soner; `spec`, the `featured` four and the contact-sheet flags stay outstanding as content, not as gates |
+| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next, and now unblocked** — stage 2 approved 2026-09-08. Prepared 2026-08-29, still not opened. 3.1 is a ⛔ gate: five facts, and it must be read out loud before any stage-3 code |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
 ## Roadmap
@@ -72,36 +72,87 @@ agree a rename table against the five published slugs, copy into `catalogue/raw/
 else can substitute for them: the **ayar and gram** per piece, the **`featured` four**, and
 a decision on the contact-sheet flags (hangtags, the soft-focus velvet rings).
 
-**Gate 2→3.** Crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2
-paused and the catalogue unapproved. The gate's actual concern is that *"the catalogue is
-approved before any directory or Google work starts"* — that work is stage 4, so preparing
-and running stage 3 does not breach it. What it does mean is that stage 3.3 cannot finish:
-see the note under the stage-3 table.
+### 2.6 — Final iteration, 2026-09-08
+
+The last pass over stage 2, run on branch `final-tweaks`. Seven sections, one commit each,
+`tsc` + lint + 66 unit + 210 e2e green at the end and the build still fully static
+(20 routes, no `ƒ`).
+
+| | What changed | Why it mattered |
+|---|---|---|
+| §1 | **Five categories became four.** `pirlanta` retired — every piece under it is white gold, not diamond — and `tek-tas-modelleri` → `yuzuk`, which was naming a subset of its own contents. Su yolu takımı → `altin-seti`, ten + five rings → `yuzuk`. Homepage and `/urunler` show four tiles in one row; the pale-gold "Tüm Ürünler" tile and the `/urunler` ask-cell are gone, replaced by a text link | The slug, the H1, the nav, the sitemap and the JSON-LD were all making a claim about the stock that the stock does not support |
+| §1 | **Both retired paths 301 to `/urunler/yuzuk`**, and every rule that used to land on them now names the final destination. A new test follows each source one hop and requires a 200 on the far side | `/urun/tek-tas-modelleri` and `/urun/pirlanta-yuzukler` were two-hop chains for the length of one edit. A chain looks exactly like a working site |
+| §2 | **Two opening-hour seasons**, both published all year, with today's emphasised client-side. 19:00 summer, 18:00 winter. JSON-LD emits three `openingHoursSpecification` entries — winter crosses New Year and `validFrom`/`validThrough` are dates, not a rule | A static build in August was telling a December visitor the shop is open until seven. The old ❌ grade on hours was never a data problem: every source had half a real seasonal pattern |
+| §3 | **Address is `No: 56/C`**, `address.formatted` is the single spelling, the Ziraat landmark is gone, and the coordinates are published from the shop's own Maps listing — so JSON-LD carries `geo` and `hasMap` | A landmark is a second address in everything but name, and this project exists because the shop already has two circulating. The TSO registry's 56/A is quoted unedited in `business-facts.md`: evidence you have edited is worth nothing |
+| §4 | **Pin-only map embed**, and a Yol Tarifi that asks on Apple platforms and goes straight to Google everywhere else. `/yol-tarifi` is a prerendered page, not a 302 | The old embed drew a *route* from "Kapaklı" to the shop — a trip planner where a location belonged. A 302 would have been dynamic *and* would never have fired the analytics beacon it exists to fire |
+| §5 | **Hakkımızda columns end on the same line**, structurally: `items-stretch` + `h-full` + `object-cover`, asserted at 1024 / 1280 / 1440. Portraits moved below the grid, names kept per Soner | Padding can only be right at one viewport width |
+| §6 | **Every page rewritten** in *sade esnaf sesi*. `lib/filler.ts` deleted, `lib/copy.ts` in its place, and `tests/copy.test.mts` is the gate `TECHNICAL.md` §3 specified but nobody had written | The old copy was not filler in the obvious sense — it was fluent and said nothing. The gate now fails the build if the copy stops answering what customers actually ask at the counter |
+
+**Verification.** All 25 redirect sources curled against a production build: one 308 hop to a
+200, every time; reclaimed paths 200; deliberate 404s 404; the `*.vercel.app` host still
+redirects to the canonical domain. Retired terms appear in no page's rendered markup —
+title, meta, JSON-LD and alt text included — asserted per route in `tests/seo.spec.ts` and
+backed at source level by `npm run gate:terms`. Screenshots at 390 / 768 / 1440 for `/`,
+`/urunler`, `/urunler/yuzuk`, `/urunler/altin-seti`, `/hakkimizda`, `/iletisim` and the 404
+are in `screenshots/final-tweaks/`.
+
+### 2.7 — WhatsApp removed, 2026-09-08
+
+The pass above left one boolean outstanding: the copy named WhatsApp, `whatsapp.pending` was
+still `true`, and confirming the number would have switched the buttons and the sentences
+together. Soner's answer was to remove the channel instead — **the shop takes calls.**
+
+So the fallback became the only path, and everything built for the other one came out: the
+number, the `wa.me` branch, the `productName` prefill that four components passed, the
+WhatsApp icon, the `#25D366` palette token, and the green state of the floating button that
+never shipped. The five copy lines that named a channel collapse to the phone versions that
+were already written beside them — no sentence was rewritten. The floating button is
+`CallFab` now and looks exactly as it always has, because the pending fallback *was* what
+shipped.
+
+This reverses `TECHNICAL.md` §9, which made WhatsApp "the site's one CTA", so the reversal is
+recorded rather than quietly applied — here, in `TECHNICAL.md`, in `design.md` D15 and in
+`docs/business-facts.md`. The stage-3 confirmation gate drops from six facts to five: there
+is no longer a WhatsApp number to confirm. `/wa`, the planned analytics hop, is dropped with
+it.
+
+Two source invariants and a rendered-markup gate now enforce the absence, so it cannot creep
+back by accident.
+
+**Gate 2→3. ✅ Satisfied 2026-09-08.** Stage 2 is approved and closed, so this gate is no
+longer being crossed on a technicality — it is simply open.
+
+It was crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2 paused and
+the catalogue unapproved; the reasoning then was that the gate's actual concern is *"the
+catalogue is approved before any directory or Google work starts"*, that work being stage 4.
+That reasoning is moot now. The constraint it carried — that stage 3.3 could not finish
+without an approved catalogue — is lifted with it: the catalogue is in the repo, approved,
+and 3.3's per-category `ItemList` and OG cards have real product images to work from.
 
 ### Stage 3 — TECHNICAL.md
 
 | # | Iteration | Ends when |
 |---|---|---|
-| 3.1 | **⛔ Confirmation gate** — **Claude stops here and asks**, in the session that writes the code. The six facts, named so they cannot be skimmed past: **(1)** the canonical name, character-for-character · **(2)** the full address block, character-for-character · **(3)** WhatsApp `0554 915 77 90` — correct? · **(4)** `0282 717 55 62` — still in use? · **(5)** opening hours including the winter closing time · **(6)** that the Altın Alım–Satım copy on `/hizmetler` matches how the shop actually operates | Facts confirmed; `whatsapp.pending` flipped; hours and phones correct in `lib/config.ts` |
+| 3.1 | **⛔ Confirmation gate** — **Claude stops here and asks**, in the session that writes the code. The five facts, named so they cannot be skimmed past: **(1)** the canonical name, character-for-character · **(2)** the full address block, character-for-character · **(3)** `0282 717 55 62` — still in use? · **(4)** opening hours including the winter closing time · **(5)** that the Altın Alım–Satım copy on `/hizmetler` matches how the shop actually operates. *(Six until 2026-09-08; the WhatsApp item went with the channel.)* | Facts confirmed; hours and phones correct in `lib/config.ts` |
 | 3.2 | **Copy** — Soner's real Turkish text replaces the filler; filler build gate added | The gate fails a build containing filler, and passes on the real copy |
 | 3.3 | **SEO** — metadata, JSON-LD with real product images, sitemap from the folders, `/studio` disallow removed, **OG images** for the homepage and five categories | Rich Results Test passes locally; a shared link previews correctly |
 | 3.4 | **Redirects re-verified** after the redesign | All 24 rules 301 correctly; the five reclaimed paths return 200 |
 | 3.5 | **Mobile device pass** — one Android, one iPhone, real hardware | Findings logged and fixed; no horizontal scroll at 320px; Lighthouse mobile ≥90 / a11y 100 |
 | 3.6 | **Accessibility on dark** — contrast, focus, reduced motion and reduced data | Measured, not assumed |
 | 3.7 | **Repo hygiene** — `.gitattributes`, delete `sanity/`, gitignore, dev routes 404 in production | `git status` is clean of line-ending noise |
-| 3.8 | **Analytics plumbing** — `/wa`, `/yol-tarifi`, `/telefon` routes so clicks count on the free tier | Each records as a page view and forwards correctly |
+| 3.8 | **Analytics plumbing** — `/telefon` so clicks count on the free tier (`/yol-tarifi` is built; `/wa` is not needed since WhatsApp was removed) | Each records as a page view and forwards correctly |
 | 3.9 | **Runbook proven** — add one product end to end following `TECHNICAL.md` §11 | The runbook works as written, without improvisation |
 
 **Two things the stage-3 session should know before it starts** (recorded 2026-08-29, when
 the stage was prepared but deliberately not opened):
 
-1. **The paused catalogue blocks part of 3.3 and only 3.3.** Two items there need product
-   images that exist *in the repo*, and none do — `/public/urunler/` is gitignored: the
-   per-category `ItemList` "carrying real image URLs", and the per-category OG cards built
-   from a product image. Everything else in 3.3 — the title pattern, `JewelryStore`
-   JSON-LD, `BreadcrumbList`, the homepage OG card, the sitemap from the folders, dropping
-   the `/studio` disallow — is unaffected. So are 3.2 and 3.4 through 3.8, entirely. 3.9 can
-   be *written* but not *proven*, since proving it means publishing a product.
+1. ~~**The paused catalogue blocks part of 3.3 and only 3.3.**~~ **No longer true — resolved
+   2026-09-08.** Two items in 3.3 needed product images that exist *in the repo*, and at the
+   time none did. They do now: `/public/urunler/` came out of `.gitignore` on 2026-09-07 and
+   the stage closed approved on 2026-09-08, so the per-category `ItemList` carries real
+   image URLs already, and the per-category OG cards have 57 products to build from. Nothing
+   in stage 3 is blocked on the catalogue any more. 3.9 is still *written but not proven*
+   until something is published.
 2. **3.7 is mostly already done, uncommitted work from earlier sessions.** `.gitattributes`
    exists with `* text=auto eol=lf`; `sanity/` is gone; `catalogue/raw/`, `images/` and
    `/public/urunler/` are gitignored; all four `app/dev/*` routes guard on
@@ -168,7 +219,7 @@ And at the end of the 1.6 verification (2026-08-29):
 | 6 | **No individual product pages.** Category pages carry the SEO, the lightbox carries the detail | `CATALOGUE.md` §3 |
 | 7 | Hours publish 09:00–20:00 pending confirmation; closing shifts winter↔summer | `TECHNICAL.md` §2 |
 | 8 | Redirect map lives in `next.config.ts` — verified against `docs/old-urls.txt` | `TECHNICAL.md` §4 |
-| 9 | Vercel Analytics on the free tier, with `/wa` and `/yol-tarifi` giving click counts | `TECHNICAL.md` §9 |
+| 9 | Vercel Analytics on the free tier, with `/telefon` and `/yol-tarifi` giving click counts | `TECHNICAL.md` §9 |
 | 10 | Display face **Ibarra Real Nova, weight 500** (replacing Bodoni Moda after a three-round selection); homepage section eyebrows removed, interior pages keep theirs | `design.md` D8 |
 
 ## Decisions overturned

@@ -6,26 +6,54 @@
 
 ---
 
+## 0 · What the 2026-09-08 stage-2 pass already did
+
+> Recorded so stage 3 does not re-plan finished work. This stage file was **not opened** —
+> §1's ⛔ confirmation gate is untouched and stage 3 has not begun. What follows happened
+> inside stage 2's final iteration (`plan.md` § 2.6) because it was catalogue and copy work
+> that happened to overlap this file's sections.
+
+- **§3, the copy gate — done, and larger than specified.** `lib/filler.ts` is deleted;
+  `lib/copy.ts` holds every sentence in *sade esnaf sesi*; `tests/copy.test.mts` is the
+  gate. See §3 below, rewritten.
+- **§4, redirects — two rules added and two repointed.** `/urunler/pirlanta` and
+  `/urunler/tek-tas-modelleri` are 301 sources now, and the rules that used to land on them
+  name `/urunler/yuzuk` directly. A no-chains assertion follows every source one hop and
+  requires a 200. `/urunler/pirlanta` left the reclaimed list — the only path ever to do so.
+- **§5, SEO — partly done.** `JewelryStore` now carries `geo` and `hasMap` (the coordinates
+  stopped being ❌ when they came from the shop's own Maps listing), and
+  `openingHoursSpecification` is three seasonal entries. Every meta description is rewritten
+  to 120–155 characters. **Still outstanding and still stage 3's:** OG images (there are
+  none), and dropping the `/studio` disallow.
+- **§9, analytics — the `/yol-tarifi` half exists.** It is a prerendered page rather than
+  the redirect the section imagines, for two reasons: a redirect would be the only dynamic
+  route in the build, and — the one that decides it — Vercel Web Analytics counts page views
+  from a script on a rendered page, so a redirect fires nothing. `/telefon` is still to
+  build and `@vercel/analytics` is still not installed. `/wa` is no longer needed —
+  WhatsApp was removed on 2026-09-08, in the same pass.
+
 ## ⛔ 1 · CONFIRMATION GATE — do not write code past this point
 
 **Claude must stop here and ask Soner to confirm, in writing, in the session:**
 
 1. The canonical name string, character-for-character.
 2. The full address block, character-for-character.
-3. **WhatsApp `0554 915 77 90`** — correct? Then `contact.whatsapp.pending` → `false`.
-4. **`0282 717 55 62`** — still in use?
-5. **Opening hours**, including the winter closing time.
-6. That the **Altın Alım–Satım copy** on `/hizmetler` matches how the shop actually
+3. **`0282 717 55 62`** — still in use?
+4. **Opening hours**, including the winter closing time.
+5. That the **Altın Alım–Satım copy** on `/hizmetler` matches how the shop actually
    operates — it promises weighing on the counter in front of the customer, with any
    deduction named beforehand.
+
+> **Five, not six, since 2026-09-08.** Item 3 used to be *"WhatsApp `0554 915 77 90` —
+> correct? Then `contact.whatsapp.pending` → `false`"*. There is nothing left to confirm:
+> Soner removed WhatsApp, the number is out of `lib/config.ts`, and the pending mechanism it
+> was waiting on is gone with it. **(2)** is also already answered — the address was
+> confirmed as `No: 56/C` in the same pass — but it stays on the list, because the point of
+> a gate is that it is read out loud rather than assumed.
 
 **Instruction to Claude:** if asked to start this iteration without these confirmations,
 stop and ask for them first. Do not infer them from `docs/`, do not carry them over from an
 earlier session, and do not treat silence as approval.
-
-Each is a one-line change behind the existing pending mechanism, verified end-to-end:
-flipping `whatsapp.pending` swaps every CTA across all eleven pages between `wa.me` (with
-the product or category name prefilled) and the `tel:` fallback, with no layout shift.
 
 ---
 
@@ -42,13 +70,13 @@ adds a fourth variant instead of replacing three.
 
 ```
 Trakya Kapaklı Kuyumculuk
-Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+Cumhuriyet Mah., Pınar Bulvarı No: 56/C
 59510 Kapaklı / Tekirdağ
 0282 717 21 31
 https://www.kapaklikuyumculuk.com
 ```
 
-Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/A` with the space,
+Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/C` with the space,
 `Kapaklı / Tekirdağ` with spaces around the slash.
 
 **Title case is the stored form.** Google Business Profile guidelines prohibit unnecessary
@@ -66,22 +94,47 @@ the Steps 3–5 directory corrections in `docs/index-cleanup-plan.md` · and ret
 `lib/config.ts`. That guarantee stops at the edge of the repo; the directories are the other
 half, and they are manual. `FINAL.md` covers them.
 
-## 3 · Filler-text build gate
+## 3 · The copy gate
 
-Turkish filler ships during stages 1 and 2, which means it can reach production by accident.
-A test fails the build if any filler marker survives. Placeholder copy reaching a live site
-is one of the most common launch failures there is, and it is trivially preventable.
+> **Done 2026-09-08, and it grew.** `lib/filler.ts` is gone — every page carries real copy
+> now, written in one pass in the *sade esnaf sesi* voice and living in `lib/copy.ts`. The
+> gate this section specified is `tests/copy.test.mts`.
 
-The original Turkish copy is preserved in [`docs/original-copy.md`](docs/original-copy.md).
+Filler shipping to production was the original worry, and it was the easy half. Filler is
+obvious. What actually threatens a shop like this is fluent copy that says nothing —
+*"eşsiz zarafet"*, *"hayallerinizdeki yüzük"*, *"her zevke uygun"*. It reads fine, it passes
+review, and it is indistinguishable from every other jeweller's site in the country.
+
+So the gate walks every string in `lib/copy.ts` and every category intro and meta
+description in `lib/content.ts`, and fails the build on:
+
+- **A banned-word list** — the vocabulary above, ~30 entries. Each is a word that sounds
+  like it describes the jewellery while carrying no information about it.
+- **Exclamation marks and rhetorical questions.** An exclamation mark on a jeweller's site
+  is a sale sign; this shop's argument is that it has been calm on the same street since 2000.
+- **Sentences opening `Biz,` or `Sizin için`** — the sound of a company describing itself.
+- **Sentence-count caps.** Three on product and contact pages, four on Hakkımızda.
+- **The locality, exactly once per page**, and never twice in one paragraph.
+- **Meta descriptions inside 120–155 characters**, and never in capitals.
+- **The questions customers actually ask** — ayar and gram on the tag, why no price is
+  printed, weighing in front of you, deductions said before, resizing and repair, how long
+  an order takes. If the copy stops answering one of them, the build fails. This is the
+  assertion that would have caught the copy it replaced.
+
+The copy as it stood before the redesign is preserved in
+[`docs/original-copy.md`](docs/original-copy.md).
 
 ## 4 · Redirects
 
 24 rules in `next.config.ts`, verified against the 309 URLs in `docs/old-urls.txt`.
 
 - Every old path returns **301** with the correct `location`.
-- The reclaimed paths — `/urunler/pirlanta`, `/urunler/ozel-tasarim-takilar`, `/galeri`,
+- The reclaimed paths — `/urunler`, `/urunler/ozel-tasarim-takilar`, `/galeri`,
   `/hakkimizda`, `/iletisim` — return **200, not 301**. This is the check that protects the
   domain's index history.
+- **No chains.** Every source reaches a 200 in one hop. `/urunler/pirlanta` and
+  `/urunler/tek-tas-modelleri` became redirect sources on 2026-09-08 when the categories
+  were restructured, so any rule still aimed at either one is a two-hop chain.
 - The deliberate 404s stay 404: `/wp-admin*`, `/wp-login.php*`, `/wp-content/*`,
   `/author/*`, `/category/*`, `/?p=*`, `/anasayfa2`, `/slide-types/*`.
 - **`robots.txt` must not block the old paths.** A blocked URL is never crawled, so Google
@@ -101,11 +154,14 @@ end. Proven locally here; proven live in `FINAL.md`.
   image URLs**, which it could not before.
 - **OG images** — new requirement from the redesign. A dark card with the coin and the
   lockup as the site-wide default, plus per-category cards using a product image. There is
-  currently nothing, so every WhatsApp share of the link looks broken.
+  currently nothing, so every share of the link looks broken — and sharing a link is
+  still how this shop's customers pass it on, whatever they share it in.
 - `sitemap.ts` regenerated from the folder-driven catalogue, so a new product needs no
   sitemap edit. **Drop the `/studio` disallow** — there is no Studio.
-- Targets stay local: **`kapaklı kuyumcu`, `tekirdağ pırlanta`, `kapaklı altın`**. Not
-  `pırlanta yüzük` — that is competing nationally against chains with budgets.
+- Targets stay local: **`kapaklı kuyumcu`, `kapaklı altın`, `tekirdağ altın seti`**. Not
+  `altın bilezik` on its own — that is competing nationally against chains with budgets.
+  (`tekirdağ pırlanta` was a target until 2026-09-08. The pırlanta category was retired —
+  the pieces are white gold — so the shop no longer competes on a word it cannot back.)
 
 ## 6 · Mobile — adaptation and verification
 
@@ -123,7 +179,7 @@ hamburger panel listing the five categories first, tap targets ≥44px (§7).
    `prefers-reduced-motion` and `prefers-reduced-data`.
 3. **`100dvh`, not `100vh`.** iOS Safari's collapsing URL bar makes a `vh` hero jump
    mid-scroll. `dvh` with a `vh` fallback.
-4. **Safe-area insets.** The WhatsApp FAB must clear the iOS home indicator
+4. **Safe-area insets.** The call FAB must clear the iOS home indicator
    (`env(safe-area-inset-bottom)`) and must never sit on the last row of a product grid.
 5. **Lightbox on touch.** Swipe to step through, close button in thumb reach, focus trap
    that does not fight the on-screen keyboard, pinch-zoom not blocked. Currently proven with
@@ -170,11 +226,14 @@ window**, and **custom events are Pro-only**. So visitors, page views, referrers
 and country-level location work free; button clicks do not.
 
 The workaround, which stays on the free tier: route the important CTAs through internal URLs
-first. The WhatsApp button links to `/wa`, which redirects to `wa.me`; directions link to
-`/yol-tarifi`. Those register as ordinary page views, giving click counts for nothing. Phone
-needs a variant — a `/telefon` page that fires the `tel:` link on load — because browsers
-handle redirects to `tel:` inconsistently. Cost is roughly one extra 100ms hop on the two
-actions that matter most.
+first. Directions link to `/yol-tarifi`, which is built. Phone needs a `/telefon` page that
+fires the `tel:` link on load, rather than a redirect, because browsers handle redirects to
+`tel:` inconsistently — and because a rendered page is what the analytics script needs in
+order to fire at all. Cost is roughly one extra 100ms hop on the two actions that matter.
+
+*(A third hop, `/wa` → `wa.me`, was specified here and is not needed: WhatsApp was removed
+on 2026-09-08. With it gone the phone is one of the two actions worth counting rather than
+the fallback for the other.)*
 
 Location granularity is country and region, not reliably city; for a shop in Kapaklı nearly
 all traffic reads "Turkey", so the genuinely useful dimension is **referrer** — Instagram

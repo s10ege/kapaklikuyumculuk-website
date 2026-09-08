@@ -2,6 +2,8 @@ import {
   address,
   areaServed,
   contact,
+  geo,
+  googleMapsUrl,
   hours,
   instagramUrl,
   shop,
@@ -23,6 +25,44 @@ import type { Category, Product } from "./content.ts";
 
 const FACEBOOK_URL = "https://www.facebook.com/537179436417060";
 
+/** §10 — the seasonal hours, as schema.org sees them.
+ *
+ * Three entries, not two, and the third is not a mistake. Summer is one
+ * unbroken run (01 May → 30 September) and fits a single spec. Winter runs
+ * from October through April, which crosses New Year — and
+ * `validFrom`/`validThrough` are dates, not a recurrence rule, so there is no
+ * way to express "10-01 through 04-30" as one range without asserting a span
+ * that runs backwards. It is published as the two calendar halves it actually
+ * occupies: January–April, and October–December.
+ *
+ * Dates are stamped for the current year, which for a static site means the
+ * year of the last deploy. That is correct in practice for a site rebuilt
+ * whenever anything changes, and a stale year is a stale hint rather than a
+ * wrong claim — the visible page carries both seasons unconditionally, so
+ * nothing depends on this being fresh.
+ *
+ * Sunday is never emitted. A `dayOfWeek` list that omits a day means closed,
+ * and an explicit Sunday entry with equal opens/closes is the other convention
+ * — mixing them is how a shop ends up listed as open 00:00–00:00. */
+export function openingHoursSpecification(now: Date = new Date()) {
+  const year = now.getFullYear();
+
+  const spec = (season: "summer" | "winter", from: string, through: string) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: hours.schemaDays,
+    opens: hours[season].open,
+    closes: hours[season].close,
+    validFrom: `${year}-${from}`,
+    validThrough: `${year}-${through}`,
+  });
+
+  return [
+    spec("summer", "05-01", "09-30"),
+    spec("winter", "01-01", "04-30"),
+    spec("winter", "10-01", "12-31"),
+  ];
+}
+
 export function jewelryStoreSchema() {
   return {
     "@context": "https://schema.org",
@@ -31,9 +71,9 @@ export function jewelryStoreSchema() {
     name: shop.name,
     legalName: shop.legalName,
     description:
-      `${shop.founded} yılında Kapaklı'da kurulan ${shop.name}; altın, ` +
-      "pırlanta ve özel tasarım takıları güvene ve dürüstlüğe dayalı hizmet " +
-      "anlayışıyla sunar.",
+      `${shop.founded} yılında Kapaklı'da kurulan ${shop.name}; altın set, ` +
+      "bilezik, küpe, yüzük ve özel tasarım takı satar, sipariş üzerine " +
+      "üretir ve altın alım–satımı yapar.",
     url: shop.url,
     telephone: `+${contact.phone.value}`,
     foundingDate: String(shop.founded),
@@ -49,19 +89,22 @@ export function jewelryStoreSchema() {
       addressCountry: address.country,
     },
 
-    /* `geo` is deliberately absent. docs/business-facts.md grades the
-     * coordinates ❌ — sources disagree by roughly 150 m — and asserting a pin
-     * we know might be wrong is worse than asserting none. The address block
-     * above is unambiguous and is what Google will geocode. */
+    /* `geo` was deliberately absent until 2026-09-08: docs/business-facts.md
+     * graded the coordinates ❌, sources disagreed by roughly 150 m, and
+     * asserting a pin we knew might be wrong was worse than asserting none.
+     * These come from the shop's own Google Maps listing, so the pin, the
+     * street number and the place ID all describe the same door — and `hasMap`
+     * points at that listing rather than at a search for it, which is the
+     * difference between naming the place and hoping Google guesses it. */
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: geo.lat,
+      longitude: geo.lng,
+    },
+    hasMap: googleMapsUrl,
 
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: hours.schemaDays,
-        opens: hours.opens,
-        closes: hours.closes,
-      },
-    ],
+
+    openingHoursSpecification: openingHoursSpecification(),
 
     /* Only accounts genuinely ours. @kapaklikuyumculuk matches our domain but
      * belongs to a different jeweller in Şanlıurfa, and at least one directory

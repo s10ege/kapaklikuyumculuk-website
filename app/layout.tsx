@@ -4,10 +4,10 @@ import "./globals.css";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { CallFab } from "@/components/CallFab";
 import { JsonLd } from "@/components/JsonLd";
 import { categoryLinks, PAGE_LINKS } from "@/lib/nav";
-import { addressOneLine, phoneDisplay, shop } from "@/lib/config";
+import { phoneDisplay, shop } from "@/lib/config";
 import { jewelryStoreSchema } from "@/lib/schema";
 
 /* Display: Ibarra Real Nova. Body: Jost.
@@ -57,16 +57,22 @@ export const metadata: Metadata = {
      resolve to absolute URLs. Without it Next emits relative canonicals, which
      Google largely ignores. */
   metadataBase: new URL(shop.url),
-  /* Built from lib/config.ts, not typed out. The hand-written version of this
-     description drifted to "Cumhuriyet Mah. Pınar Bulvarı" — no comma — while
-     the footer and the JSON-LD said "Cumhuriyet Mah., Pınar Bulvarı". Two
-     spellings of one address on the homepage is the exact signal
-     docs/index-cleanup-plan.md blames for the ranking problem, and it got in
-     here by someone typing carefully rather than importing. */
+  /* The address used to be spelled out here and is not any more — it did not
+     fit inside 155 characters alongside anything worth saying, and a meta
+     description truncated mid-address is worse than one without it. The
+     canonical block is on every page in the footer and in the JSON-LD, which
+     is where Google reads it from.
+     
+     The phone number is still composed from lib/config.ts rather than typed.
+     The hand-written version of this description once drifted to "Cumhuriyet
+     Mah. Pınar Bulvarı" — no comma — while the footer and the JSON-LD said
+     "Cumhuriyet Mah., Pınar Bulvarı", which is the exact signal
+     docs/index-cleanup-plan.md blames for the ranking problem. It got in by
+     someone typing carefully rather than importing. */
   title: `${shop.name} | ${phoneDisplay} | Kapaklı Kuyumcu`,
   description:
-    `${shop.founded} yılından beri Kapaklı'da. Altın, pırlanta ve özel ` +
-    `tasarım takılar. ${addressOneLine}. Tel: ${phoneDisplay}`,
+    "Kapaklı'da kuyumcu. Altın alır, satar, sipariş üzerine yaparız. Ayar ve " +
+    `gram etikette, fiyat günün altın kuruna göre. Tel: ${phoneDisplay}`,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -107,7 +113,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
-        <WhatsAppFab />
+        <CallFab />
         {/* Site-wide JewelryStore, generated from lib/config.ts (§10). */}
         <JsonLd data={jewelryStoreSchema()} />
       </body>

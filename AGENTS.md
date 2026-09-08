@@ -32,9 +32,13 @@ approval-gated stage files: `design.md` → `CATALOGUE.md` → `TECHNICAL.md` �
 5. **No stage begins without Soner's explicit written approval.** `TECHNICAL.md` §1 is a
    ⛔ confirmation gate: stop and ask for the six facts before writing code in stage 3. Do
    not infer them from `docs/`, and do not carry them over from an earlier session.
-6. **Turkish filler, never Latin lorem ipsum.** Placeholder copy must carry
-   `ı İ ğ ş ç ö ü` so font-fallback checks stay meaningful. Real copy is preserved in
-   `docs/original-copy.md`.
+6. **Copy is real, and it has a voice.** No filler survives — `lib/copy.ts` holds every
+   sentence a visitor reads, in *sade esnaf sesi*: the owner talking across the counter,
+   short sentences, concrete over evocative. `tests/copy.test.mts` fails the build on a
+   banned-word list, exclamation marks, rhetorical questions, over-long paragraphs, and
+   copy that stops answering what customers actually ask. If placeholder text is ever
+   needed again it must be Turkish, carrying `ı İ ğ ş ç ö ü`. The pre-redesign copy is
+   preserved in `docs/original-copy.md`.
 7. **Prices are never published.** They track the gold rate.
 8. **No contact form.** The domain has no MX records; a test enforces its absence.
 9. **The build stays fully static.** No server rendering, no `ƒ` markers in build output.
@@ -53,7 +57,6 @@ muted      #9A958D   secondary text on dark
 line-dark  #262B31 · line-light #E4DED2
 gold       #B8964F · gold-soft #CBAE72 · gold-deep #77602A (gold on cream)
 ink-muted  #5F5A52   secondary text on cream
-whatsapp   #25D366
 ```
 
 - Gold is a **hairline accent**. The only permitted fill is a primary button, one per
