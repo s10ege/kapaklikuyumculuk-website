@@ -219,3 +219,66 @@ test.describe("sitemap and robots", () => {
     expect(txt).toContain("Sitemap: https://www.kapaklikuyumculuk.com/sitemap.xml");
   });
 });
+
+/* ------------------------------------------------------------------ */
+/* Retired terms never reach a visitor                                 */
+/* ------------------------------------------------------------------ */
+
+/* The source-level version of this is a grep with a list of exclusions —
+ * next.config.ts holds the redirect map, two specs assert it, and the comments
+ * explaining the retirement necessarily name what was retired. Exclusions
+ * weaken a gate, so this is the assertion that does not need any: whatever the
+ * source says, none of these words may be in what a visitor actually reads.
+ *
+ *   pirlanta   — the category was retired 2026-09-08 because the pieces are
+ *                white gold, not diamond. Claiming otherwise is the one thing
+ *                on this site that would be a lie.
+ *   tek taş    — the slug it replaced, in every spelling.
+ *   ziraat     — the landmark, removed the same day.
+ */
+const RETIRED_TERMS = /pırlanta|pirlanta|tek\s?ta[şs]|tekta[şs]|ziraat/i;
+
+const VISITOR_ROUTES = [
+  "/",
+  "/urunler",
+  "/urunler/altin-seti",
+  "/urunler/kupe-modelleri",
+  "/urunler/yuzuk",
+  "/urunler/ozel-tasarim-takilar",
+  "/galeri",
+  "/hizmetler",
+  "/hakkimizda",
+  "/iletisim",
+  "/yol-tarifi",
+];
+
+for (const route of VISITOR_ROUTES) {
+  test(`${route} carries no retired term, anywhere in its markup`, async ({
+    page,
+  }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+
+    /* The whole document, not just visible text: this has to cover the title,
+     * the meta description, the JSON-LD and every alt attribute — the places
+     * a stale claim survives a copy edit precisely because nobody looks. */
+    const html = await page.content();
+    const hit = RETIRED_TERMS.exec(html);
+
+    expect(
+      hit,
+      hit ? `"${hit[0]}" at …${html.slice(Math.max(0, hit.index - 90), hit.index + 90)}…` : "",
+    ).toBeNull();
+  });
+}
+
+test("the 404 carries no retired term either", async ({ page }) => {
+  await page.goto("/wp-admin");
+  expect(RETIRED_TERMS.exec(await page.content())).toBeNull();
+});
+
+test("the sitemap and robots carry no retired term", async ({ request }) => {
+  for (const path of ["/sitemap.xml", "/robots.txt"]) {
+    const body = await (await request.get(path)).text();
+    expect(RETIRED_TERMS.exec(body), `${path}`).toBeNull();
+  }
+});

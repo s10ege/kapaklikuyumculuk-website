@@ -6,6 +6,31 @@
 
 ---
 
+## 0 · What the 2026-09-08 stage-2 pass already did
+
+> Recorded so stage 3 does not re-plan finished work. This stage file was **not opened** —
+> §1's ⛔ confirmation gate is untouched and stage 3 has not begun. What follows happened
+> inside stage 2's final iteration (`plan.md` § 2.6) because it was catalogue and copy work
+> that happened to overlap this file's sections.
+
+- **§3, the copy gate — done, and larger than specified.** `lib/filler.ts` is deleted;
+  `lib/copy.ts` holds every sentence in *sade esnaf sesi*; `tests/copy.test.mts` is the
+  gate. See §3 below, rewritten.
+- **§4, redirects — two rules added and two repointed.** `/urunler/pirlanta` and
+  `/urunler/tek-tas-modelleri` are 301 sources now, and the rules that used to land on them
+  name `/urunler/yuzuk` directly. A no-chains assertion follows every source one hop and
+  requires a 200. `/urunler/pirlanta` left the reclaimed list — the only path ever to do so.
+- **§5, SEO — partly done.** `JewelryStore` now carries `geo` and `hasMap` (the coordinates
+  stopped being ❌ when they came from the shop's own Maps listing), and
+  `openingHoursSpecification` is three seasonal entries. Every meta description is rewritten
+  to 120–155 characters. **Still outstanding and still stage 3's:** OG images (there are
+  none), and dropping the `/studio` disallow.
+- **§9, analytics — the `/yol-tarifi` half exists.** It is a prerendered page rather than
+  the redirect the section imagines, for two reasons: a redirect would be the only dynamic
+  route in the build, and — the one that decides it — Vercel Web Analytics counts page views
+  from a script on a rendered page, so a redirect fires nothing. `/wa` and `/telefon` are
+  still to build, and `@vercel/analytics` is still not installed.
+
 ## ⛔ 1 · CONFIRMATION GATE — do not write code past this point
 
 **Claude must stop here and ask Soner to confirm, in writing, in the session:**

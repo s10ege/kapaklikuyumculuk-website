@@ -4,7 +4,7 @@
 > order. The detailed record of the original build (iterations 0–16, milestones M1–M5)
 > is preserved in [`docs/build-history.md`](docs/build-history.md).
 >
-> Last updated 2026-08-29.
+> Last updated 2026-09-08.
 
 ## Context
 
@@ -28,7 +28,7 @@ Priority order. Each stage has its own file.
 | # | File | Covers | Status |
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
-| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **over 2026-09-07 — not sealed.** 61 frames triaged with Soner (30 dropped), 57 products across all five categories processed, polished and **committed** (`/public/urunler/` un-ignored on Soner's word). Hakkımızda photographs placed — founder, owner, shopfront. Soner is still adjusting layout and copy, and three items stay his to supply: ayar · gram, the featured four, a last look at the contact-sheet flags |
+| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ⏳ **awaiting approval — final iteration 2026-09-08.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. **Soner's call to close** — nothing here marks it approved |
 | 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next** — prepared 2026-08-29, not opened. 3.1 is a ⛔ gate |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
@@ -71,6 +71,37 @@ agree a rename table against the five published slugs, copy into `catalogue/raw/
 `npm run catalogue`, review the contact sheet. Three things still need Soner and nothing
 else can substitute for them: the **ayar and gram** per piece, the **`featured` four**, and
 a decision on the contact-sheet flags (hangtags, the soft-focus velvet rings).
+
+### 2.6 — Final iteration, 2026-09-08
+
+The last pass over stage 2, run on branch `final-tweaks`. Seven sections, one commit each,
+`tsc` + lint + 66 unit + 210 e2e green at the end and the build still fully static
+(20 routes, no `ƒ`).
+
+| | What changed | Why it mattered |
+|---|---|---|
+| §1 | **Five categories became four.** `pirlanta` retired — every piece under it is white gold, not diamond — and `tek-tas-modelleri` → `yuzuk`, which was naming a subset of its own contents. Su yolu takımı → `altin-seti`, ten + five rings → `yuzuk`. Homepage and `/urunler` show four tiles in one row; the pale-gold "Tüm Ürünler" tile and the `/urunler` ask-cell are gone, replaced by a text link | The slug, the H1, the nav, the sitemap and the JSON-LD were all making a claim about the stock that the stock does not support |
+| §1 | **Both retired paths 301 to `/urunler/yuzuk`**, and every rule that used to land on them now names the final destination. A new test follows each source one hop and requires a 200 on the far side | `/urun/tek-tas-modelleri` and `/urun/pirlanta-yuzukler` were two-hop chains for the length of one edit. A chain looks exactly like a working site |
+| §2 | **Two opening-hour seasons**, both published all year, with today's emphasised client-side. 19:00 summer, 18:00 winter. JSON-LD emits three `openingHoursSpecification` entries — winter crosses New Year and `validFrom`/`validThrough` are dates, not a rule | A static build in August was telling a December visitor the shop is open until seven. The old ❌ grade on hours was never a data problem: every source had half a real seasonal pattern |
+| §3 | **Address is `No: 56/C`**, `address.formatted` is the single spelling, the Ziraat landmark is gone, and the coordinates are published from the shop's own Maps listing — so JSON-LD carries `geo` and `hasMap` | A landmark is a second address in everything but name, and this project exists because the shop already has two circulating. The TSO registry's 56/A is quoted unedited in `business-facts.md`: evidence you have edited is worth nothing |
+| §4 | **Pin-only map embed**, and a Yol Tarifi that asks on Apple platforms and goes straight to Google everywhere else. `/yol-tarifi` is a prerendered page, not a 302 | The old embed drew a *route* from "Kapaklı" to the shop — a trip planner where a location belonged. A 302 would have been dynamic *and* would never have fired the analytics beacon it exists to fire |
+| §5 | **Hakkımızda columns end on the same line**, structurally: `items-stretch` + `h-full` + `object-cover`, asserted at 1024 / 1280 / 1440. Portraits moved below the grid, names kept per Soner | Padding can only be right at one viewport width |
+| §6 | **Every page rewritten** in *sade esnaf sesi*. `lib/filler.ts` deleted, `lib/copy.ts` in its place, and `tests/copy.test.mts` is the gate `TECHNICAL.md` §3 specified but nobody had written | The old copy was not filler in the obvious sense — it was fluent and said nothing. The gate now fails the build if the copy stops answering what customers actually ask at the counter |
+
+**Verification.** All 25 redirect sources curled against a production build: one 308 hop to a
+200, every time; reclaimed paths 200; deliberate 404s 404; the `*.vercel.app` host still
+redirects to the canonical domain. Retired terms appear in no page's rendered markup —
+title, meta, JSON-LD and alt text included — asserted per route in `tests/seo.spec.ts` and
+backed at source level by `npm run gate:terms`. Screenshots at 390 / 768 / 1440 for `/`,
+`/urunler`, `/urunler/yuzuk`, `/urunler/altin-seti`, `/hakkimizda`, `/iletisim` and the 404
+are in `screenshots/final-tweaks/`.
+
+**One thing left that only Soner can do, and it is one boolean.** The copy is written to
+name WhatsApp — "WhatsApp'tan yazın", "aynı gün cevap veririz" — but
+`contact.whatsapp.pending` is still `true`, so every button reads "Bizi Arayın" and links to
+`tel:`. The four lines that name a channel ask that flag and currently render the phone
+wording, so the site is consistent either way. Confirming the number and flipping the
+boolean switches the buttons and the sentences together.
 
 **Gate 2→3.** Crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2
 paused and the catalogue unapproved. The gate's actual concern is that *"the catalogue is
