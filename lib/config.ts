@@ -381,9 +381,13 @@ export function buildContactCta(opts: {
     return { href: opts.phoneHref, label: "Bizi Arayın", channel: "phone" };
   }
 
+  /* What the customer sends without typing. Naming the piece is the whole
+   * mechanic (§9) — the shop opens a message that already says which one.
+   * "fiyat ve gram" because those are the two things every message asks for
+   * anyway, and putting them in the prefill saves a round trip. */
   const message = opts.productName
-    ? `Merhaba, ${opts.productName} hakkında bilgi almak istiyorum.`
-    : "Merhaba, bilgi almak istiyorum.";
+    ? `Merhaba, ${opts.productName} için fiyat ve gram bilgisi almak istiyorum.`
+    : "Merhaba, bir model hakkında bilgi almak istiyorum.";
 
   return {
     href: `https://wa.me/${opts.whatsapp.value}?text=${encodeURIComponent(message)}`,

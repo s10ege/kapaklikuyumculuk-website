@@ -1,5 +1,6 @@
 import { ContactButton } from "./ContactButton";
 import { phoneDisplay, phoneHref } from "@/lib/config";
+import { COPY } from "@/lib/copy";
 
 /* The CTA band (§6.2, §6.5, §6.1).
  *
@@ -11,8 +12,8 @@ import { phoneDisplay, phoneHref } from "@/lib/config";
  * permitted panel uses per page.
  */
 export function ContactBand({
-  heading = "Vitrinde olmayan modelleri de bulabiliriz",
-  body = "Aradığınız modeli tarif edin ya da bir fotoğraf gönderin; tedarik edebiliyorsak size dönelim.",
+  heading = COPY.contactBand.heading,
+  body = COPY.contactBand.body,
   productName,
 }: {
   heading?: string;

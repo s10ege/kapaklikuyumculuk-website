@@ -15,7 +15,7 @@ import {
   shop,
 } from "@/lib/config";
 import { getCategories, getFeaturedProducts } from "@/lib/content";
-import { FILLER } from "@/lib/filler";
+import { COPY } from "@/lib/copy";
 
 /* Anasayfa (§6.1).
  *
@@ -26,8 +26,8 @@ import { FILLER } from "@/lib/filler";
  */
 
 /* D19 — one line per service panel on the homepage; the full copy lives on
- * /hizmetler. Filler until 3.2 (the originals are in docs/original-copy.md). */
-const SERVICE_COPY: Record<string, string> = FILLER.homeServices;
+ * /hizmetler. */
+const SERVICE_COPY: Record<string, string> = COPY.home.services;
 
 export default function Home() {
   const categories = getCategories();
@@ -70,7 +70,7 @@ export default function Home() {
             <div className="mt-6 h-px w-11 bg-gold" />
 
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              {FILLER.heroLede}
+              {COPY.home.heroLede}
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
@@ -173,9 +173,9 @@ export default function Home() {
             <div className="mt-5 h-px w-11 bg-gold" />
 
             {/* D19 — two sentences and the link; the full argument lives on
-                /hakkimizda. Filler until 3.2. */}
+                /hakkimizda. */}
             <p className="mt-6 max-w-md leading-relaxed text-cream-text">
-              {FILLER.homeAbout}
+              {COPY.home.about}
             </p>
 
             <Link
@@ -196,8 +196,7 @@ export default function Home() {
             <h2 className="display-md">Mağazamıza bekleriz</h2>
             <div className="mt-5 h-px w-11 bg-gold" />
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Aradığınız modeli tarif edin ya da uğrayın; vitrinde olmayan
-              modelleri de tedarik edebiliyoruz.
+              {COPY.home.contactLede}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

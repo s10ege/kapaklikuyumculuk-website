@@ -9,6 +9,7 @@ import {
   phoneHref,
   shop,
 } from "@/lib/config";
+import { COPY } from "@/lib/copy";
 import { categoryLinks } from "@/lib/nav";
 import { DirectionsButton } from "./DirectionsButton";
 import { InstagramIcon } from "./icons";
@@ -43,8 +44,7 @@ export function Footer() {
             {/* gold-deep — the on-cream gold; plain gold measures 2.46:1 here. */}
             <div className="mt-4 h-px w-11 bg-gold-deep" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
-              {shop.founded} yılından beri Kapaklı&apos;da. Altın set, bilezik,
-              küpe, yüzük ve özel tasarım takılar; {shop.claim}.
+              {COPY.footer.blurb}
             </p>
           </div>
 

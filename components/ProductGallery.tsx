@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ProductCard } from "./ProductCard";
 import { ContactButton } from "./ContactButton";
 import { CloseIcon } from "./icons";
+import { COPY } from "@/lib/copy";
 import type { Product } from "@/lib/content";
 
 /* §6.2 — the grid plus its lightbox.
@@ -138,8 +139,7 @@ export function ProductGallery({ products }: { products: Product[] }) {
               {/* Why no price. Saying it plainly is more reassuring than
                   leaving a blank where a price would be. */}
               <p className="mt-5 border-t border-line-dark pt-5 text-sm leading-relaxed text-muted">
-                Fiyatlar günlük altın kuruna göre değiştiği için sitede
-                yayınlanmıyor. Güncel fiyat ve gramaj için bize ulaşın.
+                {COPY.lightbox.priceNote}
               </p>
 
               <ContactButton

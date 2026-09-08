@@ -87,3 +87,23 @@ Keyword targets are local: `kapaklı kuyumcu`, `kapaklı altın`, `tekirdağ alt
 Not `altın bilezik` on its own — that competes nationally against chains. `tekirdağ
 pırlanta` was a target until 2026-09-08, when the pırlanta category was retired: the
 pieces are white gold, and the shop does not compete on a word it cannot back.
+
+## Voice
+
+*Sade esnaf sesi* — the shop owner talking across the counter. First person plural
+("biz"), the customer addressed as "siz". Short sentences, one idea each. Concrete over
+evocative: say what happens in the shop.
+
+Every sentence a visitor reads lives in `lib/copy.ts`. Category intros and meta
+descriptions live in `lib/content.ts` because they travel with the category. Nothing is
+inlined in a component.
+
+`tests/copy.test.mts` is the gate. It fails the build on a ~30-word banned list
+(`zarafet`, `eşsiz`, `kusursuz`, `ışıltı`, `hayallerinizdeki`, `keşfedin`, …), on
+exclamation marks and rhetorical questions, on sentences opening `Biz,` or `Sizin için`,
+on paragraphs over three sentences (four on Hakkımızda), on the locality appearing other
+than exactly once per page — and on the copy failing to answer the things customers ask
+at the counter: ayar and gram on the tag, why no price is printed, weighing in front of
+you, deductions said before not after, resizing and repair, how long an order takes.
+
+Write the answer to a real question, or do not write the sentence.

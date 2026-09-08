@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { CategoryTiles } from "@/components/CategoryTiles";
 import { ContactBand } from "@/components/ContactBand";
+import { COPY } from "@/lib/copy";
 import { getCategories, pageTitle } from "@/lib/content";
 
 /* §6.3 — Ürünlerimiz.
@@ -15,8 +16,8 @@ import { getCategories, pageTitle } from "@/lib/content";
 export const metadata: Metadata = {
   title: pageTitle("Ürünlerimiz"),
   description:
-    "Altın seti, küpe, yüzük ve özel tasarım takı koleksiyonlarımız. " +
-    "Kapaklı / Tekirdağ.",
+    "Kapaklı kuyumcu: altın set, küpe, yüzük ve sipariş üzerine yaptığımız " +
+    "takılar. Ayar ve gram etikette, fiyat günün altın kuruna göre.",
   alternates: { canonical: "/urunler" },
 };
 
@@ -36,9 +37,7 @@ export default function ProductsPage() {
           <div className="mt-5 h-px w-11 bg-gold" />
 
           <p className="mt-6 max-w-2xl leading-relaxed text-muted">
-            Vitrinimizi beş başlıkta topladık. Aradığınız parça burada yoksa
-            sorun — tedarik edebildiklerimiz vitrindekilerden çok daha geniş, ve
-            sipariş üzerine üretim de yapıyoruz.
+            {COPY.urunler.lede}
           </p>
 
           {/* Four tiles, nothing else. The ask-cell that used to complete a

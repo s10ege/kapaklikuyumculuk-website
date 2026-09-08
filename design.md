@@ -144,8 +144,13 @@ browser; only the rendered loop ships.
 
 Turkish filler, never Latin lorem ipsum — filler must carry `ı İ ğ ş ç ö ü` so the font
 fallback checks stay meaningful. The existing real Turkish copy is preserved in
-[`docs/original-copy.md`](docs/original-copy.md) before filler replaces it; Soner rewrites
-it later. A build gate (`TECHNICAL.md` §3) fails if filler survives to launch.
+[`docs/original-copy.md`](docs/original-copy.md) before filler replaces it.
+
+> **Superseded 2026-09-08.** There is no filler left. `lib/filler.ts` was replaced by
+> `lib/copy.ts`, which holds the real copy for every page in the *sade esnaf sesi* voice,
+> and the gate that used to look for placeholder markers is now the voice gate described in
+> `TECHNICAL.md` §3. The Turkish glyph coverage this paragraph was protecting is asserted
+> directly instead, by `tests/fonts.spec.ts`.
 
 ## What else changes on the homepage
 

@@ -1,4 +1,5 @@
 import { ContactButton } from "./ContactButton";
+import { COPY } from "@/lib/copy";
 
 /* §6.2 — "Never a blank grid."
  *
@@ -26,18 +27,19 @@ export function EmptyState({
     <div
       className={`border border-line-dark bg-panel px-6 py-14 text-center sm:py-20 ${className}`}
     >
-      <p className="text-label uppercase text-gold-soft">Yakında</p>
+      <p className="text-label uppercase text-gold-soft">
+        {COPY.emptyState.eyebrow}
+      </p>
 
       {/* Jost — D8 keeps Ibarra ≥32px and this line tops out at 30px. */}
       <p className="mx-auto mt-4 max-w-md text-2xl leading-snug sm:text-3xl">
-        {headline ?? `${subject} vitrinimizde — fotoğraflarını hazırlıyoruz.`}
+        {headline ?? COPY.emptyState.headline(subject)}
       </p>
 
       {/* No "vitrinde olmayan modelleri de..." here: the ContactBand a scroll
           below says exactly that as its headline (1.5 review, C2). */}
       <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
-        Aradığınız modeli bize yazın ya da telefonla sorun; elimizdekileri
-        sizin için çıkaralım.
+        {COPY.emptyState.body}
       </p>
 
       {/* onDark, not solid: the ContactBand a few hundred pixels below this

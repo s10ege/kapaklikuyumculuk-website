@@ -17,6 +17,7 @@ import {
   shop,
 } from "@/lib/config";
 import { pageTitle } from "@/lib/content";
+import { COPY } from "@/lib/copy";
 
 /* §6.7 — İletişim.
  *
@@ -37,8 +38,8 @@ export const metadata: Metadata = {
   title: pageTitle("İletişim"),
   description:
     `${addressLines[0]}, ${addressLines[1]}. Tel: ${phoneDisplay}. ` +
-    `${hours.summer.days}, yaz ${hours.summer.open}–${hours.summer.close}, ` +
-    `kış ${hours.winter.open}–${hours.winter.close}.`,
+    `Yaz ${hours.summer.open}–${hours.summer.close}, ` +
+    `kış ${hours.winter.open}–${hours.winter.close}; ${hours.closed.toLocaleLowerCase("tr")}.`,
   alternates: { canonical: "/iletisim" },
 };
 
@@ -60,8 +61,7 @@ export default function ContactPage() {
                 naming it here too would be a second copy of the one string
                 this project exists to keep single (tests/source-invariants). */}
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Aradığınız modeli önden sorun. Elimizde varsa ayırıp bekletiriz;
-              yoksa ne zaman gelebileceğini söyleriz.
+              {COPY.iletisim.lede}
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">

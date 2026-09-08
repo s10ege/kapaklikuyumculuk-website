@@ -104,7 +104,7 @@ test("prefills the product name, which is the point of the mechanic", () => {
   const text = new URL(cta.href).searchParams.get("text");
   assert.equal(
     text,
-    "Merhaba, 22 Ayar Burma Bilezik hakkında bilgi almak istiyorum.",
+    "Merhaba, 22 Ayar Burma Bilezik için fiyat ve gram bilgisi almak istiyorum.",
   );
 });
 
@@ -115,7 +115,7 @@ test("omitting a product name still produces a usable message", () => {
   });
 
   const text = new URL(cta.href).searchParams.get("text");
-  assert.equal(text, "Merhaba, bilgi almak istiyorum.");
+  assert.equal(text, "Merhaba, bir model hakkında bilgi almak istiyorum.");
 });
 
 test("Turkish characters survive the round trip into the wa.me link", () => {
@@ -130,7 +130,7 @@ test("Turkish characters survive the round trip into the wa.me link", () => {
   // ...and correct once WhatsApp decodes it.
   assert.equal(
     new URL(cta.href).searchParams.get("text"),
-    "Merhaba, Özel Tasarım Yüzük hakkında bilgi almak istiyorum.",
+    "Merhaba, Özel Tasarım Yüzük için fiyat ve gram bilgisi almak istiyorum.",
   );
 });
 

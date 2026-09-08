@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { DirectionsButton } from "@/components/DirectionsButton";
 import { ArrowRightIcon } from "@/components/icons";
-import { addressLines, phoneDisplay, phoneHref } from "@/lib/config";
+import { addressLines, phoneDisplay, phoneHref, shop } from "@/lib/config";
+import { COPY } from "@/lib/copy";
 
 /* §6.8 — 404.
  *
@@ -21,7 +22,7 @@ import { addressLines, phoneDisplay, phoneHref } from "@/lib/config";
  */
 
 export const metadata: Metadata = {
-  title: "Sayfa bulunamadı | Trakya Kapaklı Kuyumculuk",
+  title: `Sayfa bulunamadı | ${shop.name}`,
   robots: { index: false, follow: true },
 };
 
@@ -38,9 +39,7 @@ export default function NotFound() {
         <div className="mt-6 h-px w-11 bg-gold" />
 
         <p className="mt-6 leading-relaxed text-cream-text">
-          Web sitemiz yenilendi ve bazı eski adresler değişti. Muhtemelen eski
-          bir bağlantıyı ya da arama sonucunu takip ettiniz. Mağazamız yerinde
-          duruyor — aradığınızı aşağıdan bulabilirsiniz.
+          {COPY.notFound.body}
         </p>
 
         <div className="mt-9 flex flex-wrap gap-3">

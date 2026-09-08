@@ -7,7 +7,7 @@ import { ContactBand } from "@/components/ContactBand";
 import { ArrowRightIcon } from "@/components/icons";
 import { address, people, shop } from "@/lib/config";
 import { pageTitle } from "@/lib/content";
-import { FILLER } from "@/lib/filler";
+import { COPY } from "@/lib/copy";
 
 /* §6.6 — Hakkımızda.
  *
@@ -33,8 +33,8 @@ import { FILLER } from "@/lib/filler";
 export const metadata: Metadata = {
   title: pageTitle("Hakkımızda"),
   description:
-    "2000 yılında kurulan Kapaklı'nın ilk kuyumcusu. Aynı adreste, aynı " +
-    "ailenin elinde. Kapaklı / Tekirdağ.",
+    `${shop.founded} yılından beri aynı adresteyiz. Kapaklı kuyumcu: altın ` +
+    "alım–satımı, ölçü ayarı, tamir ve sipariş üzerine üretim.",
   alternates: { canonical: "/hakkimizda" },
 };
 
@@ -116,15 +116,11 @@ export default function AboutPage() {
                 it is supposed to line up with. */}
             <div>
               <div className="flex flex-col gap-5 leading-relaxed">
-                <p>
-                  Kapaklı Kuyumculuk {shop.founded} yılında, Kapaklı ilçesinin
-                  merkezinde kuruldu ve ilçenin ilk kuyumcusu oldu. O günden bu
-                  yana aynı adreste, aynı ailenin elinde.
-                </p>
-                <p className="text-ink-muted">
-                  Bir kuyumcunun sattığı şeyler geri gelir. {FILLER.aboutBody[0]}
-                </p>
-                <p className="text-ink-muted">{FILLER.aboutBody[1]}</p>
+                {COPY.hakkimizda.paragraphs.map((paragraph, i) => (
+                  <p key={paragraph} className={i === 0 ? "" : "text-ink-muted"}>
+                    {paragraph}
+                  </p>
+                ))}
               </div>
 
               {/* Two-cell fact grid (§6.6). Two, because two verified facts
@@ -208,8 +204,8 @@ export default function AboutPage() {
       </section>
 
       <ContactBand
-        heading="Uğrayın, tanışalım"
-        body="Bir şey almak zorunda değilsiniz. Bakmak, sormak, tartıya baktırmak serbest."
+        heading={COPY.hakkimizda.contactBand.heading}
+        body={COPY.hakkimizda.contactBand.body}
       />
     </>
   );

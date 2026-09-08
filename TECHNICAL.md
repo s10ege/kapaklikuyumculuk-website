@@ -66,13 +66,35 @@ the Steps 3–5 directory corrections in `docs/index-cleanup-plan.md` · and ret
 `lib/config.ts`. That guarantee stops at the edge of the repo; the directories are the other
 half, and they are manual. `FINAL.md` covers them.
 
-## 3 · Filler-text build gate
+## 3 · The copy gate
 
-Turkish filler ships during stages 1 and 2, which means it can reach production by accident.
-A test fails the build if any filler marker survives. Placeholder copy reaching a live site
-is one of the most common launch failures there is, and it is trivially preventable.
+> **Done 2026-09-08, and it grew.** `lib/filler.ts` is gone — every page carries real copy
+> now, written in one pass in the *sade esnaf sesi* voice and living in `lib/copy.ts`. The
+> gate this section specified is `tests/copy.test.mts`.
 
-The original Turkish copy is preserved in [`docs/original-copy.md`](docs/original-copy.md).
+Filler shipping to production was the original worry, and it was the easy half. Filler is
+obvious. What actually threatens a shop like this is fluent copy that says nothing —
+*"eşsiz zarafet"*, *"hayallerinizdeki yüzük"*, *"her zevke uygun"*. It reads fine, it passes
+review, and it is indistinguishable from every other jeweller's site in the country.
+
+So the gate walks every string in `lib/copy.ts` and every category intro and meta
+description in `lib/content.ts`, and fails the build on:
+
+- **A banned-word list** — the vocabulary above, ~30 entries. Each is a word that sounds
+  like it describes the jewellery while carrying no information about it.
+- **Exclamation marks and rhetorical questions.** An exclamation mark on a jeweller's site
+  is a sale sign; this shop's argument is that it has been calm on the same street since 2000.
+- **Sentences opening `Biz,` or `Sizin için`** — the sound of a company describing itself.
+- **Sentence-count caps.** Three on product and contact pages, four on Hakkımızda.
+- **The locality, exactly once per page**, and never twice in one paragraph.
+- **Meta descriptions inside 120–155 characters**, and never in capitals.
+- **The questions customers actually ask** — ayar and gram on the tag, why no price is
+  printed, weighing in front of you, deductions said before, resizing and repair, how long
+  an order takes. If the copy stops answering one of them, the build fails. This is the
+  assertion that would have caught the copy it replaced.
+
+The copy as it stood before the redesign is preserved in
+[`docs/original-copy.md`](docs/original-copy.md).
 
 ## 4 · Redirects
 

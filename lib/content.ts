@@ -4,7 +4,7 @@ import { join } from "node:path";
 /* Explicit .ts extensions: node:test runs these modules directly under Node's
  * native type stripping, which requires the real extension on relative imports.
  * Turbopack resolves them the same way, so both paths agree. */
-import { FILLER } from "./filler.ts";
+import { COPY } from "./copy.ts";
 import { PLACEHOLDER } from "./placeholders.ts";
 import { phoneDisplay, shop } from "./config.ts";
 
@@ -114,9 +114,9 @@ const CATEGORIES: Category[] = [
     name: "Altın Setleri",
     title: pageTitle("Altın Seti Modelleri"),
     description:
-      "Nişan ve düğün için 14, 18 ve 22 ayar altın setleri. Bilezik, " +
-      "kolye, küpe ve yüzük bir arada. Kapaklı / Tekirdağ.",
-    intro: FILLER.categoryIntro["altin-seti"],
+      "Kapaklı'da altın set modelleri: kolye, bilezik, küpe ve yüzük bir " +
+      "arada. Ayar ve gram etikette yazar, fiyat günün altın kuruna göre.",
+    intro: COPY.categoryIntro["altin-seti"],
     coverImage: PLACEHOLDER.kategori["altin-seti"],
     order: 1,
   },
@@ -125,9 +125,9 @@ const CATEGORIES: Category[] = [
     name: "Küpe Modelleri",
     title: pageTitle("Küpe Modelleri"),
     description:
-      "Altın küpe modelleri; halka, sallantılı, mineli ve taşlı. Çocuk " +
-      "küpesi de var. Kapaklı / Tekirdağ.",
-    intro: FILLER.categoryIntro["kupe-modelleri"],
+      "Kapaklı kuyumcu vitrininden altın küpe modelleri: halka, sallantılı, " +
+      "mineli, taşlı ve çocuk küpesi. Ayar ve gram etikette yazar.",
+    intro: COPY.categoryIntro["kupe-modelleri"],
     coverImage: PLACEHOLDER.kategori["kupe-modelleri"],
     order: 2,
   },
@@ -136,9 +136,9 @@ const CATEGORIES: Category[] = [
     name: "Yüzük",
     title: pageTitle("Yüzük Modelleri"),
     description:
-      "Yüzük modelleri; 14 ve 22 ayar, beyaz altın dahil. Ölçü ayarı " +
-      "dükkânda yapılır. Kapaklı / Tekirdağ.",
-    intro: FILLER.categoryIntro["yuzuk"],
+      "Kapaklı'da 14 ve 22 ayar yüzük modelleri, beyaz altın dahil. Ölçünüz " +
+      "yoksa dükkânda beş dakikada bakarız, ölçü ayarı bizde yapılır.",
+    intro: COPY.categoryIntro.yuzuk,
     coverImage: PLACEHOLDER.kategori["yuzuk"],
     order: 3,
   },
@@ -147,9 +147,9 @@ const CATEGORIES: Category[] = [
     name: "Özel Tasarım Takılar",
     title: pageTitle("Özel Tasarım Takılar"),
     description:
-      "Sipariş üzerine üretilen özel tasarım takılar. Eski altınlarınızı " +
-      "yeni bir parçaya dönüştürün. Kapaklı / Tekirdağ.",
-    intro: FILLER.categoryIntro["ozel-tasarim-takilar"],
+      "Tekirdağ'da sipariş üzerine takı üretimi. Çizin ya da fotoğraf " +
+      "gönderin; ayarı ve gramı konuşup teslim gününü baştan söyleyelim.",
+    intro: COPY.categoryIntro["ozel-tasarim-takilar"],
     coverImage: PLACEHOLDER.kategori["ozel-tasarim-takilar"],
     order: 4,
   },
