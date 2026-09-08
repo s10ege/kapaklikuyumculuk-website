@@ -39,7 +39,7 @@ pass — report the exact diff.
    catalogue exists. `sameAs` carries Instagram `kuyumculukkapakli` — **not**
    `@kapaklikuyumculuk`, which is a different jeweller in Şanlıurfa.
 5. **Titles.** Pattern: `%page% - Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı`.
-6. **OG images** present for the homepage and all five categories. A missing OG image means
+6. **OG images** present for the homepage and all four categories. A missing OG image means
    every share of the link looks broken — which for this shop is the main sharing
    channel.
 7. **Sitemap and robots.** Sitemap generated from the catalogue, covering every live route

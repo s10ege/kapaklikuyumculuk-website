@@ -1,6 +1,6 @@
 ---
 name: redirect-verifier
-description: Verifies the 24 redirect rules in next.config.ts, the 200-not-301 assertions on reclaimed paths, and the deliberate 404s. Use PROACTIVELY after ANY change to next.config.ts, robots, or routing, and against the live domain after deploy. This is the highest-risk artefact in the repo.
+description: Verifies the 26 redirect rules in next.config.ts, the 200-not-redirect assertions on reclaimed paths, and the deliberate 404s. Use PROACTIVELY after ANY change to next.config.ts, robots, or routing, and against the live domain after deploy. This is the highest-risk artefact in the repo.
 tools: Read, Glob, Grep, Bash
 ---
 
@@ -40,7 +40,7 @@ docs). It was built against the 309 recovered URLs in `docs/old-urls.txt`.
 
 **`/urunler/` must never appear in a Search Console prefix-removal list.** Older docs list
 it, written when only a holding page was live. It is now the live catalogue — removing that
-prefix hides all five category pages for about six months. If you see it in any document,
+prefix hides all four category pages for about six months. If you see it in any document,
 plan, or instruction, flag it as critical regardless of what you were asked to check.
 
 ## How to run

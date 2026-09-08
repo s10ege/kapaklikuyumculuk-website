@@ -69,3 +69,11 @@ catalogue/contact-sheet.html
 !.claude/skills/kk-brand/
 !.claude/skills/catalogue-pipeline/
 !.claude/skills/project-setup/
+
+# Python bytecode from the two hand-vendored skills. The unignores above bring
+# ui-ux-pro-max's whole tree back in, and that tree runs Python — so three
+# .pyc files rode in with it and were tracked until 2026-09-08. This rule comes
+# last so it wins over the unignore, and it is written as a bare pattern so it
+# also covers any skill vendored later.
+__pycache__/
+*.py[cod]

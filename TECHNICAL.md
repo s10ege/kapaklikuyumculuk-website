@@ -55,6 +55,29 @@
 stop and ask for them first. Do not infer them from `docs/`, do not carry them over from an
 earlier session, and do not treat silence as approval.
 
+### ✅ Confirmed by Soner, in writing, 2026-09-08
+
+Asked and answered in the session that opened stage 3, each item quoted back to him from
+`lib/config.ts` rather than paraphrased, so what he confirmed is the stored string and not a
+description of it.
+
+| # | Fact | Answer |
+|---|---|---|
+| 1 | Canonical name | ✅ `Trakya Kapaklı Kuyumculuk` — confirmed as stored, unchanged |
+| 2 | Address block | ✅ Confirmed as stored, character-for-character: `Cumhuriyet Mah., Pınar Bulvarı No: 56/C` · `59510 Kapaklı / Tekirdağ`. `Bulvarı` not `Blv.`, the space after `No:`, the spaces around the slash |
+| 3 | `0282 717 55 62` | ✅ **Still in use.** Stays as `contact.phoneAlt`. `0282 717 21 31` remains primary and is the number in every CTA, the title tag and the JSON-LD `telephone` |
+| 4 | Opening hours | ✅ Confirmed as stored — summer (May–Sep) 09:00–19:00, winter (Oct–Apr) 09:00–18:00, Monday–Saturday, Pazar kapalı. Sunday is never emitted in JSON-LD, which is how schema.org reads *closed* |
+| 5 | Altın Alım–Satım copy | ✅ **Matches how the shop operates.** Both load-bearing promises stand: the gold is weighed on the counter in front of the customer, and any deduction is named before the transaction. They stay declared at the use site in `app/hizmetler/page.tsx` and asserted by e2e |
+
+**No `lib/config.ts` change fell out of the gate** — every fact was confirmed as already
+stored. That is the outcome to expect from a gate on a file that has been maintained
+carefully, and it is not a reason to skip the next one.
+
+One item stays open and is **not** part of this gate: Ramazan and bayram hour variations,
+still unresolved in `docs/open-questions.md`. The site claims nothing about them, which is
+correct until it can claim something true. It is a Google Business Profile field before it
+is a website one.
+
 ---
 
 ## 2 · The brand name — launch-blocking
@@ -126,12 +149,23 @@ The copy as it stood before the redesign is preserved in
 
 ## 4 · Redirects
 
-24 rules in `next.config.ts`, verified against the 309 URLs in `docs/old-urls.txt`.
+**26 rules** in `next.config.ts` — one host-level rule sending `*.vercel.app` to the
+canonical domain, plus 25 path rules — verified against the 309 URLs in
+`docs/old-urls.txt`. `tests/redirects.spec.ts` exercises them through 24 concrete source
+paths, seven of the rules being wildcards proven with a representative path.
 
-- Every old path returns **301** with the correct `location`.
+> **Corrected 2026-09-08.** This section said "24 rules … returns 301" from the day it was
+> written. Both halves were wrong, and the second one is the dangerous one: `permanent: true`
+> emits **308**, in Next and on Vercel, and 308 is what the holding page has been serving
+> since the cleanup shipped. Google treats the two identically for indexing, so the code is
+> right and the prose was stale — but a stage-4 operator curling for 301 against a working
+> site would read a false alarm and start "fixing" the highest-risk file in the repo.
+> `tests/redirects.spec.ts` carries the same reasoning at the assertion.
+
+- Every old path returns **308** with the correct `location`.
 - The reclaimed paths — `/urunler`, `/urunler/ozel-tasarim-takilar`, `/galeri`,
-  `/hakkimizda`, `/iletisim` — return **200, not 301**. This is the check that protects the
-  domain's index history.
+  `/hakkimizda`, `/iletisim` — return **200, not a redirect**. This is the check that
+  protects the domain's index history.
 - **No chains.** Every source reaches a 200 in one hop. `/urunler/pirlanta` and
   `/urunler/tek-tas-modelleri` became redirect sources on 2026-09-08 when the categories
   were restructured, so any rule still aimed at either one is a two-hop chain.
@@ -147,9 +181,11 @@ end. Proven locally here; proven live in `FINAL.md`.
 
 - Title pattern, from the old indexed template:
   `%page% - Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı`.
-- `JewelryStore` JSON-LD site-wide, generated from `lib/config.ts`, **omitting `geo`** —
-  sources differ by ~150 m and a wrong pin is worse than none. `sameAs`: Instagram +
-  Facebook.
+- `JewelryStore` JSON-LD site-wide, generated from `lib/config.ts`, **carrying `geo` and
+  `hasMap`** since 2026-09-08. This bullet said *omitting `geo`* until then, on the grounds
+  that sources differed by ~150 m and a wrong pin is worse than none — true while the
+  coordinates were graded ❌, and moot once they came from the shop's own Maps listing. See
+  §0 and `lib/schema.ts`. `sameAs`: Instagram + Facebook.
 - `BreadcrumbList` on every page; `ItemList` of `Product` per category, **now carrying real
   image URLs**, which it could not before.
 - **OG images** — new requirement from the redesign. A dark card with the coin and the
@@ -169,7 +205,7 @@ Layout decisions for phones live in `design.md` (D15). This section is device-le
 correctness and the things only real hardware reveals.
 
 Baseline carried over: Tailwind mobile-first, breakpoints proven at 390 / 768 / 1440,
-hamburger panel listing the five categories first, tap targets ≥44px (§7).
+hamburger panel listing the four categories first, tap targets ≥44px (§7).
 
 1. **Real-device pass, not emulator.** Minimum: one mid-range Android (Chrome and Samsung
    Internet) and one iPhone (Safari — Chrome for iOS is Safari underneath, so it is not a
@@ -196,10 +232,18 @@ hamburger panel listing the five categories first, tap targets ≥44px (§7).
     wherever it appears as a button.
 12. **Landscape phone** must not break the hero or the header.
 
-**Done when:** manual pass completed on two real devices with findings logged here · e2e
-green at 390 and 768 · Lighthouse **mobile** performance ≥90 and accessibility 100 on the
-homepage and one category · no horizontal scroll at 320px · LCP ≤2.5s on throttled 4G with
-the coin in place.
+**Done when — split 2026-09-08.** The measurable half is stage 3's; the half that needs
+hardware moves to `FINAL.md` 4.2, against the live URL. A phone on mobile data is the real
+test of the coin and the LCP anyway, and the site is not deployed yet.
+
+*Stage 3:* e2e green at 320 / 360 / 390 / 768 · no horizontal scroll at 320px, asserted per
+route · `dvh` hero · safe-area insets active · the coin's source breakpoint matching its
+render width.
+
+*Stage 4.2, on real hardware:* manual pass on one mid-range Android and one iPhone with
+findings logged here · Lighthouse **mobile** performance ≥90 and accessibility 100 on the
+homepage and one category, run in a real browser · LCP ≤2.5s on throttled 4G with the coin
+in place.
 
 ## 7 · Accessibility on a dark ground
 
@@ -211,13 +255,23 @@ honoured by the coin.
 
 ## 8 · Repo hygiene
 
-- **Add `.gitattributes` with `* text=auto eol=lf`.** Six files currently show as modified
-  purely from CRLF line endings — noise that hides real changes.
-- **Delete `sanity/`.** Git history keeps it.
-- `app/dev/*` must 404 in production and stay out of the sitemap — verify after the redesign.
-- Keep `ata_animation/` as source assets, **out of `public/`**. Only the rendered loop ships.
-- `.gitignore` for `catalogue/raw/`, `test-results/`, `.tmp.driveupload/`.
-- Decide the fate of `holding-page/` once the real site is live.
+> **This section is verify-and-tidy, not build.** Everything below except the last line was
+> already done in earlier sessions and verified on 2026-09-08. Recorded as ✅ rather than
+> deleted, so a later session does not re-plan finished work.
+
+- ✅ **`.gitattributes` with `* text=auto eol=lf`**, plus `*.bat text eol=crlf` and eleven
+  binary declarations. `git ls-files --eol` shows every text file as `w/lf`; the only
+  `w/crlf` is `catalogue.bat`, deliberately.
+- ✅ **`sanity/` deleted.** No directory, no dependency, no reference. Git history keeps it.
+- ✅ `app/dev/*` 404s in production — all four routes guard on
+  `NODE_ENV === "production"` — and none appears in `sitemap.ts`.
+- ✅ `ata_animation/` stays out of `public/`; only the rendered loop in `public/hero/` ships.
+- ✅ `.gitignore` covers `catalogue/raw/`, `catalogue/fixed/`, `test-results/`,
+  `.tmp.drive*/` and `images/`. **Added 2026-09-08:** `__pycache__/` and `*.py[cod]` — three
+  `.pyc` files under the hand-vendored `ui-ux-pro-max` skill were tracked, having ridden in
+  on the unignore that brings that whole tree back.
+- ☐ Decide the fate of `holding-page/` once the real site is live. **Stage 4** — it is still
+  what the domain serves.
 
 ## 9 · Analytics
 
@@ -271,12 +325,19 @@ To remove a product: delete the image, commit, push.
 
 ## 12 · Done when
 
-- Canonical name applied to every directory Soner controls, character-for-character.
-- All six gate items confirmed and the pending flags flipped.
-- Filler gate green — no placeholder copy in the build.
-- Redirect suite green locally; reclaimed paths return 200.
-- OG images present for the homepage and all five categories.
-- Lighthouse mobile ≥90 performance / 100 accessibility on the homepage and one category.
+- ~~Canonical name applied to every directory Soner controls~~ — **stage 4.** §2's own last
+  paragraph says so: the repo half is enforced by `tests/source-invariants.test.mts`, and the
+  directories are manual work `FINAL.md` owns. Stage 3 cannot satisfy this line and should
+  not pretend to.
+- All **five** gate items confirmed. *(Six until 2026-09-08; the WhatsApp item went with the
+  channel. Every `pending` flag in `lib/config.ts` is already `false` — there is nothing left
+  to flip.)*
+- Copy gate green — `tests/copy.test.mts`, not a filler check. See §3.
+- Redirect suite green locally against a **production build**; reclaimed paths return 200.
+- OG images present for the homepage and all **four** categories. *(Five until the 2026-09-08
+  restructure retired `pirlanta`.)*
+- Lighthouse mobile ≥90 performance / 100 accessibility on the homepage and one category —
+  **stage 4.2**, per §6's split.
 - `npm run build` — every route static, no `ƒ`.
 - Full unit and e2e suite green.
 - NAP block diffed character-by-character against `lib/config.ts` and the canonical block.

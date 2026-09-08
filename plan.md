@@ -29,7 +29,7 @@ Priority order. Each stage has its own file.
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
 | 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **approved 2026-09-08 — closed.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned, **WhatsApp removed — the phone is the only channel**. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. Approved in writing by Soner; `spec`, the `featured` four and the contact-sheet flags stay outstanding as content, not as gates |
-| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next, and now unblocked** — stage 2 approved 2026-09-08. Prepared 2026-08-29, still not opened. 3.1 is a ⛔ gate: five facts, and it must be read out loud before any stage-3 code |
+| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | ◐ **open 2026-09-08.** The ⛔ 3.1 gate was read out loud and **all five facts confirmed in writing** — answers recorded in `TECHNICAL.md` §1, no `lib/config.ts` change fell out. Running as 14 PRs, none longer than a 40-minute session, each ending somewhere Soner can look. Two scope decisions taken at the open: the frontend is frozen (no `spec`, no `featured` — Öne Çıkanlar stays hidden by decision, not by oversight), and the real-device pass moves to 4.2 |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
 ## Roadmap
@@ -135,8 +135,8 @@ and 3.3's per-category `ItemList` and OG cards have real product images to work 
 |---|---|---|
 | 3.1 | **⛔ Confirmation gate** — **Claude stops here and asks**, in the session that writes the code. The five facts, named so they cannot be skimmed past: **(1)** the canonical name, character-for-character · **(2)** the full address block, character-for-character · **(3)** `0282 717 55 62` — still in use? · **(4)** opening hours including the winter closing time · **(5)** that the Altın Alım–Satım copy on `/hizmetler` matches how the shop actually operates. *(Six until 2026-09-08; the WhatsApp item went with the channel.)* | Facts confirmed; hours and phones correct in `lib/config.ts` |
 | 3.2 | **Copy** — Soner's real Turkish text replaces the filler; filler build gate added | The gate fails a build containing filler, and passes on the real copy |
-| 3.3 | **SEO** — metadata, JSON-LD with real product images, sitemap from the folders, `/studio` disallow removed, **OG images** for the homepage and five categories | Rich Results Test passes locally; a shared link previews correctly |
-| 3.4 | **Redirects re-verified** after the redesign | All 24 rules 301 correctly; the five reclaimed paths return 200 |
+| 3.3 | **SEO** — metadata, JSON-LD with real product images, sitemap from the folders, `/studio` disallow removed, **OG images** for the homepage and four categories | Rich Results Test passes locally; a shared link previews correctly |
+| 3.4 | **Redirects re-verified** after the redesign | All 26 rules 308 correctly, against a production build; the five reclaimed paths return 200 |
 | 3.5 | **Mobile device pass** — one Android, one iPhone, real hardware | Findings logged and fixed; no horizontal scroll at 320px; Lighthouse mobile ≥90 / a11y 100 |
 | 3.6 | **Accessibility on dark** — contrast, focus, reduced motion and reduced data | Measured, not assumed |
 | 3.7 | **Repo hygiene** — `.gitattributes`, delete `sanity/`, gitignore, dev routes 404 in production | `git status` is clean of line-ending noise |
@@ -217,7 +217,7 @@ And at the end of the 1.6 verification (2026-08-29):
 | 4 | Pre-rendered loop from the GLB; live 3D only if cursor interaction is ever wanted | `design.md` D2 |
 | 5 | **No CMS.** Folder-driven catalogue; Soner adds images himself | `CATALOGUE.md` §3 |
 | 6 | **No individual product pages.** Category pages carry the SEO, the lightbox carries the detail | `CATALOGUE.md` §3 |
-| 7 | Hours publish 09:00–20:00 pending confirmation; closing shifts winter↔summer | `TECHNICAL.md` §2 |
+| 7 | **Two hour seasons publish all year**, today's emphasised client-side: summer (May–Sep) 09:00–19:00, winter (Oct–Apr) 09:00–18:00, Mon–Sat. Confirmed at the 3.1 gate 2026-09-08 — nothing is pending *(this row read "09:00–20:00 pending confirmation" until then, from before the seasonal pattern was found)* | `TECHNICAL.md` §1 · `lib/config.ts` |
 | 8 | Redirect map lives in `next.config.ts` — verified against `docs/old-urls.txt` | `TECHNICAL.md` §4 |
 | 9 | Vercel Analytics on the free tier, with `/telefon` and `/yol-tarifi` giving click counts | `TECHNICAL.md` §9 |
 | 10 | Display face **Ibarra Real Nova, weight 500** (replacing Bodoni Moda after a three-round selection); homepage section eyebrows removed, interior pages keep theirs | `design.md` D8 |
@@ -239,7 +239,7 @@ Recorded so nobody re-implements a superseded decision from `docs/build-history.
 
 1. **Never request Search Console removal of the `/urunler/` prefix.** The old doc lists
    it, written when only a holding page was live. `/urunler/` is now the live catalogue —
-   removing that prefix would hide all five category pages for ~6 months. Corrected in
+   removing that prefix would hide all four category pages for ~6 months. Corrected in
    `FINAL.md` and in `docs/index-cleanup-plan.md`.
 2. **The brand name must move everywhere at once.** Publishing
    `Trakya Kapaklı Kuyumculuk` while the directories still say something else adds a

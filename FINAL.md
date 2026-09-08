@@ -20,7 +20,7 @@ version would be expensive.
 **2 · Never request removal of the `/urunler/` prefix.** `index-cleanup-plan.md` Step 7
 originally listed `/urun/`, `/urunler/`, `/wp-content/` and `/author/` for Search Console's
 prefix removal tool. That was written when a holding page was the only thing live.
-**`/urunler/` is now the live catalogue** — removing that prefix would hide all five
+**`/urunler/` is now the live catalogue** — removing that prefix would hide all four
 category pages from Google for about six months, and it would look exactly like a working
 site while it happened. The corrected list is **`/urun/`, `/wp-content/`, `/author/`** only.
 
@@ -41,16 +41,22 @@ The sequence matters more than any individual step.
 
 ## Live verification
 
-- `curl -sI` every one of the 24 redirect rules: 301 with the correct `location`.
+- `curl -sI` every one of the **26 redirect rules** — one host-level, 25 path-level:
+  **308** with the correct `location`. *(Corrected 2026-09-08: this line said "24 rules …
+  301". `permanent: true` emits 308, which is what the holding page already serves and what
+  `tests/redirects.spec.ts` asserts. Do not "fix" a working 308 to 301.)*
 - `/urunler`, `/urunler/ozel-tasarim-takilar`, `/galeri`, `/hakkimizda`,
   `/iletisim` → **200**.
-- `/urunler/pirlanta`, `/urunler/tek-tas-modelleri` → **301 to `/urunler/yuzuk`**, and that
+- `/urunler/pirlanta`, `/urunler/tek-tas-modelleri` → **308 to `/urunler/yuzuk`**, and that
   destination returns 200. Both were live pages until the 2026-09-08 category restructure.
 - `/wp-admin`, `/author/x`, `/?p=1` → 404, landing on the branded Turkish page.
 - `npm run test:e2e -- tests/redirects.spec.ts` against the live domain. It proves the map
   locally today; production is the real test.
 - Rich Results Test on `/` and one category: `JewelryStore` + `BreadcrumbList` + `ItemList`
-  valid, **no `geo` emitted**.
+  valid, **`geo` and `hasMap` present and pointing at the shop's own Maps listing**.
+  *(Corrected 2026-09-08: this line said "no `geo` emitted", written while the coordinates
+  were graded ❌. They now come from the shop's own listing, so the pin, the door number and
+  the place ID all describe the same door.)*
 - The coin loop on a real phone on mobile data, not wifi.
 - Turkish glyphs at 390px, no mid-word fallback.
 

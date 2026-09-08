@@ -24,14 +24,16 @@ approval-gated stage files: `design.md` → `CATALOGUE.md` → `TECHNICAL.md` �
    string. Caps are a CSS `text-transform` treatment only — ALL-CAPS risks a Google
    Business Profile name policy violation.
 3. **Never request Search Console removal of the `/urunler/` prefix.** It is the live
-   catalogue. Removing it hides all five category pages for ~6 months. Only `/urun/`,
+   catalogue. Removing it hides all four category pages for ~6 months. Only `/urun/`,
    `/wp-content/` and `/author/` are ever removed.
 4. **The redirect map in `next.config.ts` is the highest-risk artefact in the repo.** A
    wrong redirect looks exactly like a working site. Any change to that file re-runs
    `tests/redirects.spec.ts`.
 5. **No stage begins without Soner's explicit written approval.** `TECHNICAL.md` §1 is a
-   ⛔ confirmation gate: stop and ask for the six facts before writing code in stage 3. Do
-   not infer them from `docs/`, and do not carry them over from an earlier session.
+   ⛔ confirmation gate: stop and ask for the five facts before writing code in stage 3. Do
+   not infer them from `docs/`, and do not carry them over from an earlier session. *(Six
+   until 2026-09-08; the WhatsApp item went with the channel. Confirmed 2026-09-08 — the
+   answers are recorded in `TECHNICAL.md` §1.)*
 6. **Copy is real, and it has a voice.** No filler survives — `lib/copy.ts` holds every
    sentence a visitor reads, in *sade esnaf sesi*: the owner talking across the counter,
    short sentences, concrete over evocative. `tests/copy.test.mts` fails the build on a
@@ -75,7 +77,7 @@ Four subagents in `.claude/agents/`. Use them rather than doing this work inline
   contrast, 320px overflow. Reports facts.
 - **`design-reviewer`** — judges built pages against D1–D20 and the design skills.
 - **`seo-auditor`** — NAP consistency, JSON-LD, metadata, sitemap, OG images.
-- **`redirect-verifier`** — the 24 redirect rules and the 200-not-301 assertions.
+- **`redirect-verifier`** — the 26 redirect rules and the 200-not-redirect assertions.
 
 ## Skills
 
