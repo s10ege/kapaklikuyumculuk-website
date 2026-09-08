@@ -188,8 +188,48 @@ test.describe("/iletisim", () => {
     ).toBeVisible();
     await expect(main.getByText("0282 717 21 31").first()).toBeVisible();
     await expect(main.getByText("0282 717 55 62")).toBeVisible();
-    await expect(main.getByText("09:00 – 20:00")).toBeVisible();
+    /* Both seasons, always — the page is static, so publishing only the
+     * "current" one would freeze an August build's answer into a December
+     * visit. */
+    await expect(main.getByText("09:00 – 19:00").first()).toBeVisible();
+    await expect(main.getByText("09:00 – 18:00").first()).toBeVisible();
+    await expect(main.getByText(/Yaz \(Mayıs–Eylül\)/).first()).toBeVisible();
+    await expect(main.getByText(/Kış \(Ekim–Nisan\)/).first()).toBeVisible();
     await expect(main.getByText("@kuyumculukkapakli")).toBeVisible();
+  });
+
+  test("marks today's season, and only after hydration", async ({ page }) => {
+    await page.goto("/iletisim");
+
+    /* The server cannot know the visitor's date, so nothing date-dependent may
+     * render on the first pass — that would be a hydration mismatch. The label
+     * arrives with the effect. */
+    // Scoped to main: the footer renders the same component, correctly.
+    const now = page.getByRole("main").getByText("Şu an geçerli");
+    await expect(now).toHaveCount(1);
+
+    /* And it lands on the season that actually covers today, in Istanbul. */
+    const month = Number(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Istanbul",
+        month: "numeric",
+      }).format(new Date()),
+    );
+    const expected = [5, 6, 7, 8, 9].includes(month) ? "summer" : "winter";
+
+    const rows = page.getByRole("main").locator("dd [data-season]");
+    await expect(rows).toHaveCount(2);
+
+    // Exactly one row is current, and it is the right one.
+    await expect(page.getByRole("main").locator('[data-current="true"]'))
+      .toHaveAttribute("data-season", expected);
+
+    // ...and it is listed first, once hydration has reordered them.
+    expect(
+      await rows.evaluateAll((els) =>
+        els.map((el) => el.getAttribute("data-season")),
+      ),
+    ).toEqual([expected, expected === "summer" ? "winter" : "summer"]);
   });
 
   test("embeds a keyless map keyed on the address, not coordinates", async ({

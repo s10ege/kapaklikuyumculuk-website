@@ -119,7 +119,13 @@ test("contact block shows the canonical address, hours and directions", async ({
     main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
   ).toBeVisible();
   await expect(main.getByText("59510 Kapaklı / Tekirdağ")).toBeVisible();
-  await expect(main.getByText("09:00 – 20:00")).toBeVisible();
+  /* Both seasons, always — the page is static, so publishing only the
+   * "current" one would freeze an August build's answer into a December
+   * visit. */
+  await expect(main.getByText("09:00 – 19:00").first()).toBeVisible();
+  await expect(main.getByText("09:00 – 18:00").first()).toBeVisible();
+  await expect(main.getByText(/Yaz \(Mayıs–Eylül\)/).first()).toBeVisible();
+  await expect(main.getByText(/Kış \(Ekim–Nisan\)/).first()).toBeVisible();
   await expect(main.getByRole("link", { name: /Haritada açın/ })).toBeVisible();
 });
 

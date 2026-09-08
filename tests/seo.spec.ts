@@ -69,12 +69,47 @@ test.describe("JewelryStore", () => {
   test("publishes the six open days and never Sunday", async ({ page }) => {
     await page.goto("/");
     const shop = await jsonLd(page, "JewelryStore");
-    const spec = shop.openingHoursSpecification[0];
 
-    expect(spec.opens).toBe("09:00");
-    expect(spec.closes).toBe("20:00");
-    expect(spec.dayOfWeek).toHaveLength(6);
-    expect(spec.dayOfWeek).not.toContain("Sunday");
+    for (const spec of shop.openingHoursSpecification) {
+      expect(spec.opens).toBe("09:00");
+      expect(spec.dayOfWeek).toHaveLength(6);
+      /* A dayOfWeek list that omits a day means closed. An explicit Sunday
+       * entry with equal opens/closes is the other convention, and mixing the
+       * two is how a shop gets listed as open 00:00–00:00. */
+      expect(spec.dayOfWeek).not.toContain("Sunday");
+    }
+  });
+
+  test("publishes both seasons, with the winter span split at New Year", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const shop = await jsonLd(page, "JewelryStore");
+    const specs = shop.openingHoursSpecification;
+
+    /* Three, not two. validFrom/validThrough are dates rather than a
+     * recurrence rule, so October→April cannot be one range without asserting
+     * a span that runs backwards — it ships as the two calendar halves it
+     * actually occupies. */
+    expect(specs).toHaveLength(3);
+
+    const spans = specs.map(
+      (s: { opens: string; closes: string; validFrom: string; validThrough: string }) =>
+        `${s.validFrom.slice(5)}→${s.validThrough.slice(5)} ${s.closes}`,
+    );
+
+    expect(spans).toEqual([
+      "05-01→09-30 19:00",
+      "01-01→04-30 18:00",
+      "10-01→12-31 18:00",
+    ]);
+
+    // Every entry is stamped with the same year, and it is a real one.
+    const years = new Set(
+      specs.map((s: { validFrom: string }) => s.validFrom.slice(0, 4)),
+    );
+    expect(years.size).toBe(1);
+    expect(Number([...years][0])).toBeGreaterThanOrEqual(2026);
   });
 });
 

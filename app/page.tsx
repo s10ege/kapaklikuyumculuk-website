@@ -3,12 +3,12 @@ import Link from "next/link";
 import { AllProductsLink, CategoryTiles } from "@/components/CategoryTiles";
 import { ContactButton } from "@/components/ContactButton";
 import { HeroCoin } from "@/components/HeroCoin";
+import { OpeningHours } from "@/components/OpeningHours";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ArrowRightIcon, PinIcon } from "@/components/icons";
 import {
   address,
   addressLines,
-  hours,
   mapsSearchUrl,
   phoneDisplay,
   phoneHref,
@@ -237,13 +237,7 @@ export default function Home() {
                 Saatler
               </dt>
               <dd>
-                <span className="block">{hours.days}</span>
-                <span className="block">
-                  {hours.opens} – {hours.closes}
-                </span>
-                <span className="block text-sm text-muted">
-                  {hours.closedNote}
-                </span>
+                <OpeningHours />
               </dd>
             </div>
 

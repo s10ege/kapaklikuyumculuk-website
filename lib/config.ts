@@ -126,19 +126,59 @@ export const areaServed = ["Kapaklı", "Çerkezköy", "Tekirdağ"] as const;
 /* Hours                                                                      */
 /* ------------------------------------------------------------------------- */
 
-/* docs/business-facts.md grades hours ❌ — Google shows 09:00–20:00, two other
- * sources say 08:00–19:00. The owner resolved it: the closing time genuinely
- * moves between winter and summer. 20:00 is correct now.
+/* docs/business-facts.md graded hours ❌ — Google showed 09:00–20:00, two other
+ * sources said 08:00–19:00, and the disagreement was never a data-quality
+ * problem. The closing time genuinely moves between summer and winter, and
+ * every source had captured a different half of a true seasonal pattern.
  *
- * Because it is seasonal rather than unknown, it ships as a real value and
- * becomes owner-editable in phase two: the Sanity `siteSettings` document
- * (iteration 15) carries these fields so the switch needs no deploy. */
+ * So both seasons ship, both are published, and neither is hidden behind a
+ * "current" calculation the visitor cannot check. Soner confirmed the times on
+ * 2026-09-08: 19:00 in summer, 18:00 in winter. That supersedes the single
+ * 20:00 value this file carried, which was the summer figure rounded up from
+ * Google's listing.
+ *
+ * WHY BOTH ARE ALWAYS SHOWN. The site is statically generated, so a build in
+ * August would freeze "summer" into HTML that is still being served in
+ * December. Rendering both removes the failure mode entirely: the page is
+ * correct whenever it is read, and the only thing needing today's date is
+ * which of the two gets the emphasis. That is one small client component
+ * (components/OpeningHours.tsx), and if its JavaScript never runs, a visitor
+ * still sees both seasons with their months spelled out.
+ *
+ * Owner-editable in phase two: the Sanity `siteSettings` document (iteration
+ * 15) carries these fields so a change of hours needs no deploy. */
+
+export type Season = "summer" | "winter";
+
+export type SeasonHours = {
+  /** Rendered as-is, months included — this is what makes the static page
+   *  honest without JavaScript. */
+  readonly label: string;
+  readonly days: string;
+  readonly open: string;
+  readonly close: string;
+  /** Calendar months, 1–12. The two lists must cover all twelve exactly once. */
+  readonly months: readonly number[];
+};
+
 export const hours = {
-  days: "Pazartesi – Cumartesi",
-  opens: "09:00",
-  closes: "20:00",
-  closedNote: "Pazar kapalı",
-  /** Days matching openingHoursSpecification in schema.org terms. */
+  summer: {
+    label: "Yaz (Mayıs–Eylül)",
+    days: "Pazartesi–Cumartesi",
+    open: "09:00",
+    close: "19:00",
+    months: [5, 6, 7, 8, 9],
+  },
+  winter: {
+    label: "Kış (Ekim–Nisan)",
+    days: "Pazartesi–Cumartesi",
+    open: "09:00",
+    close: "18:00",
+    months: [10, 11, 12, 1, 2, 3, 4],
+  },
+  closed: "Pazar kapalı",
+  /** Days matching openingHoursSpecification in schema.org terms. Both seasons
+   *  keep the same six days; only the closing time moves. */
   schemaDays: [
     "Monday",
     "Tuesday",
@@ -147,8 +187,30 @@ export const hours = {
     "Friday",
     "Saturday",
   ],
-  seasonal: true,
 } as const;
+
+/** Summer first — the order both seasons are rendered in before hydration. */
+export const seasons: readonly Season[] = ["summer", "winter"];
+
+/* Istanbul, not the visitor's clock.
+ *
+ * `new Date().getMonth()` is the browser's local month, and the one day a year
+ * it matters — 30 September into 1 October — a visitor in Auckland would be
+ * told the shop keeps winter hours while Kapaklı is still on summer time. The
+ * shop is in one timezone and its hours belong to that timezone, so the month
+ * is read there. Takes an explicit date so the boundaries can be tested. */
+export function getCurrentSeason(date: Date = new Date()): Season {
+  const month = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/Istanbul",
+      month: "numeric",
+    }).format(date),
+  );
+
+  return (hours.summer.months as readonly number[]).includes(month)
+    ? "summer"
+    : "winter";
+}
 
 /* ------------------------------------------------------------------------- */
 /* Services (§2)                                                              */

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactButton } from "@/components/ContactButton";
+import { OpeningHours } from "@/components/OpeningHours";
 import { InstagramIcon, PinIcon } from "@/components/icons";
 import {
   address,
@@ -37,7 +38,8 @@ export const metadata: Metadata = {
   title: pageTitle("İletişim"),
   description:
     `${addressLines[0]}, ${addressLines[1]}. Tel: ${phoneDisplay}. ` +
-    `${hours.days} ${hours.opens}–${hours.closes}.`,
+    `${hours.summer.days}, yaz ${hours.summer.open}–${hours.summer.close}, ` +
+    `kış ${hours.winter.open}–${hours.winter.close}.`,
   alternates: { canonical: "/iletisim" },
 };
 
@@ -114,13 +116,7 @@ export default function ContactPage() {
                   Saatler
                 </dt>
                 <dd>
-                  <span className="block">{hours.days}</span>
-                  <span className="block">
-                    {hours.opens} – {hours.closes}
-                  </span>
-                  <span className="block text-sm text-muted">
-                    {hours.closedNote}
-                  </span>
+                  <OpeningHours />
                 </dd>
               </div>
 

@@ -4,7 +4,6 @@ import {
   address,
   addressLines,
   contact,
-  hours,
   instagramUrl,
   mapsSearchUrl,
   phoneDisplay,
@@ -14,6 +13,7 @@ import {
 import { categoryLinks } from "@/lib/nav";
 import { InstagramIcon, PinIcon } from "./icons";
 import { Lockup } from "./Lockup";
+import { OpeningHours } from "./OpeningHours";
 
 /* §5 — cream (D6), four columns, hairline, then copyright and legal entity.
  *
@@ -99,13 +99,7 @@ export function Footer() {
 
           <div>
             <ColumnHeading>Çalışma Saatleri</ColumnHeading>
-            <div className="mt-4 flex flex-col gap-1 text-sm">
-              <span>{hours.days}</span>
-              <span>
-                {hours.opens} – {hours.closes}
-              </span>
-              <span className="text-ink-muted">{hours.closedNote}</span>
-            </div>
+            <OpeningHours tone="cream" className="mt-4 text-sm" />
             <a
               href={mapsSearchUrl}
               target="_blank"

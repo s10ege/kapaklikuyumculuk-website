@@ -9,6 +9,7 @@ import {
   contact,
   contactCta,
   formatTrPhone,
+  getCurrentSeason,
   hours,
   instagramUrl,
   phoneAltDisplay,
@@ -172,13 +173,60 @@ test("has no email address, so no page may offer one", () => {
   assert.equal(contact.email.value, null);
 });
 
-test("hours are the seasonal summer closing", () => {
-  assert.equal(hours.opens, "09:00");
-  assert.equal(hours.closes, "20:00");
+test("both seasons carry a full set of hours", () => {
+  assert.equal(hours.summer.open, "09:00");
+  assert.equal(hours.summer.close, "19:00");
+  assert.equal(hours.winter.open, "09:00");
+  assert.equal(hours.winter.close, "18:00");
+  assert.equal(hours.closed, "Pazar kapalı");
   assert.equal(hours.schemaDays.length, 6, "Sunday is closed");
   // Widened: the tuple's literal type would otherwise reject "Sunday" at
   // compile time, which is reassuring but does not prove the runtime value.
   assert.ok(!(hours.schemaDays as readonly string[]).includes("Sunday"));
+});
+
+test("the two seasons cover all twelve months, exactly once each", () => {
+  /* The gap this guards is silent: a month in neither list falls through to
+   * winter by getCurrentSeason's else-branch and nobody notices, and a month
+   * in both makes the label a lie. Twelve, once each, is the whole invariant. */
+  const covered = [...hours.summer.months, ...hours.winter.months].sort(
+    (a, b) => a - b,
+  );
+  assert.deepEqual(covered, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+});
+
+test("season labels name the months they cover", () => {
+  // The label is what a visitor reads without JavaScript, so it has to say
+  // which months it means rather than just "Yaz".
+  assert.match(hours.summer.label, /Mayıs.*Eylül/);
+  assert.match(hours.winter.label, /Ekim.*Nisan/);
+});
+
+test("getCurrentSeason switches on the right days, in Istanbul time", () => {
+  const on = (iso: string) => getCurrentSeason(new Date(`${iso}T12:00:00Z`));
+
+  assert.equal(on("2026-04-30"), "winter", "April is still winter");
+  assert.equal(on("2026-05-01"), "summer", "May opens the summer season");
+  assert.equal(on("2026-09-30"), "summer", "September is the last summer month");
+  assert.equal(on("2026-10-01"), "winter", "October opens the winter season");
+  assert.equal(on("2026-01-15"), "winter");
+  assert.equal(on("2026-12-31"), "winter");
+});
+
+test("the season is read in the shop's timezone, not the visitor's", () => {
+  /* 30 September 22:00 UTC is already 1 October in Istanbul (UTC+3), and a
+   * visitor in Los Angeles reading it as local time would still be in
+   * mid-September. The shop's hours belong to the shop's clock. */
+  assert.equal(
+    getCurrentSeason(new Date("2026-09-30T22:00:00Z")),
+    "winter",
+    "already 1 October in Kapaklı",
+  );
+  assert.equal(
+    getCurrentSeason(new Date("2026-04-30T22:00:00Z")),
+    "summer",
+    "already 1 May in Kapaklı",
+  );
 });
 
 test("legal name is kept distinct from the display name", () => {

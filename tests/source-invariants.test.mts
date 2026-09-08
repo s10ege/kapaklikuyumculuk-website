@@ -110,8 +110,12 @@ test("the Şanlıurfa lookalike Instagram handle is never linked", () => {
 });
 
 test("opening hours are never inlined outside config", () => {
-  // Seasonal, and owner-editable in phase two — one source only.
-  const hits = offenders(/\b09:00\b|\b20:00\b|\b08:00\b|\b19:00\b/);
+  /* Seasonal, and owner-editable in phase two — one source only. Two closing
+   * times now (19:00 summer, 18:00 winter), which doubles the chance of one
+   * being typed into a component; 08:00 and 20:00 stay in the pattern because
+   * both appeared in earlier drafts and in the directory listings the cleanup
+   * is correcting. */
+  const hits = offenders(/\b0[89]:00\b|\b(?:18|19|20):00\b/);
   assert.deepEqual(hits, [], `hours belong in lib/config.ts:\n${hits.join("\n")}`);
 });
 
