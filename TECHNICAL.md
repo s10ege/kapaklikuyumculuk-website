@@ -486,15 +486,63 @@ a contact form on that basis.
 
 Written for six months from now, when the details have been forgotten.
 
+> **Rehearsed end to end on 2026-09-08** (iteration 3.9) with a scratch photograph, then
+> reverted — `public/urunler/` came out byte-identical, 61 files. The steps below are what
+> the pipeline actually does. Three of them did not match what this section used to say, and
+> the corrections are marked.
+
 1. Photograph the piece per the brief in `CATALOGUE.md` — white paper, window light, out of
    the vitrin.
-2. Drop the photo into `catalogue/raw/` and run `catalogue.bat`.
-3. Check the contact sheet. If a crop is off centre, the frame is crooked or the exposure
-   does not match the rest of the sitting, fix that one file, put it in `catalogue/fixed/`
-   under the same name, and run again — a fixed file wins over the raw one.
-4. Move the finished image into `public/urunler/<kategori>/`, add a line to `catalogue.json`
-   if it needs a spec or a `featured` flag, then commit and push. Vercel rebuilds on its own,
-   usually in under two minutes.
+
+2. **Name the file `<kategori-slug>_<parça-adı>_<nn>.jpg`** and drop it in `catalogue/raw/`.
+   *(New step. The naming rule was only written down in `catalogue.bat` and inside
+   `scripts/catalogue.mjs`, never here — and it is the thing most likely to go wrong.)*
+   All lowercase, hyphens inside each part, `nn` two digits for the angle:
+   `yuzuk_burma-yuzuk_01.jpg`. The four slugs are `altin-seti`, `kupe-modelleri`, `yuzuk`,
+   `ozel-tasarim-takilar`.
+
+   Both likely mistakes fail loudly and write nothing:
+
+   ```
+   skipped  Yuzuk Deneme 97.jpg — name is not <kategori>_<parça>_<nn>
+   skipped  pirlanta_deneme-98_01.jpg — "pirlanta" is not a published category
+   ```
+
+3. Run it. **`npm run catalogue`** on macOS or Linux; `catalogue.bat` is the Windows
+   double-click wrapper around the same script. *(Corrected: this section named only the
+   `.bat`, which does nothing on a Mac.)* Useful flags: `--only <substring>` to process one
+   piece, `--force` to redo one that is already cached — a second run prints `cached` and
+   changes nothing, which is intended.
+
+   Node prints a `MODULE_TYPELESS_PACKAGE_JSON` warning about `lib/content.ts` first. It is
+   noise, not a failure.
+
+4. Check `catalogue/contact-sheet.html`. If a crop is off centre, the frame is crooked or
+   the exposure does not match the rest of the sitting, fix that one file, put it in
+   `catalogue/fixed/` under the same name, and run again — a fixed file wins over the raw
+   one.
+
+5. **The image is already published.** *(Corrected, and this is the one that would have
+   wasted the most time: this section said "move the finished image into
+   `public/urunler/<kategori>/`". There is nothing to move — the script writes there
+   directly, and `lib/content.ts` reads the folder, so the product is on its category page
+   and in `/galeri` the moment the script finishes. No sitemap edit, no code change.)*
+
+6. **Add a line to `public/urunler/catalogue.json`** — keyed `<kategori>/<parça>`. *(Also
+   corrected: this section called it optional, "if it needs a spec or a `featured` flag". It
+   is where the `name` and the `alt` live too. Without it the name is derived from the slug
+   in ASCII — `deneme-99` becomes `Deneme 99`, with no `ş`, `ğ` or `ü` — and the alt text
+   falls back to that name. A piece will appear either way; it will just be named by a
+   machine.)*
+
+   ```json
+   "yuzuk/burma-yuzuk": {
+     "name": "Burma Yüzük",
+     "alt": "Sarı altın burma yüzük, tezgâh üstünde."
+   }
+   ```
+
+7. Commit and push. Vercel rebuilds on its own, usually in under two minutes.
 
 To remove a product: delete the image, commit, push.
 
