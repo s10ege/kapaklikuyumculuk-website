@@ -22,10 +22,16 @@ const CSS = readFileSync("app/globals.css", "utf8");
 
 function tokens(): Record<string, string> {
   const found: Record<string, string> = {};
-  for (const [, name, hex] of CSS.matchAll(
+  for (const match of CSS.matchAll(
     /--color-([a-z-]+):\s*(#[0-9a-fA-F]{6})/g,
   )) {
-    found[name] = hex;
+    /* Destructured capture groups are `string | undefined` to TypeScript even
+       though a match guarantees them, and `next build` type-checks this file
+       even though it never ships. Checked rather than asserted non-null, so a
+       regex change that drops a group fails loudly here instead of writing
+       `undefined` into the palette. */
+    const [, name, hex] = match;
+    if (name && hex) found[name] = hex;
   }
   return found;
 }
@@ -48,10 +54,13 @@ function contrast(a: string, b: string): number {
   assert.ok(fg, `unknown token --color-${a}`);
   assert.ok(bg, `unknown token --color-${b}`);
 
-  const [hi, lo] = [relativeLuminance(fg), relativeLuminance(bg)].sort(
-    (x, y) => y - x,
-  );
-  return (hi + 0.05) / (lo + 0.05);
+  /* Not destructured from .sort(): under noUncheckedIndexedAccess a tuple
+     index is `number | undefined`, and `next build` type-checks these files
+     even though they never ship. Math.max/min say the same thing and say it
+     without a non-null assertion. */
+  const a1 = relativeLuminance(fg);
+  const b1 = relativeLuminance(bg);
+  return (Math.max(a1, b1) + 0.05) / (Math.min(a1, b1) + 0.05);
 }
 
 /** Rounded the way a report would state it, so failures read like the comments
@@ -169,8 +178,10 @@ test("no text token is pure white", () => {
    * the number would argue for the wrong colour, so the rule is asserted
    * directly. */
   for (const name of ["cream-text", "muted", "gold-soft"]) {
+    const hex = COLOR[name];
+    assert.ok(hex, `unknown token --color-${name}`);
     assert.notEqual(
-      COLOR[name].toLowerCase(),
+      hex.toLowerCase(),
       "#ffffff",
       `--color-${name} is pure white (D9)`,
     );
