@@ -78,10 +78,16 @@ export const contact = {
   /** ✅ 3 sources — worth confirming it is still in use. */
   phoneAlt: { value: "902827175562", pending: false } satisfies Fact<string>,
 
-  /** 🟡 Instagram bio only. Pending until the family confirms it, so every CTA
-   *  on the site falls back to tel: until then (§9). The number is filled in
-   *  already, so confirming it means flipping this one boolean. */
-  whatsapp: { value: "905549157790", pending: true } satisfies Fact<string>,
+  /* WhatsApp `0554 915 77 90` was here until 2026-09-08, graded 🟡 from the
+   * Instagram bio and `pending: true` for its whole life — so every CTA on the
+   * site always fell back to `tel:` and no `wa.me` link was ever emitted.
+   *
+   * Removed on Soner's instruction: the shop takes calls and does not want to
+   * be reachable on WhatsApp. That makes the fallback the only path, so the
+   * switch it was waiting on is gone rather than permanently off. See §9 in
+   * TECHNICAL.md, where this reverses a documented spec position, and
+   * docs/business-facts.md for the number itself. Do not reintroduce it
+   * without asking. */
 
   /** ✅ ⚠️ NOT @kapaklikuyumculuk. That handle matches our domain but belongs
    *  to a different jeweller in Şanlıurfa, and at least one directory already
@@ -363,52 +369,24 @@ export function directionsHref(app: MapsApp): string {
 export type ContactCta = {
   href: string;
   label: string;
-  channel: "whatsapp" | "phone";
 };
-
-/** The pure form, taking its inputs explicitly.
- *
- * Split out from `contactCta` so both sides of the pending switch can be tested
- * directly. The whole point of §8's mechanism is that flipping one boolean
- * changes every CTA on the site; a test that can only ever observe today's
- * value would not be testing that. */
-export function buildContactCta(opts: {
-  whatsapp: Fact<string>;
-  phoneHref: string;
-  productName?: string | undefined;
-}): ContactCta {
-  if (opts.whatsapp.pending) {
-    return { href: opts.phoneHref, label: "Bizi Arayın", channel: "phone" };
-  }
-
-  /* What the customer sends without typing. Naming the piece is the whole
-   * mechanic (§9) — the shop opens a message that already says which one.
-   * "fiyat ve gram" because those are the two things every message asks for
-   * anyway, and putting them in the prefill saves a round trip. */
-  const message = opts.productName
-    ? `Merhaba, ${opts.productName} için fiyat ve gram bilgisi almak istiyorum.`
-    : "Merhaba, bir model hakkında bilgi almak istiyorum.";
-
-  return {
-    href: `https://wa.me/${opts.whatsapp.value}?text=${encodeURIComponent(message)}`,
-    label: "WhatsApp'tan Sorun",
-    channel: "whatsapp",
-  };
-}
 
 /** Every product card, lightbox and call-to-action on the site routes through
  * this one function.
  *
- * Prefilling the product name is the entire trick (§9): the shop instantly
- * knows what the customer is looking at, and the customer types nothing.
+ * There is one channel, so there is nothing here to decide — and the seam is
+ * still worth keeping. It is the single place that answers "what does the
+ * site's call-to-action do", which is what makes
+ * tests/source-invariants.test.mts able to assert that no component builds a
+ * `tel:` link by hand.
  *
- * While `contact.whatsapp.pending` is true the site never emits a `wa.me` link
- * — it falls back to `tel:` with the label "Bizi Arayın", so no button is ever
- * dead. Switching the whole site over is one boolean above. */
-export function contactCta(productName?: string): ContactCta {
-  return buildContactCta({
-    whatsapp: contact.whatsapp,
-    phoneHref,
-    productName,
-  });
+ * WHAT THIS USED TO BE. Until 2026-09-08 it branched on
+ * `contact.whatsapp.pending`, returning a `wa.me` link with the product name
+ * pre-filled — "the shop opens a message that already says which piece" — and
+ * falling back to the phone until the number was confirmed. The number was
+ * never confirmed, and then it was removed. The `productName` argument went
+ * with it: a `tel:` link cannot carry a message, so keeping the parameter
+ * would have been four components passing a value that silently did nothing. */
+export function contactCta(): ContactCta {
+  return { href: phoneHref, label: "Bizi Arayın" };
 }

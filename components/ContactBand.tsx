@@ -14,11 +14,9 @@ import { COPY } from "@/lib/copy";
 export function ContactBand({
   heading = COPY.contactBand.heading,
   body = COPY.contactBand.body,
-  productName,
 }: {
   heading?: string;
   body?: string;
-  productName?: string;
 }) {
   return (
     <section className="bg-panel">
@@ -33,7 +31,7 @@ export function ContactBand({
         </div>
 
         <div className="flex flex-none flex-wrap items-center gap-3">
-          <ContactButton productName={productName} variant="solid" />
+          <ContactButton variant="solid" />
           <a
             href={phoneHref}
             className="inline-flex min-h-11 items-center px-4 text-xl text-gold-soft transition-colors hover:text-cream-text"

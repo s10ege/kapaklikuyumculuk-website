@@ -5,7 +5,6 @@ import {
   address,
   addressLines,
   addressOneLine,
-  buildContactCta,
   contact,
   contactCta,
   formatTrPhone,
@@ -31,7 +30,12 @@ test("formats a Turkish landline", () => {
 });
 
 test("formats a Turkish mobile with the same rule", () => {
-  assert.equal(formatTrPhone("905549157790"), "0554 915 77 90");
+  /* Turkish mobiles and landlines share one shape — 0 + a three-digit code +
+   * 3-2-2 — so one formatter covers both. The fixture is deliberately not a
+   * number belonging to this business: the shop's own mobile used to be here,
+   * and a retired number sitting in a test is how it finds its way back into
+   * something real. */
+  assert.equal(formatTrPhone("905321234567"), "0532 123 45 67");
 });
 
 test("returns unknown shapes untouched rather than inventing a number", () => {
@@ -53,7 +57,6 @@ test("never emits the former partner's phone numbers", () => {
   const emitted = [
     contact.phone.value,
     contact.phoneAlt.value,
-    contact.whatsapp.value,
     phoneDisplay.replace(/\s/g, ""),
     phoneAltDisplay.replace(/\s/g, ""),
   ].join(" ");
@@ -64,81 +67,39 @@ test("never emits the former partner's phone numbers", () => {
 });
 
 /* ------------------------------------------------------------------ */
-/* The pending mechanism (§8, §9)                                      */
+/* The one call-to-action                                              */
 /* ------------------------------------------------------------------ */
 
-const PHONE_FALLBACK = "tel:+902827172131";
+/* Five tests lived here until 2026-09-08, exercising both sides of a switch:
+ * `buildContactCta` returned a `wa.me` link with the product name pre-filled,
+ * or fell back to `tel:` while the number was unconfirmed. It was never
+ * confirmed, and then WhatsApp was removed entirely. There is one channel now,
+ * so there is nothing to switch and nothing to prefill — a `tel:` link cannot
+ * carry a message.
+ *
+ * What survives is the part that still matters: every CTA on the site comes
+ * from this one function, and what it returns is the phone. */
 
-test("falls back to tel: while the WhatsApp number is pending", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: true },
-    phoneHref: PHONE_FALLBACK,
-    productName: "22 Ayar Burma Bilezik",
-  });
+test("the site's one CTA is the phone, and says so", () => {
+  const cta = contactCta();
 
-  assert.equal(cta.channel, "phone");
-  assert.equal(cta.href, PHONE_FALLBACK);
+  assert.equal(cta.href, "tel:+902827172131");
   assert.equal(cta.label, "Bizi Arayın");
-  assert.ok(!cta.href.includes("wa.me"), "must not emit a wa.me link");
 });
 
-test("switches every CTA to WhatsApp when the flag flips", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-    productName: "22 Ayar Burma Bilezik",
-  });
+test("the CTA can never become a wa.me link again", () => {
+  /* Belt and braces with tests/source-invariants.test.mts, which greps the
+   * source. This one asserts the value, so it would catch a link built at
+   * runtime from a string the grep could not see. */
+  const cta = contactCta();
 
-  assert.equal(cta.channel, "whatsapp");
-  assert.equal(cta.label, "WhatsApp'tan Sorun");
-  assert.ok(cta.href.startsWith("https://wa.me/905549157790?text="));
+  assert.ok(!cta.href.includes("wa.me"));
+  assert.ok(!cta.label.toLocaleLowerCase("tr").includes("whatsapp"));
 });
 
-test("prefills the product name, which is the point of the mechanic", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-    productName: "22 Ayar Burma Bilezik",
-  });
-
-  const text = new URL(cta.href).searchParams.get("text");
-  assert.equal(
-    text,
-    "Merhaba, 22 Ayar Burma Bilezik için fiyat ve gram bilgisi almak istiyorum.",
-  );
-});
-
-test("omitting a product name still produces a usable message", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-  });
-
-  const text = new URL(cta.href).searchParams.get("text");
-  assert.equal(text, "Merhaba, bir model hakkında bilgi almak istiyorum.");
-});
-
-test("Turkish characters survive the round trip into the wa.me link", () => {
-  const cta = buildContactCta({
-    whatsapp: { value: "905549157790", pending: false },
-    phoneHref: PHONE_FALLBACK,
-    productName: "Özel Tasarım Yüzük",
-  });
-
-  // Encoded on the wire...
-  assert.ok(!cta.href.includes("Özel"), "must be percent-encoded in the href");
-  // ...and correct once WhatsApp decodes it.
-  assert.equal(
-    new URL(cta.href).searchParams.get("text"),
-    "Merhaba, Özel Tasarım Yüzük için fiyat ve gram bilgisi almak istiyorum.",
-  );
-});
-
-test("the live config currently routes to the phone", () => {
-  // Mirrors today's state. When the family confirms the number and
-  // contact.whatsapp.pending flips to false, this expectation flips with it —
-  // which is the reminder to re-run the site-wide CTA check in plan.md §16.
-  assert.equal(contactCta("Tek Taş Yüzük").channel, "phone");
+test("the CTA is derived from the phone, not typed out beside it", () => {
+  // If the number in config changes, the button changes with it.
+  assert.equal(contactCta().href, phoneHref);
 });
 
 /* ------------------------------------------------------------------ */

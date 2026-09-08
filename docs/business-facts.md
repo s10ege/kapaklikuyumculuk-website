@@ -34,7 +34,7 @@ This reframes the whole cleanup: the job isn't to reconcile two branches, it's t
 | ~~Landmark~~ | ~~Ziraat Bankası karşısı~~ | **retired 2026-09-08** — see below |
 | **Primary phone** | **0282 717 21 31** | ✅ 4+ sources; used in old site title tag |
 | Second phone | 0282 717 55 62 | ✅ 3 sources — confirm still in use |
-| WhatsApp | 0554 915 77 90 | 🟡 Instagram bio only |
+| ~~WhatsApp~~ | ~~0554 915 77 90~~ | **retired 2026-09-08** — see below |
 | Coordinates | 41.326459, 27.976502 | ✅ the shop's own Google Maps listing, 2026-09-08 |
 | Google Place ID | `ChIJSQxn1KkptRQRLtfCCLZCYLk` | ✅ same listing |
 | Founded | 2000 | ✅ |
@@ -55,6 +55,18 @@ accurately — an ownership claim resting on a document we have edited is worth
 nothing. Expect Google to see both; the site, the profile and the signage should
 all say 56/C, and the registry entry is supporting evidence that the company is at
 this address on this street, not a competing address.
+
+**WhatsApp is retired.** `0554 915 77 90` came from the Instagram bio and was graded 🟡
+for its whole life, so `contact.whatsapp.pending` never flipped and the site never emitted
+a single `wa.me` link — every button always fell back to `tel:`. Soner's decision on
+2026-09-08 was to remove it outright: the shop takes calls and does not want to be reachable
+on WhatsApp. A channel nobody watches is worse than no channel at all — the customer
+messages and hears nothing back.
+
+The number is deleted from `lib/config.ts` rather than left `pending`, so nothing can render
+it and no future session finds a filled-in value that only needs a boolean flipped. It is
+recorded here and nowhere else. **Do not reintroduce it without asking Soner.** This
+reverses `TECHNICAL.md` §9, which made WhatsApp "the site's one CTA".
 
 **The landmark is retired.** "Ziraat Bankası karşısı" came from the Instagram bio
 and was published under the address in the footer, on `/iletisim`, on `/hakkimizda`

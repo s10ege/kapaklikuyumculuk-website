@@ -142,7 +142,7 @@ test("states why no price is shown", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("carries a CTA that is never a dead wa.me link while pending", async ({
+test("carries a CTA that dials, and never a wa.me link", async ({
   page,
 }) => {
   await page.locator(firstCard).first().click();

@@ -28,20 +28,14 @@
  * lightbox is a "use client" component and imports the price note from here.
  */
 
-import { contact, shop } from "./config.ts";
+import { shop } from "./config.ts";
 
-/* The site's one CTA falls back to the phone while the WhatsApp number is
- * unconfirmed (§8/§9), and copy that says "WhatsApp'tan yazın" beside a button
- * reading "Bizi Arayın" is the site contradicting itself in the same glance.
- * So the handful of lines that name a channel ask which one is live.
- *
- * Flipping contact.whatsapp.pending to false switches the buttons and these
- * sentences together, in one edit — which is the whole point of the mechanism.
+/* Five lines below name a contact channel, and until 2026-09-08 each carried
+ * two versions — one saying "WhatsApp'tan yazın", one saying "telefonla
+ * sorun" — chosen by contact.whatsapp.pending, so the copy could never
+ * contradict the buttons. WhatsApp was removed; the phone versions are simply
+ * the copy now. Nothing was rewritten in the collapse.
  */
-const asksOnWhatsApp = !contact.whatsapp.pending;
-
-const ask = (viaWhatsApp: string, viaPhone: string) =>
-  asksOnWhatsApp ? viaWhatsApp : viaPhone;
 
 export const COPY = {
   /* ---------------------------------------------------------------- */
@@ -73,12 +67,9 @@ export const COPY = {
         "ve gramı konuşur, teslim gününü baştan söyleriz.",
     },
 
-    contactLede: ask(
-      "Aradığınız modeli WhatsApp'tan yazın ya da uğrayın. Vitrinde olmayanı " +
-        "da çoğu zaman tedarik ediyoruz.",
+    contactLede:
       "Aradığınız modeli telefonla sorun ya da uğrayın. Vitrinde olmayanı da " +
-        "çoğu zaman tedarik ediyoruz.",
-    ),
+      "çoğu zaman tedarik ediyoruz.",
   },
 
   /* ---------------------------------------------------------------- */
@@ -190,16 +181,10 @@ export const COPY = {
         "etiketinde yazar. Fiyat yazmaz: fiyat o günkü altın kuruna göre " +
         "değişir, sorduğunuzda o anki hesabı söyleriz.",
 
-      ask(
-        "Altın bozdururken tartı tezgâhın üstünde, sizin önünüzde yapılır. " +
-          "Düşülecek pay varsa tartıdan önce söyleriz. Ölçü ayarı, tamir ve " +
-          "sipariş üzerine üretim de burada; başka bir yerde gördüğünüz bir " +
-          "modeli WhatsApp'tan gönderin, yapabiliyor muyuz bakalım.",
-        "Altın bozdururken tartı tezgâhın üstünde, sizin önünüzde yapılır. " +
-          "Düşülecek pay varsa tartıdan önce söyleriz. Ölçü ayarı, tamir ve " +
-          "sipariş üzerine üretim de burada; başka bir yerde gördüğünüz bir " +
-          "modeli telefonla anlatın, yapabiliyor muyuz bakalım.",
-      ),
+      "Altın bozdururken tartı tezgâhın üstünde, sizin önünüzde yapılır. " +
+        "Düşülecek pay varsa tartıdan önce söyleriz. Ölçü ayarı, tamir ve " +
+        "sipariş üzerine üretim de burada; başka bir yerde gördüğünüz bir " +
+        "modeli telefonla anlatın, yapabiliyor muyuz bakalım.",
     ],
 
     contactBand: {
@@ -245,31 +230,22 @@ export const COPY = {
     eyebrow: "Yakında",
     headline: (subject: string) =>
       `${subject} fotoğrafları henüz yüklenmedi.`,
-    body: ask(
-      "Aradığınız modeli WhatsApp'tan yazın, vitrinde olanı gönderelim.",
-      "Aradığınız modeli telefonla sorun, vitrinde olanı tarif edelim.",
-    ),
+    body: "Aradığınız modeli telefonla sorun, vitrinde olanı tarif edelim.",
   },
 
   contactBand: {
     heading: "Vitrinde olmayanı da bulabiliriz",
-    body: ask(
-      "Başka bir yerde gördüğünüz bir modeli anlatın ya da fotoğrafını " +
-        "WhatsApp'tan gönderin. Tedarik edebiliyorsak aynı gün haber veririz.",
+    body:
       "Başka bir yerde gördüğünüz bir modeli telefonla anlatın. Tedarik " +
-        "edebiliyorsak aynı gün haber veririz.",
-    ),
+      "edebiliyorsak aynı gün haber veririz.",
   },
 
   /* Why there is no price. Saying it plainly is more reassuring than leaving
    * a blank where a price would be — and it is the single most common
    * question the shop is asked. */
   lightbox: {
-    priceNote: ask(
+    priceNote:
       "Fiyat günün altın kuruna göre belirlenir; bu yüzden sitede yazmıyor. " +
-        "WhatsApp'tan sorun, aynı gün cevap veririz.",
-      "Fiyat günün altın kuruna göre belirlenir; bu yüzden sitede yazmıyor. " +
-        "Telefonla sorun, o anki hesabı söyleyelim.",
-    ),
+      "Telefonla sorun, o anki hesabı söyleyelim.",
   },
 } as const;

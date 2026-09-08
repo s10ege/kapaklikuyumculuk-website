@@ -29,7 +29,6 @@ const NEUTRALS = [
   ["muted", "#9A958D", "secondary text on dark"],
   ["line-dark", "#262B31", "hairlines on espresso"],
   ["line-light", "#E4DED2", "hairlines on cream"],
-  ["whatsapp", "#25D366", "WhatsApp only"],
 ] as const;
 
 /* Every Turkish-specific glyph, upper and lower. If latin-ext is missing,

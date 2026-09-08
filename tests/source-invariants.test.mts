@@ -64,11 +64,24 @@ function offenders(pattern: RegExp): string[] {
   return hits;
 }
 
-test("no component builds a wa.me link by hand", () => {
-  /* §9's promise is that flipping one boolean switches every CTA on the site.
-   * That is only true while every CTA goes through contactCta(). */
+test("no source file builds a wa.me link", () => {
+  /* This used to guard a seam: §9's promise was that flipping one boolean
+   * switched every CTA on the site, which held only while every CTA went
+   * through contactCta().
+   *
+   * Since 2026-09-08 it guards a removal instead, and it is the stronger job.
+   * WhatsApp is gone — the number, the branch, the icon, the colour token —
+   * and the shop takes calls. A `wa.me` link appearing anywhere in this
+   * codebase again would be someone reinstating a channel that was removed on
+   * purpose. */
   const hits = offenders(/["'`][^"'`]*wa\.me/);
-  assert.deepEqual(hits, [], `build wa.me links via contactCta():\n${hits.join("\n")}`);
+  assert.deepEqual(hits, [], `WhatsApp was removed on purpose:\n${hits.join("\n")}`);
+});
+
+test("no source file mentions WhatsApp at all", () => {
+  // Same reason as above, one level broader: no label, no aria-label, no alt.
+  const hits = offenders(/whatsapp/i);
+  assert.deepEqual(hits, [], `WhatsApp was removed on purpose:\n${hits.join("\n")}`);
 });
 
 test("no component builds a tel: link by hand", () => {

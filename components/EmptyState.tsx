@@ -3,13 +3,17 @@ import { COPY } from "@/lib/copy";
 
 /* §6.2 — "Never a blank grid."
  *
- * This is the launch state of all five category pages and the gallery, which
- * makes it the single most-seen screen on the site. It is written as an
- * invitation to act rather than an apology: it says what is happening, and
- * gives the visitor something to do about it right now.
+ * Written as an invitation to act rather than an apology: it says what is
+ * happening, and gives the visitor something to do about it right now.
  *
- * The CTA prefills the category name, so a message arrives already saying what
- * the customer was looking at (§9).
+ * This was the launch state of every category page and the gallery, and the
+ * single most-seen screen on the site. All four categories have photographs
+ * now, so it is only reachable from /dev/grid — and from any category added
+ * before it is shot, which is the state it exists for.
+ *
+ * `subject` names the headline. It also used to prefill the CTA's WhatsApp
+ * message, so a message arrived already saying what the customer was looking
+ * at; that went with WhatsApp on 2026-09-08.
  */
 export function EmptyState({
   subject,
@@ -45,11 +49,7 @@ export function EmptyState({
       {/* onDark, not solid: the ContactBand a few hundred pixels below this
           panel carries the page's gold fill, and two identical gold
           "Bizi Arayın" fills in one scroll read as templated (1.4 review). */}
-      <ContactButton
-        productName={subject}
-        variant="onDark"
-        className="mt-7"
-      />
+      <ContactButton variant="onDark" className="mt-7" />
     </div>
   );
 }

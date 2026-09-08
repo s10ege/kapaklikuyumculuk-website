@@ -1,6 +1,6 @@
 /* Icons are drawn here rather than pulled from a library.
  *
- * The set is tiny — eight marks — and §3's line weight is part of the look, so a
+ * The set is tiny — seven marks — and §3's line weight is part of the look, so a
  * package whose stroke weights and corner radii were chosen for a different
  * design system would fight it. These share one stroke width and square caps,
  * matching the hairline rules used everywhere else.
@@ -21,15 +21,6 @@ const base = {
   "aria-hidden": true,
   focusable: "false",
 } as const;
-
-export function WhatsAppIcon({ className }: IconProps) {
-  return (
-    <svg {...base} className={className}>
-      <path d="M3.5 20.5l1.2-4.1a8 8 0 1 1 3 2.9z" />
-      <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1-.5 1-1l-1.4-.8-1 .8a5 5 0 0 1-2.1-2.1l.8-1L11 9.5c-.5 0-1 .4-1 1" />
-    </svg>
-  );
-}
 
 export function PhoneIcon({ className }: IconProps) {
   return (

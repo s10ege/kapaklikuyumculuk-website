@@ -142,11 +142,7 @@ export function ProductGallery({ products }: { products: Product[] }) {
                 {COPY.lightbox.priceNote}
               </p>
 
-              <ContactButton
-                productName={active.name}
-                variant="solid"
-                className="mt-6 self-start"
-              />
+              <ContactButton variant="solid" className="mt-6 self-start" />
 
               {products.length > 1 && (
                 <div className="mt-6 flex gap-px border-t border-line-dark pt-6">

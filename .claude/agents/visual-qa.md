@@ -27,7 +27,7 @@ actually true on the page, with evidence.
 - **Contrast**, measured not eyeballed. Body text is `#E8E3DA` on `#17120E`; secondary is
   `#9A958D`. Report computed ratios. Flag any pure-white text — it is banned (D9).
 - **Tap targets ≥44px**, especially footer links, breadcrumbs, category tiles, lightbox
-  arrows and the WhatsApp FAB.
+  arrows and the call FAB.
 - **Focus rings** visible on both espresso and cream grounds.
 - **CLS and LCP.** LCP must remain the H1, never the hero coin.
 - **Reduced motion.** With `prefers-reduced-motion: reduce`, the coin must show a still

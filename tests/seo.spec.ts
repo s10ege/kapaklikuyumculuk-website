@@ -235,8 +235,12 @@ test.describe("sitemap and robots", () => {
  *                on this site that would be a lie.
  *   tek taş    — the slug it replaced, in every spelling.
  *   ziraat     — the landmark, removed the same day.
+ *   whatsapp   — removed the same day too. The shop takes calls, and a page
+ *                offering a channel nobody watches is worse than one that does
+ *                not offer it: the customer messages and hears nothing back.
  */
-const RETIRED_TERMS = /pırlanta|pirlanta|tek\s?ta[şs]|tekta[şs]|ziraat/i;
+const RETIRED_TERMS =
+  /pırlanta|pirlanta|tek\s?ta[şs]|tekta[şs]|ziraat|whatsapp|wa\.me/i;
 
 const VISITOR_ROUTES = [
   "/",

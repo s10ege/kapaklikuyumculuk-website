@@ -249,7 +249,7 @@ the moment a piece sells.
 3. **Supplier images.** Rights plus duplicate content. Worth repeating because it is the
    tempting shortcut.
 4. **Scope creep into a shop.** No cart, no prices, no accounts. The catalogue's job is to
-   get someone to WhatsApp or walk in.
+   get someone to call or walk in.
 
 ## 7 · Final iteration — 2026-09-08
 
@@ -328,9 +328,18 @@ portrait pair moved below the two-column grid; in the column it forced the shopf
 - **The `featured` four.** Unset, so Öne Çıkanlar stays hidden.
 - **The contact-sheet flags** — hangtags on about six frames, the soft-focus velvet rings.
 
-### And one new thing, which is one boolean
+### WhatsApp removed, same day
 
-`contact.whatsapp.pending` is still `true`, so every button reads "Bizi Arayın" and links to
-`tel:`. The new copy is written to name WhatsApp, and the four lines that do ask that flag —
-they currently render the phone wording, so the site is consistent either way. Confirming
-the number and flipping the boolean switches the buttons and the sentences together.
+This section closed on an outstanding boolean: the copy named WhatsApp, `whatsapp.pending`
+was still `true`, and confirming the number would have switched buttons and sentences
+together. **Soner's answer was to remove the channel — the shop takes calls.**
+
+The number is deleted from `lib/config.ts` rather than left pending, so nothing can render
+it and nobody finds a filled-in value that only needs a flag flipped. Out with it went the
+`wa.me` branch, the `productName` prefill, the WhatsApp icon, the `#25D366` token and the
+floating button's green state. The five copy lines that named a channel became the phone
+versions already written beside them — nothing was rewritten. Nothing on the page changed
+appearance, because the pending fallback *was* what shipped.
+
+Recorded in `plan.md` § 2.7, `TECHNICAL.md` (§1's gate drops to five facts), `design.md` D15
+and `docs/business-facts.md`. Two source invariants and a rendered-markup gate keep it out.

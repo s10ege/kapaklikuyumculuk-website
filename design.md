@@ -45,7 +45,7 @@ dark vitrin. Done badly it looks pasted on. Every decision below follows from th
 | D12 | Gold may be a **fill for primary buttons only**, one per section. Everywhere else gold stays a hairline accent. |
 | D13 | Hero composition: **headline left, coin right.** |
 | D14 | Coin diameter **≈1.2× the headline block height**, capped at 46% of hero width, minimum 280px. Visibly the larger element, not dominant. *Revised at the 1.3 review: Soner judged the ratio-correct 386px too small in the browser and set 580px (1.5×) at lg+, waiving the width cap; the 280px floor and mobile sizes stand.* |
-| D15 | Mobile: **headline and CTAs first, coin below.** The phone and WhatsApp buttons must be reachable without scrolling. |
+| D15 | Mobile: **headline and CTAs first, coin below.** Both hero buttons must be reachable without scrolling. *(Read "the phone and WhatsApp buttons" until 2026-09-08, when WhatsApp was removed and the phone became the only channel.)* |
 | D16 | Category tiles: cut-out image on the panel colour, hairline border, gold label, border turns gold on hover. *Revised 2026-08-29 (stage-2 change of plan, per Soner): no cut-outs — no professional photography, and the rembg pipeline is retired. The tile is filled by the polished photograph itself (`object-cover`), hairline border and gold label unchanged, plus the smallest scrim the label needs to stay legible over a photo. Code change pending in `CategoryTiles.tsx` / `lib/content.ts`; reviewed at the stage-2 contact-sheet gate.* |
 | D17 | The mobile menu panel is **cream**, reading as the header expanding. |
 | D18 | Focus rings are **gold**, verified visible on both espresso and cream. |
@@ -72,7 +72,6 @@ gold-deep    #77602A   gold on cream — the only version legible there
 ink-muted    #5F5A52   secondary text on cream — added at the 1.2 gate; the
                        frame had no muted token and alpha improvisations
                        measured as low as 2.9:1
-whatsapp     #25D366
 ```
 
 The logo appears on cream in both the header and the footer, so both use the **gold-deep**

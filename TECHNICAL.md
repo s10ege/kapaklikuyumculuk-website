@@ -28,8 +28,9 @@
 - **§9, analytics — the `/yol-tarifi` half exists.** It is a prerendered page rather than
   the redirect the section imagines, for two reasons: a redirect would be the only dynamic
   route in the build, and — the one that decides it — Vercel Web Analytics counts page views
-  from a script on a rendered page, so a redirect fires nothing. `/wa` and `/telefon` are
-  still to build, and `@vercel/analytics` is still not installed.
+  from a script on a rendered page, so a redirect fires nothing. `/telefon` is still to
+  build and `@vercel/analytics` is still not installed. `/wa` is no longer needed —
+  WhatsApp was removed on 2026-09-08, in the same pass.
 
 ## ⛔ 1 · CONFIRMATION GATE — do not write code past this point
 
@@ -37,20 +38,22 @@
 
 1. The canonical name string, character-for-character.
 2. The full address block, character-for-character.
-3. **WhatsApp `0554 915 77 90`** — correct? Then `contact.whatsapp.pending` → `false`.
-4. **`0282 717 55 62`** — still in use?
-5. **Opening hours**, including the winter closing time.
-6. That the **Altın Alım–Satım copy** on `/hizmetler` matches how the shop actually
+3. **`0282 717 55 62`** — still in use?
+4. **Opening hours**, including the winter closing time.
+5. That the **Altın Alım–Satım copy** on `/hizmetler` matches how the shop actually
    operates — it promises weighing on the counter in front of the customer, with any
    deduction named beforehand.
+
+> **Five, not six, since 2026-09-08.** Item 3 used to be *"WhatsApp `0554 915 77 90` —
+> correct? Then `contact.whatsapp.pending` → `false`"*. There is nothing left to confirm:
+> Soner removed WhatsApp, the number is out of `lib/config.ts`, and the pending mechanism it
+> was waiting on is gone with it. **(2)** is also already answered — the address was
+> confirmed as `No: 56/C` in the same pass — but it stays on the list, because the point of
+> a gate is that it is read out loud rather than assumed.
 
 **Instruction to Claude:** if asked to start this iteration without these confirmations,
 stop and ask for them first. Do not infer them from `docs/`, do not carry them over from an
 earlier session, and do not treat silence as approval.
-
-Each is a one-line change behind the existing pending mechanism, verified end-to-end:
-flipping `whatsapp.pending` swaps every CTA across all eleven pages between `wa.me` (with
-the product or category name prefilled) and the `tel:` fallback, with no layout shift.
 
 ---
 
@@ -67,13 +70,13 @@ adds a fourth variant instead of replacing three.
 
 ```
 Trakya Kapaklı Kuyumculuk
-Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+Cumhuriyet Mah., Pınar Bulvarı No: 56/C
 59510 Kapaklı / Tekirdağ
 0282 717 21 31
 https://www.kapaklikuyumculuk.com
 ```
 
-Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/A` with the space,
+Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/C` with the space,
 `Kapaklı / Tekirdağ` with spaces around the slash.
 
 **Title case is the stored form.** Google Business Profile guidelines prohibit unnecessary
@@ -151,7 +154,8 @@ end. Proven locally here; proven live in `FINAL.md`.
   image URLs**, which it could not before.
 - **OG images** — new requirement from the redesign. A dark card with the coin and the
   lockup as the site-wide default, plus per-category cards using a product image. There is
-  currently nothing, so every WhatsApp share of the link looks broken.
+  currently nothing, so every share of the link looks broken — and sharing a link is
+  still how this shop's customers pass it on, whatever they share it in.
 - `sitemap.ts` regenerated from the folder-driven catalogue, so a new product needs no
   sitemap edit. **Drop the `/studio` disallow** — there is no Studio.
 - Targets stay local: **`kapaklı kuyumcu`, `kapaklı altın`, `tekirdağ altın seti`**. Not
@@ -175,7 +179,7 @@ hamburger panel listing the five categories first, tap targets ≥44px (§7).
    `prefers-reduced-motion` and `prefers-reduced-data`.
 3. **`100dvh`, not `100vh`.** iOS Safari's collapsing URL bar makes a `vh` hero jump
    mid-scroll. `dvh` with a `vh` fallback.
-4. **Safe-area insets.** The WhatsApp FAB must clear the iOS home indicator
+4. **Safe-area insets.** The call FAB must clear the iOS home indicator
    (`env(safe-area-inset-bottom)`) and must never sit on the last row of a product grid.
 5. **Lightbox on touch.** Swipe to step through, close button in thumb reach, focus trap
    that does not fight the on-screen keyboard, pinch-zoom not blocked. Currently proven with
@@ -222,11 +226,14 @@ window**, and **custom events are Pro-only**. So visitors, page views, referrers
 and country-level location work free; button clicks do not.
 
 The workaround, which stays on the free tier: route the important CTAs through internal URLs
-first. The WhatsApp button links to `/wa`, which redirects to `wa.me`; directions link to
-`/yol-tarifi`. Those register as ordinary page views, giving click counts for nothing. Phone
-needs a variant — a `/telefon` page that fires the `tel:` link on load — because browsers
-handle redirects to `tel:` inconsistently. Cost is roughly one extra 100ms hop on the two
-actions that matter most.
+first. Directions link to `/yol-tarifi`, which is built. Phone needs a `/telefon` page that
+fires the `tel:` link on load, rather than a redirect, because browsers handle redirects to
+`tel:` inconsistently — and because a rendered page is what the analytics script needs in
+order to fire at all. Cost is roughly one extra 100ms hop on the two actions that matter.
+
+*(A third hop, `/wa` → `wa.me`, was specified here and is not needed: WhatsApp was removed
+on 2026-09-08. With it gone the phone is one of the two actions worth counting rather than
+the fallback for the other.)*
 
 Location granularity is country and region, not reliably city; for a shop in Kapaklı nearly
 all traffic reads "Turkey", so the genuinely useful dimension is **referrer** — Instagram

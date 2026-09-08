@@ -57,7 +57,6 @@ muted      #9A958D   secondary text on dark
 line-dark  #262B31 · line-light #E4DED2
 gold       #B8964F · gold-soft #CBAE72 · gold-deep #77602A (gold on cream)
 ink-muted  #5F5A52   secondary text on cream
-whatsapp   #25D366
 ```
 
 - Gold is a **hairline accent**. The only permitted fill is a primary button, one per

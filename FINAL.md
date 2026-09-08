@@ -148,8 +148,8 @@ his own name.
   months of history. If the name consolidation works, it shows up here first.
 - Step 8 of the cleanup plan: search the shop name monthly from a logged-out browser and
   record what appears. Fifteen minutes, forever.
-- Vercel Analytics for visitors and referrers, with `/wa` and `/yol-tarifi` giving click
-  counts on the free tier.
+- Vercel Analytics for visitors and referrers, with `/telefon` and `/yol-tarifi` giving
+  click counts on the free tier.
 
 ## Done when
 

@@ -109,7 +109,7 @@ export default async function CategoryPage({
         </div>
       </section>
 
-      <ContactBand productName={category.name} />
+      <ContactBand />
 
       {/* Sibling categories, so nobody dead-ends on an empty page (§6.2). At
           launch every category is empty, which makes this row the main way

@@ -73,19 +73,18 @@ test.describe("mobile", () => {
   });
 });
 
-test.describe("the pending WhatsApp mechanism", () => {
-  test("the floating button dials instead of linking to a dead wa.me", async ({
-    page,
-  }) => {
+test.describe("the call button", () => {
+  test("the floating button dials the shop from any page", async ({ page }) => {
     await page.goto("/");
 
-    // contact.whatsapp.pending is true, so §9 requires the tel: fallback.
+    /* §7 requires the shop to be one tap away from anywhere, and the phone is
+     * the only channel — WhatsApp was removed 2026-09-08. */
     const fab = page.getByRole("link", { name: "Bizi Arayın" }).last();
     await expect(fab).toBeVisible();
     await expect(fab).toHaveAttribute("href", "tel:+902827172131");
   });
 
-  test("no dead wa.me link appears anywhere on the page", async ({ page }) => {
+  test("no wa.me link appears anywhere on the page", async ({ page }) => {
     await page.goto("/");
 
     const waLinks = await page.locator('a[href*="wa.me"]').count();

@@ -4,7 +4,7 @@ import "./globals.css";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { CallFab } from "@/components/CallFab";
 import { JsonLd } from "@/components/JsonLd";
 import { categoryLinks, PAGE_LINKS } from "@/lib/nav";
 import { phoneDisplay, shop } from "@/lib/config";
@@ -113,7 +113,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
-        <WhatsAppFab />
+        <CallFab />
         {/* Site-wide JewelryStore, generated from lib/config.ts (§10). */}
         <JsonLd data={jewelryStoreSchema()} />
       </body>

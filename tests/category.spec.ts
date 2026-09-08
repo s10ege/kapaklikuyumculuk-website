@@ -91,12 +91,13 @@ test("an unknown category is a 404, not an empty page", async ({ page }) => {
   expect(response?.status()).toBe(404);
 });
 
-test("the empty state CTA prefills the category name", async ({ page }) => {
+test("every CTA on a category page dials the shop", async ({ page }) => {
   await page.goto("/urunler/yuzuk");
 
-  /* While the WhatsApp number is pending every CTA is a tel: link, so the
-   * prefill is not observable in the href yet — but no dead wa.me link may
-   * appear either. Both halves of §9 are asserted here. */
+  /* This asserted a WhatsApp prefill until 2026-09-08 — the CTA carried the
+   * category name into a wa.me message. WhatsApp is gone and a tel: link
+   * cannot carry one, so what is left to assert is that every button is a live
+   * phone link and nothing reaches for the removed channel. */
   const waLinks = await page.locator('a[href*="wa.me"]').count();
   expect(waLinks).toBe(0);
 

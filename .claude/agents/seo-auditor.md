@@ -40,7 +40,7 @@ pass — report the exact diff.
    `@kapaklikuyumculuk`, which is a different jeweller in Şanlıurfa.
 5. **Titles.** Pattern: `%page% - Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı`.
 6. **OG images** present for the homepage and all five categories. A missing OG image means
-   every WhatsApp share of the link looks broken — which for this shop is the main sharing
+   every share of the link looks broken — which for this shop is the main sharing
    channel.
 7. **Sitemap and robots.** Sitemap generated from the catalogue, covering every live route
    and no dev route. `robots.txt` must **not** block old paths — a blocked URL is never

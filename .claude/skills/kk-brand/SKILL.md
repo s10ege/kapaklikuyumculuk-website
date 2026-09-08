@@ -26,7 +26,6 @@ gold       #B8964F   hairline accent
 gold-soft  #CBAE72   gold on dark, where it needs to lift
 gold-deep  #77602A   gold on cream — the only version legible there
                      (darkened from #8A6D2F at the 1.2 gate for AA contrast)
-whatsapp   #25D366
 ```
 
 Never name a token `base` — it collides with Tailwind's `text-base`.
@@ -70,8 +69,10 @@ https://www.kapaklikuyumculuk.com
   `Kapaklı / Tekirdağ` with spaces.
 - Instagram is **`kuyumculukkapakli`**. **Not** `@kapaklikuyumculuk` — a different jeweller
   in Şanlıurfa.
-- WhatsApp `0554 915 77 90` is still `pending: true`; every CTA falls back to `tel:` until
-  the family confirms it.
+- **WhatsApp is not published** — removed 2026-09-08 on Soner's instruction. The shop takes
+  calls. `contactCta()` returns the phone, always; there is no `wa.me` link, no green FAB
+  and no `whatsapp` colour token. Two source invariants and a rendered-markup gate enforce
+  it. Do not reintroduce it without asking.
 - **No email address exists** — the domain has no MX records. No contact form, ever.
 - **No prices.** They track the gold rate.
 - No `geo` in structured data — sources differ by ~150 m and a wrong pin is worse than none.

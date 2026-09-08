@@ -39,7 +39,6 @@ Updated 2026-08-03. Turkish version for the family: **`aile-sorulari.md`**
       video verification too), interior, display cases, products.
 - [ ] **Instagram handle** — confirm @kuyumculukkapakli is yours.
       (NOT @kapaklikuyumculuk — that's a jeweller in Şanlıurfa.)
-- [ ] **WhatsApp** — is 0554 915 77 90 correct and monitored?
 - [ ] **Real product categories** — the current list is partly inferred from a
       low-quality directory. Prune to what's actually sold.
 - [ ] **Brands carried** — confirm, and check whether any agreement restricts showing
@@ -64,6 +63,10 @@ Updated 2026-08-03. Turkish version for the family: **`aile-sorulari.md`**
 
 ## ✅ Resolved
 
+- ~~WhatsApp — is 0554 915 77 90 correct and monitored?~~ → **Moot: WhatsApp is not
+  published.** Soner's decision 2026-09-08 — the shop takes calls. The number is deleted
+  from `lib/config.ts` and recorded only in `business-facts.md`. A channel nobody watches is
+  worse than no channel at all.
 - ~~Exact door number — 56 or 56/A?~~ → **56/C**, confirmed by Soner 2026-09-08 and
   published. Note the Çerkezköy TSO registry says 56/A; that entry is quoted as-is in
   `business-facts.md` rather than corrected, because its value as evidence depends on

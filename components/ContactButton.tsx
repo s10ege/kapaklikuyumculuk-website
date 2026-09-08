@@ -1,15 +1,15 @@
 import { contactCta } from "@/lib/config";
-import { PhoneIcon, WhatsAppIcon } from "./icons";
+import { PhoneIcon } from "./icons";
 
 /* The one call-to-action on the site (§9).
  *
- * Nothing else renders a wa.me or tel: link directly. Everything routes through
- * contactCta(), so while contact.whatsapp.pending is true every button on every
- * page falls back to the phone with the label "Bizi Arayın" — and when the
- * family confirms the number, all of them switch at once.
+ * Nothing else renders a tel: link directly — everything routes through
+ * contactCta(), which is the single place that decides what the CTA does.
  *
- * `productName` is what makes the mechanic work: the shop opens a message that
- * already names the piece, and the customer types nothing.
+ * It took a `productName` until 2026-09-08, to pre-fill a WhatsApp message with
+ * the piece the customer was looking at. WhatsApp is gone and a tel: link
+ * cannot carry a message, so the prop went with it rather than staying on as
+ * something four callers pass and nothing reads.
  */
 
 type Variant = "solid" | "outline" | "onDark";
@@ -24,28 +24,22 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 export function ContactButton({
-  productName,
   variant = "solid",
   className = "",
 }: {
-  productName?: string;
   variant?: Variant;
   className?: string;
 }) {
-  const cta = contactCta(productName);
-  const Icon = cta.channel === "whatsapp" ? WhatsAppIcon : PhoneIcon;
+  const cta = contactCta();
 
   return (
+    /* No target/rel: a tel: link hands off to the dialer and stays in the app,
+     * so opening a tab for it would leave an empty one behind. */
     <a
       href={cta.href}
-      /* A tel: link stays in the app; wa.me opens WhatsApp, so it gets a new
-       * tab and the usual rel guard. */
-      {...(cta.channel === "whatsapp"
-        ? { target: "_blank", rel: "noopener noreferrer" }
-        : {})}
       className={`inline-flex min-h-[2.75rem] items-center justify-center gap-2 px-5 py-3 text-sm font-medium transition-colors ${VARIANTS[variant]} ${className}`}
     >
-      <Icon className="h-4 w-4 flex-none" />
+      <PhoneIcon className="h-4 w-4 flex-none" />
       {cta.label}
     </a>
   );
