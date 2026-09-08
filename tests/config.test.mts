@@ -18,6 +18,7 @@ import {
   phoneDisplay,
   phoneHref,
   shop,
+  telefonPath,
   telHref,
 } from "../lib/config.ts";
 
@@ -83,7 +84,12 @@ test("never emits the former partner's phone numbers", () => {
 test("the site's one CTA is the phone, and says so", () => {
   const cta = contactCta();
 
-  assert.equal(cta.href, "tel:+902827172131");
+  /* `/telefon`, not `tel:`, since 2026-09-08. Vercel Analytics on the free
+   * tier cannot count a click on an outbound link — custom events are
+   * Pro-only — so the click is routed through an internal page that fires the
+   * real `tel:` on load and is counted as an ordinary page view (§9). The
+   * label did not change, and neither did what the visitor gets. */
+  assert.equal(cta.href, telefonPath);
   assert.equal(cta.label, "Bizi Arayın");
 });
 
@@ -97,9 +103,20 @@ test("the CTA can never become a wa.me link again", () => {
   assert.ok(!cta.label.toLocaleLowerCase("tr").includes("whatsapp"));
 });
 
-test("the CTA is derived from the phone, not typed out beside it", () => {
-  // If the number in config changes, the button changes with it.
-  assert.equal(contactCta().href, phoneHref);
+test("the CTA still cannot drift from the number in config", () => {
+  /* This used to be `assert.equal(contactCta().href, phoneHref)` — the button
+   * WAS the number, so it could not disagree with it.
+   *
+   * The hop broke that identity, so the guarantee has to be stated in two
+   * halves rather than dropped. Here: the CTA goes to the hop, and the hop
+   * page's own link is built from `phoneHref`, which is derived from
+   * `contact.phone.value` and never typed. The other half is in
+   * tests/telefon.spec.ts and tests/chrome.spec.ts, which follow the button
+   * through to a rendered `tel:` link carrying the real number — the part a
+   * unit test cannot see now that a page sits in the middle. */
+  assert.equal(contactCta().href, telefonPath);
+  assert.equal(phoneHref, `tel:+${contact.phone.value}`);
+  assert.ok(!phoneHref.includes(" "), "the tel: href must carry no spaces");
 });
 
 /* ------------------------------------------------------------------ */

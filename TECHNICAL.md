@@ -28,9 +28,9 @@
 - **§9, analytics — the `/yol-tarifi` half exists.** It is a prerendered page rather than
   the redirect the section imagines, for two reasons: a redirect would be the only dynamic
   route in the build, and — the one that decides it — Vercel Web Analytics counts page views
-  from a script on a rendered page, so a redirect fires nothing. `/telefon` is still to
-  build and `@vercel/analytics` is still not installed. `/wa` is no longer needed —
-  WhatsApp was removed on 2026-09-08, in the same pass.
+  from a script on a rendered page, so a redirect fires nothing. `/wa` is no longer needed —
+  WhatsApp was removed on 2026-09-08, in the same pass. **`/telefon` and
+  `@vercel/analytics` landed in stage 3 on 2026-09-08; §9 is done.**
 
 ## ⛔ 1 · CONFIRMATION GATE — do not write code past this point
 
@@ -288,6 +288,23 @@ order to fire at all. Cost is roughly one extra 100ms hop on the two actions tha
 *(A third hop, `/wa` → `wa.me`, was specified here and is not needed: WhatsApp was removed
 on 2026-09-08. With it gone the phone is one of the two actions worth counting rather than
 the fallback for the other.)*
+
+> **Built 2026-09-08.** `@vercel/analytics` is installed and `<Analytics />` renders from the
+> root layout; it emits nothing outside a Vercel deployment, so the dev server, the e2e suite
+> and the static build are unaffected. `/telefon` is a prerendered page carrying the number,
+> both hour seasons and a fallback message, in the shape `/yol-tarifi` already proved.
+>
+> **Only the label-bearing buttons route through it** — `contactCta()`, which is what
+> `CallFab` and `ContactButton` render. Every place the number itself is printed keeps a
+> direct `tel:` link on the digits, so the number stays selectable text where `tel:` is a
+> dead end (§6.11). That split was not a judgement call: every direct `phoneHref` use on the
+> site already rendered `{phoneDisplay}`, and every `contactCta()` use rendered a label.
+>
+> One thing the hop costs, recorded because it is easy to forget: a unit test could
+> previously assert `contactCta().href === phoneHref` — the button *was* the number, so it
+> could not drift from it. A page sits in the middle now, so that guarantee is split between
+> `tests/config.test.mts` and the e2e in `tests/telefon.spec.ts` and `tests/chrome.spec.ts`,
+> which follow the button through to a rendered `tel:` carrying the real number.
 
 Location granularity is country and region, not reliably city; for a shop in Kapaklı nearly
 all traffic reads "Turkey", so the genuinely useful dimension is **referrer** — Instagram

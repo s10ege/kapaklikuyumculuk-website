@@ -78,10 +78,31 @@ test.describe("the call button", () => {
     await page.goto("/");
 
     /* §7 requires the shop to be one tap away from anywhere, and the phone is
-     * the only channel — WhatsApp was removed 2026-09-08. */
+     * the only channel — WhatsApp was removed 2026-09-08.
+     *
+     * The href is /telefon, not tel:, since 2026-09-08: Vercel Analytics on
+     * the free tier cannot count a click on an outbound link, so the two
+     * clicks worth counting are routed through internal pages that fire the
+     * real link on load (§9). One tap still, one page view now. */
     const fab = page.getByRole("link", { name: "Bizi Arayın" }).last();
     await expect(fab).toBeVisible();
-    await expect(fab).toHaveAttribute("href", "tel:+902827172131");
+    await expect(fab).toHaveAttribute("href", "/telefon");
+  });
+
+  test("the hop lands on a page that dials", async ({ page }) => {
+    /* The tap has to end at the dialer, not at a page about dialling. This is
+     * the assertion that would catch /telefon quietly becoming a dead end —
+     * the failure mode of routing a CTA through an extra page. */
+    await page.goto("/");
+    await page.getByRole("link", { name: "Bizi Arayın" }).last().click();
+
+    await expect(page).toHaveURL(/\/telefon$/);
+    /* Scoped to <main>: the footer prints the number on every page, and it is
+       a correct tel: link too — but the one that matters here is the one the
+       hop page puts in front of someone whose dialer did not open. */
+    await expect(
+      page.locator("#icerik").getByRole("link", { name: /0282 717 21 31/ }),
+    ).toHaveAttribute("href", "tel:+902827172131");
   });
 
   test("no wa.me link appears anywhere on the page", async ({ page }) => {

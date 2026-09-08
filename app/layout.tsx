@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Ibarra_Real_Nova, Jost } from "next/font/google";
 import "./globals.css";
 
@@ -126,6 +127,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <CallFab />
         {/* Site-wide JewelryStore, generated from lib/config.ts (§10). */}
         <JsonLd data={jewelryStoreSchema()} />
+        {/* Vercel Web Analytics, Hobby tier (§9): visitors, page views,
+            referrers, devices, country. Custom events are Pro-only, which is
+            why the two clicks worth counting — the call button and the
+            directions button — are routed through /telefon and /yol-tarifi and
+            counted as page views instead.
+
+            Cookieless and collecting no personal data, so no consent banner is
+            required. That stays true only as long as nothing tracking-heavy is
+            added beside it.
+
+            Inert outside a Vercel deployment: it renders no script locally, so
+            it does not affect the dev server, the e2e suite or the static
+            build. */}
+        <Analytics />
       </body>
     </html>
   );

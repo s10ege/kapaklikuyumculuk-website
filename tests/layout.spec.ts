@@ -18,6 +18,8 @@ const ROUTES = [
   "/hakkimizda",
   "/iletisim",
   "/urunler/ozel-tasarim-takilar",
+  "/yol-tarifi",
+  "/telefon",
   "/dev/tokens",
   "/dev/placeholders",
   "/dev/grid",

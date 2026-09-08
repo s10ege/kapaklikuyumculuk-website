@@ -375,6 +375,20 @@ export function directionsHref(app: MapsApp): string {
   return `${directionsPath}?app=${app}`;
 }
 
+/** The same hop for the phone (TECHNICAL.md §9).
+ *
+ *  A page rather than a redirect for the same two reasons `/yol-tarifi` is one
+ *  — a redirect would be the only dynamic route in the build, and it renders
+ *  nothing, so the analytics beacon that is the entire point would never fire.
+ *  Browsers are also inconsistent about redirecting to a `tel:` URL, which is
+ *  the third reason and the one specific to this route.
+ *
+ *  Only the label-bearing buttons go through it — `contactCta()` below, which
+ *  is what CallFab and ContactButton render. Everywhere the number itself is
+ *  printed it stays a plain `tel:` link on the digits, so the number is
+ *  selectable text on desktop where `tel:` is a dead end (§6.11). */
+export const telefonPath = "/telefon";
+
 /* ------------------------------------------------------------------------- */
 /* The contact CTA (§9)                                                       */
 /* ------------------------------------------------------------------------- */
@@ -401,5 +415,9 @@ export type ContactCta = {
  * with it: a `tel:` link cannot carry a message, so keeping the parameter
  * would have been four components passing a value that silently did nothing. */
 export function contactCta(): ContactCta {
-  return { href: phoneHref, label: "Bizi Arayın" };
+  /* `/telefon`, not `phoneHref`. The hop is what makes the click countable on
+     Vercel's free tier, where custom events are Pro-only — see telefonPath.
+     The page it lands on fires the `tel:` link immediately and prints the
+     number as a link for the case where it does not. */
+  return { href: telefonPath, label: "Bizi Arayın" };
 }

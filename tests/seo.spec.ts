@@ -511,6 +511,7 @@ const VISITOR_ROUTES = [
   "/hakkimizda",
   "/iletisim",
   "/yol-tarifi",
+  "/telefon",
 ];
 
 for (const route of VISITOR_ROUTES) {

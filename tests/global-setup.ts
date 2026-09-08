@@ -19,6 +19,8 @@ const ROUTES = [
   "/urunler/kupe-modelleri",
   "/urunler/yuzuk",
   "/urunler/ozel-tasarim-takilar",
+  "/yol-tarifi",
+  "/telefon",
   "/dev/tokens",
   "/dev/placeholders",
   "/dev/grid",
