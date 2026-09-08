@@ -17,7 +17,10 @@ import { shop } from "@/lib/config";
  * scales with the user's font settings, and screen readers get it for free.
  */
 
-function OvalMark({ className }: { className?: string }) {
+/* Exported since 2026-09-08 so the OG cards can draw the mark without the
+   <Link> wrapper below. There is still exactly one copy of the redrawn oval —
+   which is the point, since there is no vector original to fall back on. */
+export function OvalMark({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 64 64"

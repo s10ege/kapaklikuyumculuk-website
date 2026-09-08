@@ -73,12 +73,22 @@ export const metadata: Metadata = {
   description:
     "Kapaklı'da kuyumcu. Altın alır, satar, sipariş üzerine yaparız. Ayar ve " +
     `gram etikette, fiyat günün altın kuruna göre. Tel: ${phoneDisplay}`,
-  alternates: { canonical: "/" },
+  /* No `alternates` here. It used to carry `canonical: "/"`, which every page
+     that sets its own canonical replaced — but /yol-tarifi and the 404 do not
+     set one, and they are `noindex`. That pairing tells Google to drop the
+     page *and* consolidate it onto the homepage, which is not what either
+     route wants. The homepage sets its own canonical in app/page.tsx now, and
+     the noindex routes correctly have none. */
+
+  /* No `url` here either, for the mirror-image reason: openGraph is inherited
+     wholesale, so `url: shop.url` made every page that declared no openGraph
+     of its own announce itself as the homepage. Pages set their own through
+     openGraph() in lib/metadata.ts; what is left here is only what is true of
+     every page. */
   openGraph: {
     type: "website",
     locale: "tr_TR",
     siteName: shop.name,
-    url: shop.url,
   },
   robots: { index: true, follow: true },
 };

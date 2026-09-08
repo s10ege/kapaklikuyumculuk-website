@@ -18,6 +18,7 @@ import {
 } from "@/lib/config";
 import { pageTitle } from "@/lib/content";
 import { COPY } from "@/lib/copy";
+import { openGraph } from "@/lib/metadata";
 
 /* §6.7 — İletişim.
  *
@@ -41,6 +42,7 @@ export const metadata: Metadata = {
     `Yaz ${hours.summer.open}–${hours.summer.close}, ` +
     `kış ${hours.winter.open}–${hours.winter.close}; ${hours.closed.toLocaleLowerCase("tr")}.`,
   alternates: { canonical: "/iletisim" },
+  openGraph: openGraph("/iletisim"),
 };
 
 export default function ContactPage() {

@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { existsSync, statSync } from "node:fs";
 
 import {
   getCategories,
@@ -229,4 +230,38 @@ test("mutating a returned array does not affect later reads", () => {
   const first = getCategories();
   first.pop();
   assert.equal(getCategories().length, PUBLISHED_SLUGS.length);
+});
+
+/* ------------------------------------------------------------------ */
+/* Open Graph cards (§5)                                               */
+/* ------------------------------------------------------------------ */
+
+/* The cards are committed PNGs rather than generated at build time, which
+ * means nothing rebuilds them when a category is added — the failure would be
+ * a category page sharing the site-wide card, silently, forever. So the
+ * existence of one card per published category is asserted here, against the
+ * same reader that drives the routes.
+ *
+ * If this fails after adding a category: run `npm run og` with a dev server
+ * up. The layout is in app/dev/og. */
+test("every published category has an Open Graph card", () => {
+  for (const slug of PUBLISHED_SLUGS) {
+    const card = `public/og/${slug}.png`;
+    assert.ok(existsSync(card), `${card} is missing — run \`npm run og\``);
+  }
+});
+
+test("the site-wide Open Graph card exists and is a plausible size", () => {
+  /* Every page that does not name its own card falls back to this one through
+   * openGraph() in lib/metadata.ts. If it is missing, those pages preview
+   * blank and nothing else about them looks wrong. */
+  const card = "public/og/default.png";
+  assert.ok(existsSync(card), `${card} is missing — run \`npm run og\``);
+
+  /* Facebook rejects images over 8 MB and a card this simple should be well
+   * under a megabyte. A card that has grown past this is usually a card that
+   * has quietly become a full-bleed photograph. */
+  const bytes = statSync(card).size;
+  assert.ok(bytes > 10_000, `${card} is ${bytes} bytes — suspiciously empty`);
+  assert.ok(bytes < 1_000_000, `${card} is ${bytes} bytes — too heavy`);
 });

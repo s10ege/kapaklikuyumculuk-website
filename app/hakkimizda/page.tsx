@@ -8,6 +8,7 @@ import { ArrowRightIcon } from "@/components/icons";
 import { address, people, shop } from "@/lib/config";
 import { pageTitle } from "@/lib/content";
 import { COPY } from "@/lib/copy";
+import { openGraph } from "@/lib/metadata";
 
 /* §6.6 — Hakkımızda.
  *
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
     `${shop.founded} yılından beri aynı adresteyiz. Kapaklı kuyumcu: altın ` +
     "alım–satımı, ölçü ayarı, tamir ve sipariş üzerine üretim.",
   alternates: { canonical: "/hakkimizda" },
+  openGraph: openGraph("/hakkimizda"),
 };
 
 const FACTS = [

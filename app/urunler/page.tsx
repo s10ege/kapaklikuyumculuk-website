@@ -5,6 +5,7 @@ import { CategoryTiles } from "@/components/CategoryTiles";
 import { ContactBand } from "@/components/ContactBand";
 import { COPY } from "@/lib/copy";
 import { getCategories, pageTitle } from "@/lib/content";
+import { openGraph } from "@/lib/metadata";
 
 /* §6.3 — Ürünlerimiz.
  *
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
     "Kapaklı kuyumcu: altın set, küpe, yüzük ve sipariş üzerine yaptığımız " +
     "takılar. Ayar ve gram etikette, fiyat günün altın kuruna göre.",
   alternates: { canonical: "/urunler" },
+  openGraph: openGraph("/urunler"),
 };
 
 export default function ProductsPage() {

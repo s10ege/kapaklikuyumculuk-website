@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { ProductGallery } from "@/components/ProductGallery";
 import { COPY } from "@/lib/copy";
 import { getCategories, getProducts, pageTitle } from "@/lib/content";
+import { openGraph } from "@/lib/metadata";
 
 /* §6.4 — Galeri.
  *
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
     "Kapaklı'daki vitrinimizden altın set, bilezik, küpe ve yüzük " +
     "fotoğrafları. Fiyat günün altın kuruna göre; gramı ve ayarı sorun.",
   alternates: { canonical: "/galeri" },
+  openGraph: openGraph("/galeri"),
 };
 
 export default function GalleryPage() {

@@ -4,6 +4,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { ContactBand } from "@/components/ContactBand";
 import { pageTitle } from "@/lib/content";
 import { COPY } from "@/lib/copy";
+import { openGraph } from "@/lib/metadata";
 
 /* §6.5 — Hizmetler.
  *
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     "Kapaklı'da altın alım–satımı ve sipariş üzerine takı üretimi. Tartı " +
     "tezgâhta önünüzde, düşülecek pay işlemden önce söylenir.",
   alternates: { canonical: "/hizmetler" },
+  openGraph: openGraph("/hizmetler"),
 };
 
 type Service = {

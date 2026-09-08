@@ -277,6 +277,143 @@ for (const [path, last] of TRAILS) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Open Graph — every shared link previews as something                */
+/* ------------------------------------------------------------------ */
+
+/* There was no og:image anywhere until 2026-09-08, so every share of every
+ * page previewed blank — and sharing a link is how this shop's customers pass
+ * it on, whatever they share it in.
+ *
+ * The assertion is deliberately "every indexed route", not "the six that have
+ * cards": app/opengraph-image.png is a root-segment file, so pages without
+ * their own card inherit it. If that inheritance ever breaks, this catches the
+ * pages nobody remembered to wire up rather than only the ones we did. */
+const INDEXED = [
+  "/",
+  "/urunler",
+  "/urunler/altin-seti",
+  "/urunler/kupe-modelleri",
+  "/urunler/yuzuk",
+  "/urunler/ozel-tasarim-takilar",
+  "/galeri",
+  "/hizmetler",
+  "/hakkimizda",
+  "/iletisim",
+];
+
+for (const path of INDEXED) {
+  test(`${path} previews with a real Open Graph image`, async ({
+    page,
+    request,
+  }) => {
+    await page.goto(path);
+
+    const url = await page
+      .locator('meta[property="og:image"]')
+      .first()
+      .getAttribute("content");
+
+    expect(url, `${path} emits no og:image`).toBeTruthy();
+
+    /* Absolute, whatever the origin. A relative og:image is ignored by every
+       platform that reads it — they fetch the URL out of context, with no page
+       to resolve against. `metadataBase` in app/layout.tsx is what guarantees
+       this; the assertion is that it is still doing its job.
+
+       Not asserted against the production host, because the file-convention
+       card resolves to the *request* origin under `next dev` and to
+       metadataBase in a production build. Asserting the built form here would
+       be a test that only passes in an environment this suite does not yet run
+       in — which is PR-10's job to fix, not this test's to pretend. */
+    expect(url).toMatch(/^https?:\/\/[^/]+\//);
+
+    /* An og:image pointing at a 404 is worse than none: the platform caches
+       the miss and the link previews blank for as long as it holds it. */
+    const asset = new URL(url!).pathname + new URL(url!).search;
+    const response = await request.get(asset);
+    expect(response.status(), `${asset} does not resolve`).toBe(200);
+    expect(response.headers()["content-type"]).toContain("image/png");
+
+    /* Dimensions matter to the platforms — 1200x630 is what gets rendered as
+       a large card rather than a thumbnail beside the text. */
+    await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute(
+      "content",
+      "1200",
+    );
+    await expect(
+      page.locator('meta[property="og:image:height"]'),
+    ).toHaveAttribute("content", "630");
+  });
+}
+
+/* Nothing asserted og:url before 2026-09-08, which is exactly why five pages
+ * shipped announcing themselves as the homepage: openGraph is inherited
+ * wholesale from the layout, the layout set `url: shop.url`, and only the
+ * category pages overrode it. Each page's canonical was right the whole time,
+ * so the two disagreed and nothing noticed. */
+for (const path of INDEXED) {
+  test(`${path} names itself in og:url, not the homepage`, async ({ page }) => {
+    await page.goto(path);
+
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+      "content",
+      `https://www.kapaklikuyumculuk.com${path === "/" ? "" : path}`,
+    );
+
+    /* Site-level fields survive on every page — the category pages lost these
+       for as long as they hand-built their own openGraph block. */
+    await expect(
+      page.locator('meta[property="og:site_name"]'),
+    ).toHaveAttribute("content", "Trakya Kapaklı Kuyumculuk");
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+      "content",
+      "tr_TR",
+    );
+  });
+}
+
+/* A noindex page must not also name a canonical. Pairing them asks Google to
+ * drop the page and consolidate its signals onto the canonical target — which,
+ * while /yol-tarifi inherited the layout's `canonical: "/"`, was the homepage.
+ * The homepage owns that canonical now; this route should have none. */
+test("/yol-tarifi is noindex and names no canonical", async ({ page }) => {
+  await page.goto("/yol-tarifi");
+
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    /noindex/,
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+});
+
+test("each category overrides the site-wide card with its own", async ({
+  page,
+}) => {
+  /* The four categories are the pages worth sharing individually, and a share
+     of /urunler/yuzuk that previews the generic coin card wastes the one
+     chance to show a ring. */
+  const seen = new Set<string>();
+
+  for (const slug of [
+    "altin-seti",
+    "kupe-modelleri",
+    "yuzuk",
+    "ozel-tasarim-takilar",
+  ]) {
+    await page.goto(`/urunler/${slug}`);
+    const url = await page
+      .locator('meta[property="og:image"]')
+      .first()
+      .getAttribute("content");
+
+    expect(url).toContain(`/og/${slug}.png`);
+    seen.add(url!);
+  }
+
+  expect(seen.size, "two categories share a card").toBe(4);
+});
+
+/* ------------------------------------------------------------------ */
 /* Retired terms never reach a visitor                                 */
 /* ------------------------------------------------------------------ */
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AllProductsLink, CategoryTiles } from "@/components/CategoryTiles";
@@ -16,6 +17,15 @@ import {
 } from "@/lib/config";
 import { getCategories, getFeaturedProducts } from "@/lib/content";
 import { COPY } from "@/lib/copy";
+import { openGraph } from "@/lib/metadata";
+
+/* The homepage's own canonical and Open Graph block. Both used to live in
+   app/layout.tsx and be inherited; they were correct here and wrong everywhere
+   else that did not override them. */
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: openGraph("/"),
+};
 
 /* Anasayfa (§6.1).
  *
