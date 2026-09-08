@@ -276,6 +276,43 @@ than decoration; gold focus rings verified on both espresso and cream; tap targe
 re-audited after the redesign; `prefers-reduced-motion` and `prefers-reduced-data` both
 honoured by the coin.
 
+> **Measured 2026-09-08.** `tests/contrast.test.mts` does the arithmetic, parsing the tokens
+> out of `app/globals.css` rather than restating them — a contrast test carrying its own copy
+> of the hexes tests itself. `tests/a11y.spec.ts` does the half arithmetic cannot reach.
+>
+> **Every text pairing clears AA.** `cream-text` 14.55:1 on espresso, `muted` 6.25:1,
+> `gold-soft` 8.71:1; on cream, `ink-text` 15.58:1, `ink-muted` 6.02:1, `gold-deep` 5.29:1.
+> The two ratios `globals.css` states in prose — 5.3 and 6 — are exactly right and are now
+> asserted, because they are the reason two tokens were changed at the 1.2 gate; a drift
+> would make the reasoning recorded beside them false.
+>
+> **Focus rings resolve correctly on both grounds**, in a browser: gold-deep on the cream
+> header, gold on the espresso body, gold-deep again on the skip link whose own fill is gold.
+> Plain gold on cream measures **2.46:1**, below the 3:1 an indicator needs — which is
+> precisely why the `.bg-frame` override exists. The test asserts the measurement *and* that
+> the rule is still in the stylesheet, since the measurement alone would pass the day
+> somebody deletes it.
+>
+> **Two real failures, both fixed.** "İletişim sayfasına dön" measured 20px on `/yol-tarifi`
+> and `/telefon` — `chrome.spec.ts` had only ever measured the header, the footer and the
+> FAB, never inside a page, and `/telefon` inherited it by being written from the other
+> file's pattern. Nothing had checked 200% text scaling or that pinch-zoom is unblocked
+> either; both are asserted now, the second because the Next docs show
+> `maximumScale: 1, userScalable: false` in the same example as fields this site does set.
+>
+> **One thing measured and deliberately not graded.** The hairlines are `line-dark` at
+> **1.30:1** on espresso and `line-light` at **1.18:1** on cream, far below 3:1. Not a
+> failure — D11 separates sections by spacing first and treats the rule as a refinement —
+> but whether they survive a phone in daylight is §13 risk 4 and needs real hardware: **4.2**.
+>
+> **`prefers-reduced-data` could not be tested here, and that is a fact about Chrome rather
+> than about this site.** Chrome parses the feature but never matches it;
+> `page.emulateMedia({ reducedData: "reduce" })` runs clean and leaves `matches` false,
+> because no user-facing setting was ever shipped behind it. The flag that does fire for a
+> visitor with Data Saver on is `navigator.connection.saveData`, which `HeroCoin` reads and
+> which **is** tested, by stubbing it before any script runs. The media query itself is 4.2's
+> to confirm, on a real Android.
+
 ## 8 · Repo hygiene
 
 > **This section is verify-and-tidy, not build.** Everything below except the last line was
