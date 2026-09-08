@@ -65,8 +65,8 @@ export const metadata: Metadata = {
      here by someone typing carefully rather than importing. */
   title: `${shop.name} | ${phoneDisplay} | Kapaklı Kuyumcu`,
   description:
-    `${shop.founded} yılından beri Kapaklı'da. Altın, pırlanta ve özel ` +
-    `tasarım takılar. ${addressOneLine}. Tel: ${phoneDisplay}`,
+    `${shop.founded} yılından beri Kapaklı'da. Altın set, bilezik, küpe, ` +
+    `yüzük ve özel tasarım takılar. ${addressOneLine}. Tel: ${phoneDisplay}`,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",

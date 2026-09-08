@@ -85,11 +85,6 @@ export const FILLER = {
    * (category.spec asserts the mention; the real intros carried the same
    * rule for local search intent). */
   categoryIntro: {
-    pirlanta:
-      "Işığı en çok seven taş, pırlantadır; kesimi ve berraklığı yan yana " +
-      "görmeden karar vermeyin. Kapaklı'daki mağazamızda taşı elinize alıp " +
-      "büyüteç altında inceleyebilir, seçenekleri gönül rahatlığıyla " +
-      "karşılaştırabilirsiniz.",
     "altin-seti":
       "Düğünün, nişanın ve özel günlerin başköşesinde altın seti oturur. " +
       "Bilezik, kolye, küpe ve yüzüğü uyumlu bir bütün hâlinde, gramajıyla " +
@@ -99,9 +94,9 @@ export const FILLER = {
       "küpesinden inceliğiyle öne çıkan modellere kadar geniş bir yelpaze " +
       "sunuyoruz. Kulağınıza uygun olanı Kapaklı'daki mağazamızda deneyerek " +
       "seçebilirsiniz.",
-    "tek-tas-modelleri":
-      "Tek taş çoğu zaman bir söz verilirken alınır; montürün yüksekliği ve " +
-      "tırnak işçiliği görünümü baştan değiştirir. Farklı karat ve montür " +
+    yuzuk:
+      "Yüzük çoğu zaman bir söz verilirken alınır; montürün yüksekliği ve " +
+      "tırnak işçiliği görünümü baştan değiştirir. Sarı ve beyaz altın " +
       "seçeneklerini Kapaklı'daki vitrinimizde yan yana görüp gönlünüze göre " +
       "seçin.",
     "ozel-tasarim-takilar":

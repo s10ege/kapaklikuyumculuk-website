@@ -79,9 +79,12 @@ The original Turkish copy is preserved in [`docs/original-copy.md`](docs/origina
 24 rules in `next.config.ts`, verified against the 309 URLs in `docs/old-urls.txt`.
 
 - Every old path returns **301** with the correct `location`.
-- The reclaimed paths — `/urunler/pirlanta`, `/urunler/ozel-tasarim-takilar`, `/galeri`,
+- The reclaimed paths — `/urunler`, `/urunler/ozel-tasarim-takilar`, `/galeri`,
   `/hakkimizda`, `/iletisim` — return **200, not 301**. This is the check that protects the
   domain's index history.
+- **No chains.** Every source reaches a 200 in one hop. `/urunler/pirlanta` and
+  `/urunler/tek-tas-modelleri` became redirect sources on 2026-09-08 when the categories
+  were restructured, so any rule still aimed at either one is a two-hop chain.
 - The deliberate 404s stay 404: `/wp-admin*`, `/wp-login.php*`, `/wp-content/*`,
   `/author/*`, `/category/*`, `/?p=*`, `/anasayfa2`, `/slide-types/*`.
 - **`robots.txt` must not block the old paths.** A blocked URL is never crawled, so Google
@@ -104,8 +107,10 @@ end. Proven locally here; proven live in `FINAL.md`.
   currently nothing, so every WhatsApp share of the link looks broken.
 - `sitemap.ts` regenerated from the folder-driven catalogue, so a new product needs no
   sitemap edit. **Drop the `/studio` disallow** — there is no Studio.
-- Targets stay local: **`kapaklı kuyumcu`, `tekirdağ pırlanta`, `kapaklı altın`**. Not
-  `pırlanta yüzük` — that is competing nationally against chains with budgets.
+- Targets stay local: **`kapaklı kuyumcu`, `kapaklı altın`, `tekirdağ altın seti`**. Not
+  `altın bilezik` on its own — that is competing nationally against chains with budgets.
+  (`tekirdağ pırlanta` was a target until 2026-09-08. The pırlanta category was retired —
+  the pieces are white gold — so the shop no longer competes on a word it cannot back.)
 
 ## 6 · Mobile — adaptation and verification
 

@@ -43,8 +43,8 @@ export function Footer() {
             {/* gold-deep — the on-cream gold; plain gold measures 2.46:1 here. */}
             <div className="mt-4 h-px w-11 bg-gold-deep" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
-              {shop.founded} yılından beri Kapaklı&apos;da. Altın, pırlanta ve
-              özel tasarım takılar; {shop.claim}.
+              {shop.founded} yılından beri Kapaklı&apos;da. Altın set, bilezik,
+              küpe, yüzük ve özel tasarım takılar; {shop.claim}.
             </p>
           </div>
 

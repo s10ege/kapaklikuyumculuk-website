@@ -20,8 +20,8 @@ import { getCategories, getProducts, pageTitle } from "@/lib/content";
 export const metadata: Metadata = {
   title: pageTitle("Galeri"),
   description:
-    "Mağazamızdan altın, pırlanta ve özel tasarım takı fotoğrafları. " +
-    "Kapaklı / Tekirdağ.",
+    "Mağazamızdan altın set, bilezik, küpe, yüzük ve özel tasarım takı " +
+    "fotoğrafları. Kapaklı / Tekirdağ.",
   alternates: { canonical: "/galeri" },
 };
 

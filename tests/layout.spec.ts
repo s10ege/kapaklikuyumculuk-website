@@ -12,7 +12,7 @@ const WIDTHS = [360, 390, 768, 1440] as const;
 const ROUTES = [
   "/",
   "/urunler",
-  "/urunler/pirlanta",
+  "/urunler/yuzuk",
   "/galeri",
   "/hizmetler",
   "/hakkimizda",

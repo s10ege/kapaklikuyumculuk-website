@@ -5,10 +5,9 @@ import { test, expect } from "@playwright/test";
  * CTA alive. */
 
 const CATEGORY_NAMES = [
-  "Pırlanta",
-  "Altın Seti",
+  "Altın Setleri",
   "Küpe Modelleri",
-  "Tek Taş Modelleri",
+  "Yüzük",
   "Özel Tasarım Takılar",
 ];
 

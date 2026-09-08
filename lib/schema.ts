@@ -31,9 +31,9 @@ export function jewelryStoreSchema() {
     name: shop.name,
     legalName: shop.legalName,
     description:
-      `${shop.founded} yılında Kapaklı'da kurulan ${shop.name}; altın, ` +
-      "pırlanta ve özel tasarım takıları güvene ve dürüstlüğe dayalı hizmet " +
-      "anlayışıyla sunar.",
+      `${shop.founded} yılında Kapaklı'da kurulan ${shop.name}; altın set, ` +
+      "bilezik, küpe, yüzük ve özel tasarım takı satar, sipariş üzerine " +
+      "üretir ve altın alım–satımı yapar.",
     url: shop.url,
     telephone: `+${contact.phone.value}`,
     foundingDate: String(shop.founded),

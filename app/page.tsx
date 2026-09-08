@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { CategoryTiles } from "@/components/CategoryTiles";
+import { AllProductsLink, CategoryTiles } from "@/components/CategoryTiles";
 import { ContactButton } from "@/components/ContactButton";
 import { HeroCoin } from "@/components/HeroCoin";
 import { ProductGallery } from "@/components/ProductGallery";
@@ -110,6 +110,9 @@ export default function Home() {
           <div className="mt-10">
             <CategoryTiles categories={categories} />
           </div>
+
+          {/* The retired "Tüm Ürünler" tile's job, as a line of text. */}
+          <AllProductsLink className="mt-8" />
         </div>
       </section>
 

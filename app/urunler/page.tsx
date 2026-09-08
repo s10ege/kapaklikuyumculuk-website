@@ -15,8 +15,8 @@ import { getCategories, pageTitle } from "@/lib/content";
 export const metadata: Metadata = {
   title: pageTitle("Ürünlerimiz"),
   description:
-    "Pırlanta, altın seti, küpe, tek taş ve özel tasarım takı " +
-    "koleksiyonlarımız. Kapaklı / Tekirdağ.",
+    "Altın seti, küpe, yüzük ve özel tasarım takı koleksiyonlarımız. " +
+    "Kapaklı / Tekirdağ.",
   alternates: { canonical: "/urunler" },
 };
 
@@ -41,14 +41,11 @@ export default function ProductsPage() {
             sipariş üzerine üretim de yapıyoruz.
           </p>
 
-          {/* No "Tüm Ürünler" tile here: this is that page. The ask-cell
-              completes the six-cell grid instead (1.5 review, C4). */}
+          {/* Four tiles, nothing else. The ask-cell that used to complete a
+              six-cell grid retired with the fifth category — four divides
+              evenly, so there is no hole left for a filler tile to plug. */}
           <div className="mt-10">
-            <CategoryTiles
-              categories={categories}
-              showAllTile={false}
-              showAskTile
-            />
+            <CategoryTiles categories={categories} />
           </div>
         </div>
       </section>

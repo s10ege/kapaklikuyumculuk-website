@@ -36,11 +36,10 @@ till, no stray tools. Inconsistency between sittings is now the single biggest q
 
 ```
 <kategori-slug>_<parca-adi>_<nn>.jpg
-pirlanta_tektas-yuzuk_01.jpg
+yuzuk_baget-yuzuk_01.jpg
 ```
 
-Slugs: `pirlanta` · `altin-seti` · `kupe-modelleri` · `tek-tas-modelleri` ·
-`ozel-tasarim-takilar`. Several files sharing a piece name are **one product seen from
+Slugs: `altin-seti` · `kupe-modelleri` · `yuzuk` · `ozel-tasarim-takilar`. Several files sharing a piece name are **one product seen from
 several angles**, not several products.
 
 ## Folders

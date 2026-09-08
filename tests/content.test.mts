@@ -15,16 +15,19 @@ import {
 /* Slugs are published URLs (§4)                                       */
 /* ------------------------------------------------------------------ */
 
-/* This list is not a preference — it is the URL strategy. `/urunler/pirlanta`
- * and `/urunler/ozel-tasarim-takilar` are already in Google's index and are
- * being reclaimed as live pages; the other three receive 301s from `/urun/*`.
- * If this test fails, a redirect has to be added to vercel.json before the
- * slug changes, or the index history is lost. */
+/* This list is not a preference — it is the URL strategy.
+ * `/urunler/ozel-tasarim-takilar` is already in Google's index and is being
+ * reclaimed as a live page; the others receive 301s from `/urun/*`. If this
+ * test fails, a redirect has to be added to next.config.ts before the slug
+ * changes, or the index history is lost.
+ *
+ * Four since 2026-09-08. `pirlanta` was retired (its pieces are white gold,
+ * not diamond) and `tek-tas-modelleri` became `yuzuk`; both old paths now 301
+ * to `/urunler/yuzuk`, asserted in tests/redirects.spec.ts. */
 const PUBLISHED_SLUGS = [
-  "pirlanta",
   "altin-seti",
   "kupe-modelleri",
-  "tek-tas-modelleri",
+  "yuzuk",
   "ozel-tasarim-takilar",
 ];
 
@@ -43,6 +46,14 @@ test("getCategory finds each slug and rejects unknown ones", () => {
     assert.equal(getCategory(slug)?.slug, slug);
   }
   assert.equal(getCategory("yuzuk-modelleri"), undefined);
+});
+
+test("the retired slugs no longer resolve to a category", () => {
+  /* They must 404 through the app and 301 through next.config.ts — never come
+   * back as a second live page holding the same rings as /urunler/yuzuk. */
+  for (const slug of ["pirlanta", "tek-tas-modelleri"]) {
+    assert.equal(getCategory(slug), undefined, `${slug} is retired`);
+  }
 });
 
 test("categories come back in display order", () => {
@@ -105,8 +116,8 @@ test("descriptions stay inside a sensible meta length", () => {
 
 test("titles keep the template the old site was indexed under", () => {
   assert.equal(
-    pageTitle("Pırlanta Modelleri"),
-    "Pırlanta Modelleri - Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı",
+    pageTitle("Yüzük Modelleri"),
+    "Yüzük Modelleri - Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı",
   );
 });
 

@@ -20,18 +20,38 @@ import type { NextConfig } from "next";
 
    THE RULE THAT MATTERS MOST
    §4's insight is that a live page at an already-indexed address is worth far
-   more than a 301. So /urunler, /urunler/pirlanta, /urunler/ozel-tasarim-takilar,
-   /galeri, /hakkimizda and /iletisim are NOT redirected — they are real pages
-   now, and their redirects were deliberately deleted from the holding page's
-   map. A test asserts each returns 200 rather than 301.
+   more than a 301. So /urunler, /urunler/ozel-tasarim-takilar, /galeri,
+   /hakkimizda and /iletisim are NOT redirected — they are real pages now, and
+   their redirects were deliberately deleted from the holding page's map. A
+   test asserts each returns 200 rather than 301.
+
+   /urunler/pirlanta was on that list until 2026-09-08. It is a 301 now because
+   the category itself is gone, not because the path was given up: a 301 to the
+   page that actually holds its pieces is the best available answer once the
+   page it named no longer exists. This is the only reclaimed path ever to move
+   back into the redirect map, and it needed the category restructure to
+   justify it.
 --------------------------------------------------------------------------- */
 
 const CATEGORY = {
-  pirlanta: "/urunler/pirlanta",
   altinSeti: "/urunler/altin-seti",
   kupe: "/urunler/kupe-modelleri",
-  tekTas: "/urunler/tek-tas-modelleri",
+  yuzuk: "/urunler/yuzuk",
   ozelTasarim: "/urunler/ozel-tasarim-takilar",
+} as const;
+
+/* Retired 2026-09-08 — see the note in lib/content.ts. Both were live category
+   pages, both are in Google's index, and both now 301 to /urunler/yuzuk.
+
+   NOTHING may point at these two paths as a destination. A redirect landing on
+   a redirect costs a hop of PageRank and, worse, is the exact shape that hides
+   a broken chain: every URL still resolves, so the site looks fine while every
+   old link takes two round trips. The `permanent: true` rules below therefore
+   name CATEGORY.yuzuk directly, and tests/redirects.spec.ts asserts that every
+   source in this file reaches a 200 in exactly one hop. */
+const RETIRED = {
+  pirlanta: "/urunler/pirlanta",
+  tekTas: "/urunler/tek-tas-modelleri",
 } as const;
 
 const nextConfig: NextConfig = {
@@ -76,14 +96,28 @@ const nextConfig: NextConfig = {
          /urun/pirlanta-yuzukler, /urun/yuzuk-modelleri and /urunler/altin. */
       { source: "/urun/altin-seti", destination: CATEGORY.altinSeti, permanent: true },
       { source: "/urun/kupe-modelleri", destination: CATEGORY.kupe, permanent: true },
-      { source: "/urun/tek-tas-modelleri", destination: CATEGORY.tekTas, permanent: true },
+      { source: "/urun/tek-tas-modelleri", destination: CATEGORY.yuzuk, permanent: true },
       { source: "/urun/ozel-tasarim-takilar", destination: CATEGORY.ozelTasarim, permanent: true },
-      { source: "/urun/pirlanta-yuzukler", destination: CATEGORY.pirlanta, permanent: true },
+      { source: "/urun/pirlanta-yuzukler", destination: CATEGORY.yuzuk, permanent: true },
       /* Generic "ring models" — no single category is the right answer, so it
          goes to the index rather than guessing. */
       { source: "/urun/yuzuk-modelleri", destination: "/urunler", permanent: true },
       /* The old category listing for gold, archived 2017. */
       { source: "/urunler/altin", destination: CATEGORY.altinSeti, permanent: true },
+
+      /* ---- Retired category pages (2026-09-08) ---------------------------
+         These two were live pages that Google indexed, so they are the most
+         valuable sources in this file — a visitor arriving on either one came
+         from a real search result. They go to the page that now holds their
+         contents: /urunler/pirlanta's rings and /urunler/tek-tas-modelleri's
+         rings are all in /urunler/yuzuk, and the su yolu takımı that was the
+         only non-ring in pirlanta is in /urunler/altin-seti.
+
+         The su yolu takımı is the one thing this loses: someone who had
+         bookmarked pirlanta for it lands on rings. One destination has to be
+         picked, and five of the six pieces went to yuzuk. */
+      { source: RETIRED.pirlanta, destination: CATEGORY.yuzuk, permanent: true },
+      { source: RETIRED.tekTas, destination: CATEGORY.yuzuk, permanent: true },
 
       /* Anything else under /urun/ lands on the catalogue rather than a 404.
          Must come after the specific rules above: first match wins. */

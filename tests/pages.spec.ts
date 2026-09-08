@@ -5,10 +5,9 @@ import { getProducts } from "../lib/content.ts";
 /* Gates for iterations 10–12 of plan.md — the remaining pages. */
 
 const CATEGORY_NAMES = [
-  "Pırlanta",
-  "Altın Seti",
+  "Altın Setleri",
   "Küpe Modelleri",
-  "Tek Taş Modelleri",
+  "Yüzük",
   "Özel Tasarım Takılar",
 ];
 
@@ -28,7 +27,7 @@ test.describe("/urunler", () => {
     ).toBeVisible();
   });
 
-  test("lists all five categories and drops the Tüm Ürünler tile", async ({
+  test("lists all four categories and carries no filler tile", async ({
     page,
   }) => {
     await page.goto("/urunler");
@@ -36,12 +35,20 @@ test.describe("/urunler", () => {
 
     for (const name of CATEGORY_NAMES) {
       await expect(
-        main.getByRole("link", { name: new RegExp(name) }),
+        main.getByRole("link", { name: new RegExp(name) }).first(),
       ).toBeVisible();
     }
 
-    // This page is "all products", so the tile pointing here would be circular.
+    const tiles = main.locator('ul li a[href^="/urunler/"]');
+    await expect(tiles).toHaveCount(4);
+
+    // This page is "all products", so the tile pointing here would be circular
+    // — and the ask-cell that used to complete a six-cell grid retired with the
+    // fifth category, because four leaves no hole to plug.
     await expect(page.getByRole("link", { name: /Tüm Ürünler/ })).toHaveCount(0);
+    await expect(
+      main.getByRole("link", { name: /Aradığınız burada yoksa/ }),
+    ).toHaveCount(0);
   });
 });
 

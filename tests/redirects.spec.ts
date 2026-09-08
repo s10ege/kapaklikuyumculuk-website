@@ -17,7 +17,6 @@ import { test, expect } from "@playwright/test";
  * carries has been thrown away. Two of them are confirmed still indexed. */
 const RECLAIMED = [
   "/urunler",
-  "/urunler/pirlanta",
   "/urunler/ozel-tasarim-takilar",
   "/galeri",
   "/hakkimizda",
@@ -39,16 +38,25 @@ for (const path of RECLAIMED) {
 /* ------------------------------------------------------------------ */
 
 const REDIRECTS: [from: string, to: string][] = [
-  // §4's table
+  // §4's table. /urun/tek-tas-modelleri points straight at /urunler/yuzuk —
+  // NOT at /urunler/tek-tas-modelleri, which is itself a redirect now. A
+  // redirect to a redirect is the shape that hides a broken chain.
   ["/urun/altin-seti", "/urunler/altin-seti"],
   ["/urun/kupe-modelleri", "/urunler/kupe-modelleri"],
-  ["/urun/tek-tas-modelleri", "/urunler/tek-tas-modelleri"],
+  ["/urun/tek-tas-modelleri", "/urunler/yuzuk"],
 
   // Indexed product paths §4's table missed, found in docs/old-urls.txt
   ["/urun/ozel-tasarim-takilar", "/urunler/ozel-tasarim-takilar"],
-  ["/urun/pirlanta-yuzukler", "/urunler/pirlanta"],
+  ["/urun/pirlanta-yuzukler", "/urunler/yuzuk"],
   ["/urun/yuzuk-modelleri", "/urunler"],
   ["/urunler/altin", "/urunler/altin-seti"],
+
+  /* Category pages retired 2026-09-08. These two were live, indexed pages —
+   * the most valuable sources in this file, because a visitor arriving on
+   * either came from a real search result. They go to the page that now holds
+   * their rings. */
+  ["/urunler/pirlanta", "/urunler/yuzuk"],
+  ["/urunler/tek-tas-modelleri", "/urunler/yuzuk"],
 
   // Unknown product paths fall back to the catalogue rather than 404
   ["/urun/bilinmeyen-bir-model", "/urunler"],
@@ -85,6 +93,37 @@ for (const [from, to] of REDIRECTS) {
       308,
     );
     expect(response.headers()["location"]).toBe(to);
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/* No chains: one hop, then a 200                                      */
+/* ------------------------------------------------------------------ */
+
+/* The assertions above pin each source to its Location header, which proves
+ * the first hop is right and says nothing about where that hop lands. A
+ * redirect pointing at another redirect satisfies every one of them while
+ * costing an extra round trip on every old link — and it is invisible, because
+ * the visitor still arrives somewhere sensible.
+ *
+ * This is the gate that catches it: follow one redirect, and what is on the
+ * other side must be a live page. It became necessary on 2026-09-08, when
+ * /urunler/pirlanta and /urunler/tek-tas-modelleri turned from destinations
+ * into sources and every rule that named them had to be repointed. */
+for (const [from] of REDIRECTS) {
+  test(`${from} reaches a 200 in exactly one hop`, async ({ request }) => {
+    const first = await request.get(from, { maxRedirects: 0 });
+    expect(first.status(), `${from} should redirect`).toBe(308);
+
+    const location = first.headers()["location"];
+    expect(location, `${from} has no Location header`).toBeTruthy();
+
+    const second = await request.get(location as string, { maxRedirects: 0 });
+    expect(
+      second.status(),
+      `${from} → ${location} → ${second.status()}: that is a chain, not a hop. ` +
+        `Repoint ${from} at the final destination.`,
+    ).toBe(200);
   });
 }
 

@@ -34,7 +34,7 @@ test("arrow keys step through the category and wrap", async ({ page }) => {
   await page.keyboard.press("ArrowRight");
   await expect(dialog.getByText("2 / 6")).toBeVisible();
   await expect(
-    dialog.getByRole("heading", { name: "Tek Taş Pırlanta Yüzük" }),
+    dialog.getByRole("heading", { name: "Beyaz Altın Yüzük" }),
   ).toBeVisible();
 
   // Wrapping backwards from the first item must not dead-end.

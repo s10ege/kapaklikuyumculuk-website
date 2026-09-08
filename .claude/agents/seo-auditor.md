@@ -46,8 +46,10 @@ pass — report the exact diff.
    and no dev route. `robots.txt` must **not** block old paths — a blocked URL is never
    crawled, so Google never sees the 301 and never drops it. No `/studio` disallow; there
    is no CMS.
-8. **Keyword targets** stay local: `kapaklı kuyumcu`, `tekirdağ pırlanta`, `kapaklı altın`.
-   Flag any copy drifting toward national terms like `pırlanta yüzük`.
+8. **Keyword targets** stay local: `kapaklı kuyumcu`, `kapaklı altın`,
+   `tekirdağ altın seti`. Flag any copy drifting toward national terms. Flag any use of
+   `pırlanta` as a claim about stock: the category was retired 2026-09-08 because the
+   pieces are white gold, not diamond.
 
 ## Out of scope
 

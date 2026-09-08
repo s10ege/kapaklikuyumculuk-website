@@ -83,5 +83,7 @@ Turkish. Placeholder copy is **Turkish filler, never Latin lorem ipsum**, so tha
 `docs/original-copy.md`; two lines in it are load-bearing — the 2000 founding claim
 (*ilçenin ilk kuyumcusu*) and the weighing-on-the-counter promise in Altın Alım–Satım.
 
-Keyword targets are local: `kapaklı kuyumcu`, `tekirdağ pırlanta`, `kapaklı altın`.
-Not `pırlanta yüzük` — that competes nationally against chains.
+Keyword targets are local: `kapaklı kuyumcu`, `kapaklı altın`, `tekirdağ altın seti`.
+Not `altın bilezik` on its own — that competes nationally against chains. `tekirdağ
+pırlanta` was a target until 2026-09-08, when the pırlanta category was retired: the
+pieces are white gold, and the shop does not compete on a word it cannot back.

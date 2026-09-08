@@ -34,8 +34,8 @@ const FIXTURES: Product[] = [
   },
   {
     id: "f2",
-    name: "Tek Taş Pırlanta Yüzük",
-    category: "tek-tas-modelleri",
+    name: "Beyaz Altın Yüzük",
+    category: "yuzuk",
     images: [PLACEHOLDER.urun],
     note: "Sipariş üzerine üretilir",
     order: 2,
@@ -58,7 +58,7 @@ const FIXTURES: Product[] = [
   },
   {
     id: "f5",
-    name: "Pırlanta Halka Küpe",
+    name: "Taşlı Halka Küpe",
     category: "kupe-modelleri",
     images: [PLACEHOLDER.urun],
     spec: "18 ayar · 4,75 gr",
@@ -106,10 +106,10 @@ export default function GridPage() {
 
         <div className="mt-14 border-b border-line-dark pb-3">
           <p className="text-label uppercase text-muted">
-            Boş durum — lansmanda beş kategoride de görünen ekran
+            Boş durum — kategorisi henüz fotoğraflanmamışken görünen ekran
           </p>
         </div>
-        <EmptyState subject="Pırlanta" className="mt-6" />
+        <EmptyState subject="Yüzük" className="mt-6" />
       </div>
     </main>
   );

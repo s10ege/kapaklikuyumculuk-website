@@ -49,13 +49,13 @@ optional. Scale shots on a hand are a phase-two nicety.
 **File naming** — this feeds the pipeline directly:
 
 ```
-pirlanta_tektas-yuzuk_01.jpg
+yuzuk_baget-yuzuk_01.jpg
 altin-seti_burma-bilezik_01.jpg
 kupe-modelleri_halka-kupe_01.jpg
 ```
 
-Category slug, piece, number. The five published slugs are `pirlanta`, `altin-seti`,
-`kupe-modelleri`, `tek-tas-modelleri`, `ozel-tasarim-takilar`.
+Category slug, piece, number. The four published slugs are `altin-seti`,
+`kupe-modelleri`, `yuzuk`, `ozel-tasarim-takilar`. *(Five until 2026-09-08 — see §5.)*
 
 **How many.** No minimum is set — decided as we go. Below roughly six pieces a category
 still reads as empty, and in that case the `Yakında` panel is the more honest state; it
@@ -146,18 +146,18 @@ not through them.
 **No CMS.** The catalogue is folder-driven:
 
 ```
-public/urunler/pirlanta/tektas-yuzuk_01.webp
+public/urunler/yuzuk/baget-yuzuk_01.webp
 public/urunler/altin-seti/burma-bilezik_01.webp
 ```
 
 The build reads the folders. Drop an image in and the product appears in that category, its
-name derived from the filename — `Tek Taş Yüzük` from `tektas-yuzuk`.
+name derived from the filename — `Baget Yuzuk` from `baget-yuzuk`.
 
 Anything a filename cannot carry goes in one small `catalogue.json` beside the folders, and
 only for the products that need it:
 
 ```
-name       "Tek Taş Yüzük"        — the display name
+name       "Baget Yüzük"         — the display name
 spec       "22 ayar · 38.5 gr"   — ayar and gram only
 alt        Turkish alt text, written by hand
 note       a short line under the spec
@@ -166,7 +166,7 @@ order      optional sort override
 ```
 
 **`name` is not optional in practice.** The slug is ASCII, and no transformation restores
-`ş`, `ü` or `ı` — `tektas-yuzuk` cannot become `Tek Taş Yüzük` by rule. A Title-Cased slug is
+`ş`, `ü` or `ı` — `baget-yuzuk` cannot become `Baget Yüzük` by rule. A Title-Cased slug is
 the fallback so a freshly dropped-in image still appears rather than being silently skipped,
 but anything a customer reads gets a real name here.
 

@@ -33,8 +33,8 @@ import { phoneDisplay, shop } from "./config.ts";
 
 export type Category = {
   /** ⚠️ This is a published URL (§4). Changing one after launch means adding a
-   *  301 to vercel.json first — two of these paths are already in Google's
-   *  index and are being reclaimed rather than redirected away. */
+   *  301 to next.config.ts first — several of these paths are already in
+   *  Google's index and are being reclaimed rather than redirected away. */
   slug: string;
   name: string;
   /** <title> */
@@ -85,64 +85,62 @@ export function pageTitle(name: string): string {
 /* Categories                                                          */
 /* ------------------------------------------------------------------ */
 
-/* The five from §2, in display order.
+/* The four from §2, in display order.
+ *
+ * Was five until 2026-09-08. `pirlanta` is gone: its pieces are white gold,
+ * not diamond, and calling them pırlanta in a category name was a claim the
+ * shop cannot stand behind. Its su yolu takımı moved to `altin-seti` and its
+ * five rings to `yuzuk`. `tek-tas-modelleri` became `yuzuk` in the same pass —
+ * the page carries every ring, tek taş or not, so the narrow slug was
+ * describing a subset of its own contents.
+ *
+ * ⚠️ Both retired paths are indexed. `next.config.ts` 301s
+ * `/urunler/pirlanta` and `/urunler/tek-tas-modelleri` to `/urunler/yuzuk`,
+ * and `tests/redirects.spec.ts` asserts every source resolves in one hop.
+ * Do not change a slug here without adding the redirect first.
  *
  * The `intro` is the category's entire search surface — there are no product
  * pages, so this paragraph is what Google reads and what a customer arriving
- * from Instagram actually reads too. During stages 1–2 it renders Turkish
- * FILLER (design.md § Copy); the original real intros are preserved in
- * docs/original-copy.md and Soner's rewrite replaces the FILLER import in
- * stage 3.2, before anything deploys. Each intro (filler included) mentions
- * Kapaklı or Tekirdağ exactly once, where it belongs in the sentence.
+ * from Instagram actually reads too. Each intro mentions Kapaklı or Tekirdağ
+ * exactly once, where it belongs in the sentence.
  *
- * §10 targets local intent — "kapaklı kuyumcu", "tekirdağ pırlanta", "kapaklı
- * altın". Competing nationally on "pırlanta yüzük" against the chains is not
- * winnable and is not attempted.
+ * §10 targets local intent — "kapaklı kuyumcu", "kapaklı altın", "tekirdağ
+ * altın seti". Competing nationally on "pırlanta yüzük" against the chains is
+ * not winnable and is not attempted.
  */
 const CATEGORIES: Category[] = [
   {
-    slug: "pirlanta",
-    name: "Pırlanta",
-    title: pageTitle("Pırlanta Modelleri"),
-    description:
-      "Sertifikalı pırlanta yüzük, kolye ve küpe modelleri. Taşı ışık " +
-      "altında inceleyerek seçin. Kapaklı / Tekirdağ.",
-    intro: FILLER.categoryIntro["pirlanta"],
-    coverImage: PLACEHOLDER.kategori.pirlanta,
-    order: 1,
-  },
-  {
     slug: "altin-seti",
-    name: "Altın Seti",
+    name: "Altın Setleri",
     title: pageTitle("Altın Seti Modelleri"),
     description:
       "Nişan ve düğün için 14, 18 ve 22 ayar altın setleri. Bilezik, " +
       "kolye, küpe ve yüzük bir arada. Kapaklı / Tekirdağ.",
     intro: FILLER.categoryIntro["altin-seti"],
     coverImage: PLACEHOLDER.kategori["altin-seti"],
-    order: 2,
+    order: 1,
   },
   {
     slug: "kupe-modelleri",
     name: "Küpe Modelleri",
     title: pageTitle("Küpe Modelleri"),
     description:
-      "Altın, pırlanta ve gümüş küpe modelleri; halka, sallantılı, çocuk " +
-      "küpesi ve daha fazlası. Kapaklı / Tekirdağ.",
+      "Altın küpe modelleri; halka, sallantılı, mineli ve taşlı. Çocuk " +
+      "küpesi de var. Kapaklı / Tekirdağ.",
     intro: FILLER.categoryIntro["kupe-modelleri"],
     coverImage: PLACEHOLDER.kategori["kupe-modelleri"],
-    order: 3,
+    order: 2,
   },
   {
-    slug: "tek-tas-modelleri",
-    name: "Tek Taş Modelleri",
-    title: pageTitle("Tek Taş Yüzük Modelleri"),
+    slug: "yuzuk",
+    name: "Yüzük",
+    title: pageTitle("Yüzük Modelleri"),
     description:
-      "Tek taş yüzük modelleri. Montür, tırnak sayısı ve karat " +
-      "seçeneklerini karşılaştırın. Kapaklı / Tekirdağ.",
-    intro: FILLER.categoryIntro["tek-tas-modelleri"],
-    coverImage: PLACEHOLDER.kategori["tek-tas-modelleri"],
-    order: 4,
+      "Yüzük modelleri; 14 ve 22 ayar, beyaz altın dahil. Ölçü ayarı " +
+      "dükkânda yapılır. Kapaklı / Tekirdağ.",
+    intro: FILLER.categoryIntro["yuzuk"],
+    coverImage: PLACEHOLDER.kategori["yuzuk"],
+    order: 3,
   },
   {
     slug: "ozel-tasarim-takilar",
@@ -153,7 +151,7 @@ const CATEGORIES: Category[] = [
       "yeni bir parçaya dönüştürün. Kapaklı / Tekirdağ.",
     intro: FILLER.categoryIntro["ozel-tasarim-takilar"],
     coverImage: PLACEHOLDER.kategori["ozel-tasarim-takilar"],
-    order: 5,
+    order: 4,
   },
 ];
 

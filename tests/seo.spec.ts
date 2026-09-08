@@ -80,14 +80,14 @@ test.describe("JewelryStore", () => {
 
 test.describe("category pages", () => {
   test("emit a BreadcrumbList matching the visible trail", async ({ page }) => {
-    await page.goto("/urunler/pirlanta");
+    await page.goto("/urunler/yuzuk");
     const crumbs = await jsonLd(page, "BreadcrumbList");
 
     expect(crumbs).not.toBeNull();
     expect(crumbs.itemListElement).toHaveLength(3);
-    expect(crumbs.itemListElement[2].name).toBe("Pırlanta");
+    expect(crumbs.itemListElement[2].name).toBe("Yüzük");
     expect(crumbs.itemListElement[2].item).toBe(
-      "https://www.kapaklikuyumculuk.com/urunler/pirlanta",
+      "https://www.kapaklikuyumculuk.com/urunler/yuzuk",
     );
   });
 
@@ -98,9 +98,9 @@ test.describe("category pages", () => {
      * structured-data mismatch, not a rich result — and a populated grid
      * missing its ItemList wastes the category's whole search surface. The
      * expected state comes from the same reader the build uses. */
-    const products = getProducts("pirlanta");
+    const products = getProducts("yuzuk");
 
-    await page.goto("/urunler/pirlanta");
+    await page.goto("/urunler/yuzuk");
     const list = await jsonLd(page, "ItemList");
 
     if (products.length === 0) {
@@ -113,21 +113,19 @@ test.describe("category pages", () => {
   });
 
   test("carry their own canonical", async ({ page }) => {
-    await page.goto("/urunler/tek-tas-modelleri");
+    await page.goto("/urunler/yuzuk");
 
     const canonical = await page
       .locator('link[rel="canonical"]')
       .getAttribute("href");
 
-    expect(canonical).toBe(
-      "https://www.kapaklikuyumculuk.com/urunler/tek-tas-modelleri",
-    );
+    expect(canonical).toBe("https://www.kapaklikuyumculuk.com/urunler/yuzuk");
   });
 
   test("keep the title template the old site was indexed under", async ({
     page,
   }) => {
-    await page.goto("/urunler/pirlanta");
+    await page.goto("/urunler/yuzuk");
     await expect(page).toHaveTitle(/0282 717 21 31/);
   });
 });
@@ -145,7 +143,9 @@ test.describe("sitemap and robots", () => {
       "/hizmetler",
       "/hakkimizda",
       "/iletisim",
-      "/urunler/pirlanta",
+      "/urunler/altin-seti",
+      "/urunler/kupe-modelleri",
+      "/urunler/yuzuk",
       "/urunler/ozel-tasarim-takilar",
     ]) {
       expect(xml).toContain(`https://www.kapaklikuyumculuk.com${path}`);
@@ -155,6 +155,10 @@ test.describe("sitemap and robots", () => {
     expect(xml).not.toContain("/urun/");
     expect(xml).not.toContain("/kurumsal");
     expect(xml).not.toContain("/dev/");
+    // Retired 2026-09-08. Listing a URL that 301s asks Google to crawl a
+    // redirect it was about to drop, which is the opposite of the cleanup.
+    expect(xml).not.toContain("/urunler/pirlanta");
+    expect(xml).not.toContain("/urunler/tek-tas-modelleri");
   });
 
   test("robots does not block the old paths", async ({ request }) => {

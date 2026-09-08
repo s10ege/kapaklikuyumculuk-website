@@ -42,10 +42,9 @@ const GLYPHS = "ı İ i I ğ Ğ ş Ş ç Ç ö Ö ü Ü â Â î Î û Û";
 const PANGRAM = "Pijamalı hasta yağız şoföre çabucak güvendi.";
 
 const CATEGORY_NAMES = [
-  "Pırlanta",
-  "Altın Seti",
+  "Altın Setleri",
   "Küpe Modelleri",
-  "Tek Taş Modelleri",
+  "Yüzük",
   "Özel Tasarım Takılar",
 ];
 
@@ -112,7 +111,7 @@ export default function TokensPage() {
           <div className="flex flex-col gap-4">
             <p className="display-lg">Trakya Kapaklı Kuyumculuk</p>
             <p className="display-md">Özel Tasarım Takılar</p>
-            <p className="display-sm">Tek Taş Modelleri</p>
+            <p className="display-sm">Küpe Modelleri</p>
             <p className="display-sm text-gold-soft">
               {GLYPHS}
             </p>
