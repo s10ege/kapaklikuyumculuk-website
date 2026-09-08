@@ -54,6 +54,68 @@ const RETIRED = {
   tekTas: "/urunler/tek-tas-modelleri",
 } as const;
 
+/* The page Content-Security-Policy. See the note beside the header below for
+ * why there is no nonce and what that costs.
+ *
+ * frame-src is the directive doing the most work: /iletisim embeds a keyless
+ * Google Maps iframe, and this pins iframes to that one origin.
+ *
+ * connect-src stays 'self' because Vercel Web Analytics beacons to
+ * /_vercel/insights on the same origin — it needs no third-party allowance,
+ * which is one of the reasons §9 chose it. */
+/* Two allowances that exist ONLY in development, both verified rather than
+ * assumed, and both invisible in production.
+ *
+ * `'unsafe-eval'`: React uses `eval` in development to reconstruct server-side
+ * error stacks — the local CSP guide says so explicitly, and neither React nor
+ * Next uses it in production. Without it, `next dev` serves the HTML, fails to
+ * hydrate, and every interactive test times out at 30s: the lightbox never
+ * opens, the /yol-tarifi forward never fires.
+ *
+ * `va.vercel-scripts.com`: @vercel/analytics loads a debug script from that
+ * origin in development and a same-origin `/_vercel/insights/script.js` in
+ * production — read out of getScriptSrc() in the package, not guessed.
+ *
+ * Both are why the violation sweep against a production build came back clean
+ * while the dev-server e2e suite went red. Production keeps `script-src 'self'`
+ * with no third-party origin at all. */
+const isDev = process.env.NODE_ENV === "development";
+const DEV_SCRIPT = isDev
+  ? " 'unsafe-eval' https://va.vercel-scripts.com"
+  : "";
+
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${DEV_SCRIPT}`,
+  /* 'self' covers the analytics beacon IF it posts to /_vercel/insights on the
+     deployment's own origin, which is what the same-origin script path implies
+     — but the beacon lives inside the remote script and cannot be observed
+     from here, because that script only loads on a real Vercel deployment.
+     FINAL.md 4.2 must confirm analytics actually records a page view. A CSP
+     that blocks the beacon fails SILENTLY: no data, and a site that looks
+     perfect. Same failure class as a blanked map, minus the visible symptom. */
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  /* BOTH origins are required, and the second is not obvious: the embed URL
+     in lib/config.ts is maps.google.com, which 301s to
+     www.google.com/maps/embed. CSP re-checks frame-src against the redirect
+     target, so listing only the URL we actually write would blank the map.
+     Confirmed against a production build — the iframe loads 526x725 with no
+     violation. (The maps.googleapis.com script the embed then pulls is inside
+     a cross-origin frame and is governed by Google's CSP, not ours.) */
+  "frame-src https://www.google.com https://maps.google.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  /* 'self' rather than 'none', to agree exactly with the X-Frame-Options
+     SAMEORIGIN set alongside it. Two headers making different claims about
+     the same thing is how one of them gets "corrected" later. */
+  "frame-ancestors 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 const nextConfig: NextConfig = {
   /* Carried over from the holding page. Archive.org shows the old site used
      trailing slashes (/hakkimizda/, /iletisim/), so Next canonicalises those
@@ -161,6 +223,33 @@ const nextConfig: NextConfig = {
              named explicitly rather than left out: a jeweller's site is
              exactly the kind of page a visitor would not expect to be asked,
              and the map is an iframe that does not need it. */
+          /* Landed report-only, swept every route for violations, then
+             promoted to enforcing in the same pass. The failure mode of getting this
+             wrong is a silently blank map on /iletisim while every other page
+             looks perfect, so it is not a header to land and hope about.
+
+             NO NONCE, and that is forced rather than chosen. The local docs
+             are explicit: "Static pages are generated at build time, when no
+             request or response headers exist — so no nonce can be injected",
+             and nonces "must use dynamic rendering". Hard rule 9 keeps this
+             build fully static, so a nonce would cost every route its ○.
+
+             That leaves 'unsafe-inline' on script-src, which is a real
+             weakness and is worth naming rather than burying: this CSP does
+             not stop an injected inline script. What it does stop is a base
+             tag rewrite, an object/embed, a form posting somewhere else, this
+             site being framed, and — the one that matters most here — any
+             iframe other than Google Maps. Hashes were the alternative and
+             were rejected: Next's inline bootstrap changes content per build,
+             so the hash set would need regenerating on every deploy and would
+             fail closed, blanking the site, the first time somebody forgot.
+
+             Note browsers IGNORE 'unsafe-inline' when a hash or nonce is also
+             present, so the two cannot be combined as a belt-and-braces. */
+          {
+            key: "Content-Security-Policy",
+            value: CSP,
+          },
           {
             key: "Permissions-Policy",
             value:

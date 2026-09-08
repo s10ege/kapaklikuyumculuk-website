@@ -400,10 +400,40 @@ position and impressions over 16 months. That is in `FINAL.md`.
 > routing layer may apply headers to redirects itself, which is 4.2's to check against the
 > live domain** rather than something to guess at from here.
 >
-> The **Content-Security-Policy is deliberately not in that set.** It has to account for the
-> inline JSON-LD, the Maps iframe on `/iletisim`, the analytics script and `_next/image`, and
-> its failure mode is a silently blank map on a page that otherwise looks perfect. Separate
-> pass, landing report-only first.
+> **The Content-Security-Policy landed separately, 2026-09-08** — report-only first, swept
+> for violations across all 13 routes against a production build, then promoted to enforcing
+> in the same pass.
+>
+> **There is no nonce, and that is forced rather than chosen.** The local Next guide is
+> explicit: *"Static pages are generated at build time, when no request or response headers
+> exist — so no nonce can be injected"*, and nonces *"must use dynamic rendering"*. Hard rule
+> 9 keeps every route static, so a nonce would cost the whole build its `○`. Hashes were the
+> alternative and were rejected: Next's inline bootstrap changes content per build, so the
+> hash set would need regenerating on every deploy and would fail closed — blanking the site
+> the first time somebody forgot.
+>
+> **So `script-src` carries `'unsafe-inline'`, and this CSP does not stop an injected inline
+> script.** Worth stating plainly rather than leaving for someone to discover. What it does
+> stop: a base-tag rewrite, an `<object>`/`<embed>`, a form posting somewhere else, this site
+> being framed, and — the one that earns its keep here — any iframe other than Google Maps.
+>
+> **`frame-src` needs both `maps.google.com` and `www.google.com`.** The embed URL in
+> `lib/config.ts` is the first; it **301s** to the second, and CSP re-checks `frame-src`
+> against the redirect target. A policy naming only the URL we write would blank the map.
+>
+> **Two development-only allowances**, both read out of the source rather than guessed:
+> `'unsafe-eval'`, because React uses `eval` in dev to rebuild error stacks, and
+> `va.vercel-scripts.com`, because `@vercel/analytics` loads a debug script from there in dev
+> and a same-origin `/_vercel/insights/script.js` in production. Production keeps
+> `script-src 'self'` with no third-party origin. This is why the production sweep came back
+> clean while the dev-server e2e suite went red — 13 tests, every interactive one, timing out
+> at 30s because the page served but never hydrated.
+>
+> **⚠ One thing 4.2 must verify live.** `connect-src 'self'` covers the analytics beacon only
+> if it posts to the deployment's own origin. The beacon lives inside the remote script,
+> which loads only on a real Vercel deployment, so it cannot be observed from here.
+> **A CSP that blocks the beacon fails silently** — no data, and a site that looks perfect.
+> Same failure class as a blanked map, without the visible symptom.
 
 
 `docs/domain-security-plan.md` is the reference. Landing in this stage: registrar lock and

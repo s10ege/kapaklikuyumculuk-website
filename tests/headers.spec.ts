@@ -76,6 +76,116 @@ test("nothing here blocks the analytics referrer §9 depends on", async ({
   expect(policy).not.toContain("no-referrer");
 });
 
+/* ------------------------------------------------------------------ */
+/* Content-Security-Policy                                             */
+/* ------------------------------------------------------------------ */
+
+test.describe("the page CSP", () => {
+  test("is enforcing, not report-only", async ({ request }) => {
+    const headers = (await request.get("/")).headers();
+
+    expect(headers["content-security-policy"], "no CSP on a page").toBeTruthy();
+    expect(
+      headers["content-security-policy-report-only"],
+      "the report-only header is still set — it was a step, not the destination",
+    ).toBeUndefined();
+  });
+
+  test("names both Google Maps origins, because one redirects to the other", async ({
+    request,
+  }) => {
+    /* The embed URL in lib/config.ts is maps.google.com, which 301s to
+       www.google.com/maps/embed. CSP re-checks frame-src against the redirect
+       target, so a policy listing only the URL we write would blank the map on
+       /iletisim while every other page looked perfect. This is the assertion
+       that would catch somebody "tidying" the duplicate away. */
+    const csp = (await request.get("/")).headers()["content-security-policy"];
+
+    expect(csp).toContain("https://maps.google.com");
+    expect(csp).toContain("https://www.google.com");
+  });
+
+  test("closes the directives a static site can actually close", async ({
+    request,
+  }) => {
+    /* No nonce is possible — the local Next docs are explicit that nonces need
+       dynamic rendering, and hard rule 9 keeps every route static. So
+       script-src carries 'unsafe-inline' and this CSP does NOT stop an
+       injected inline script. These are the directives that do real work here,
+       and the test exists so a future edit cannot quietly drop them and leave
+       a CSP that is all compromise and no protection. */
+    const csp = (await request.get("/")).headers()["content-security-policy"];
+
+    expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain("base-uri 'self'");
+    expect(csp).toContain("form-action 'self'");
+    expect(csp).toContain("frame-ancestors 'self'");
+    expect(csp).toContain("upgrade-insecure-requests");
+  });
+
+  test("agrees with X-Frame-Options rather than contradicting it", async ({
+    request,
+  }) => {
+    /* Two headers making different claims about who may frame this site is how
+       one of them gets "corrected" later, in whichever direction the person
+       happens to read first. */
+    const headers = (await request.get("/")).headers();
+
+    expect(headers["x-frame-options"]).toBe("SAMEORIGIN");
+    expect(headers["content-security-policy"]).toContain(
+      "frame-ancestors 'self'",
+    );
+  });
+
+  test("carries no third-party script origin in a production build", async ({
+    request,
+  }) => {
+    /* The dev server allows 'unsafe-eval' and va.vercel-scripts.com, both
+       genuinely needed there and neither wanted in production. This suite runs
+       against `next dev`, so it can only assert the shape of the exception —
+       that it is conditional at all — rather than the production value.
+       Asserting the production string from here would be a test that passes by
+       describing an environment it is not running in. */
+    const csp = (await request.get("/")).headers()["content-security-policy"];
+    const dev = process.env.NODE_ENV !== "production";
+
+    if (dev) {
+      expect(csp).toContain("'unsafe-eval'");
+      expect(csp).toContain("https://va.vercel-scripts.com");
+    } else {
+      expect(csp).not.toContain("'unsafe-eval'");
+      expect(csp).not.toContain("vercel-scripts.com");
+    }
+  });
+
+  test("the map iframe survives the policy", async ({ page }) => {
+    /* The whole reason this landed report-only first. A CSP that blanks the
+       map looks exactly like a working site on every other page. */
+    const violations: string[] = [];
+    await page.exposeFunction("__csp", (v: string) => violations.push(v));
+    await page.addInitScript(() => {
+      document.addEventListener("securitypolicyviolation", (e) =>
+        (window as unknown as { __csp?: (v: string) => void }).__csp?.(
+          `${e.effectiveDirective} <- ${e.blockedURI}`,
+        ),
+      );
+    });
+
+    await page.goto("/iletisim");
+
+    const frame = page.locator("iframe").first();
+    await expect(frame).toBeVisible();
+
+    /* A cross-origin frame cannot be inspected, so the proof is that a child
+       frame exists on a Google origin and nothing was blocked getting there. */
+    await expect
+      .poll(() => page.frames().length, { timeout: 15_000 })
+      .toBeGreaterThan(1);
+
+    expect(violations, violations.join(" | ")).toEqual([]);
+  });
+});
+
 test("the image CSP is untouched and still separate", async ({ request }) => {
   /* next.config.ts carries a SECOND, unrelated CSP —
      `images.contentSecurityPolicy` — which sandboxes SVGs served through
