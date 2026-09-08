@@ -5,7 +5,6 @@ import { ContactButton } from "@/components/ContactButton";
 import { OpeningHours } from "@/components/OpeningHours";
 import { InstagramIcon, PinIcon } from "@/components/icons";
 import {
-  address,
   addressLines,
   contact,
   hours,
@@ -57,11 +56,12 @@ export default function ContactPage() {
             <h1 className="mt-3 display-md">Bize ulaşın</h1>
             <div className="mt-5 h-px w-11 bg-gold" />
 
-            {/* No .toLowerCase(): "Ziraat Bankası" is a proper noun and keeps
-                its capitals mid-sentence (1.5 review, C5). */}
+            {/* The street belongs to lib/config.ts and to the grid below —
+                naming it here too would be a second copy of the one string
+                this project exists to keep single (tests/source-invariants). */}
             <p className="mt-6 max-w-md leading-relaxed text-muted">
-              Mağazamız {address.landmark.value}nda. Aradığınız modeli önden
-              sorabilir, uygun olup olmadığını öğrenip öyle gelebilirsiniz.
+              Aradığınız modeli önden sorun. Elimizde varsa ayırıp bekletiriz;
+              yoksa ne zaman gelebileceğini söyleriz.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -88,9 +88,6 @@ export default function ContactPage() {
                       </span>
                     ))}
                   </address>
-                  <span className="mt-1 block text-sm text-muted">
-                    {address.landmark.value}
-                  </span>
                 </dd>
               </div>
 

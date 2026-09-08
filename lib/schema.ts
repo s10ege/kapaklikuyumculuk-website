@@ -2,6 +2,8 @@ import {
   address,
   areaServed,
   contact,
+  geo,
+  googleMapsUrl,
   hours,
   instagramUrl,
   shop,
@@ -87,10 +89,20 @@ export function jewelryStoreSchema() {
       addressCountry: address.country,
     },
 
-    /* `geo` is deliberately absent. docs/business-facts.md grades the
-     * coordinates ❌ — sources disagree by roughly 150 m — and asserting a pin
-     * we know might be wrong is worse than asserting none. The address block
-     * above is unambiguous and is what Google will geocode. */
+    /* `geo` was deliberately absent until 2026-09-08: docs/business-facts.md
+     * graded the coordinates ❌, sources disagreed by roughly 150 m, and
+     * asserting a pin we knew might be wrong was worse than asserting none.
+     * These come from the shop's own Google Maps listing, so the pin, the
+     * street number and the place ID all describe the same door — and `hasMap`
+     * points at that listing rather than at a search for it, which is the
+     * difference between naming the place and hoping Google guesses it. */
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: geo.lat,
+      longitude: geo.lng,
+    },
+    hasMap: googleMapsUrl,
+
 
     openingHoursSpecification: openingHoursSpecification(),
 

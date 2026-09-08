@@ -9,7 +9,10 @@ import {
   contact,
   contactCta,
   formatTrPhone,
+  geo,
   getCurrentSeason,
+  googleMapsUrl,
+  googlePlaceId,
   hours,
   instagramUrl,
   phoneAltDisplay,
@@ -149,12 +152,24 @@ test("uses the correct Instagram handle", () => {
 });
 
 test("address matches the canonical block character for character", () => {
-  assert.equal(address.street, "Cumhuriyet Mah., Pınar Bulvarı No: 56/A");
-  assert.equal(addressOneLine.includes("59510 Kapaklı / Tekirdağ"), true);
+  /* This is the string the Google Business Profile will carry. Every comma,
+   * every space and the door letter are part of it — docs/index-cleanup-plan.md
+   * blames exactly this class of difference for the ranking problem. */
+  assert.equal(address.street, "Cumhuriyet Mah., Pınar Bulvarı No: 56/C");
+  assert.equal(
+    address.formatted,
+    "Cumhuriyet Mah., Pınar Bulvarı No: 56/C, 59510 Kapaklı / Tekirdağ",
+  );
+  assert.equal(addressOneLine, address.formatted, "one line, one spelling");
   assert.deepEqual(addressLines, [
-    "Cumhuriyet Mah., Pınar Bulvarı No: 56/A",
+    "Cumhuriyet Mah., Pınar Bulvarı No: 56/C",
     "59510 Kapaklı / Tekirdağ",
   ]);
+});
+
+test("the door number is 56/C, not the 56/A carried from a directory", () => {
+  // The change that made this file's whole premise worth having.
+  assert.ok(!address.formatted.includes("56/A"));
 });
 
 test("uses the post-2012 district and postcode, not Çerkezköy/59500", () => {
@@ -164,9 +179,32 @@ test("uses the post-2012 district and postcode, not Çerkezköy/59500", () => {
   assert.ok(!addressOneLine.includes("59500"));
 });
 
-test("publishes no coordinates, because the sources disagree", () => {
-  assert.ok(!("latitude" in address), "coordinates are graded ❌");
-  assert.ok(!("geo" in address));
+test("publishes the shop's own coordinates, not a geocoded guess", () => {
+  /* Graded ❌ until 2026-09-08 — sources disagreed by ~150 m and the site
+   * published none. These come from the shop's Google Maps listing, so the pin
+   * and the street number describe the same door. The bounds below are Kapaklı;
+   * a transposed lat/lng or a stray digit lands outside them. */
+  assert.ok(geo.lat > 41.3 && geo.lat < 41.36, `lat ${geo.lat} is not Kapaklı`);
+  assert.ok(geo.lng > 27.9 && geo.lng < 28.05, `lng ${geo.lng} is not Kapaklı`);
+  assert.equal(geo.lat, 41.326459);
+  assert.equal(geo.lng, 27.976502);
+});
+
+test("the maps URL names the place rather than searching for it", () => {
+  assert.ok(googleMapsUrl.includes(`place_id:${googlePlaceId}`));
+  assert.ok(!googleMapsUrl.includes("/search"));
+});
+
+test("the Ziraat landmark is gone from the config, in every spelling", () => {
+  /* A landmark is a second address in everything but name, and this project
+   * exists because the shop already has two circulating. It also decays
+   * silently: a branch closes and the site is pointing at a bank that is not
+   * there. Removed 2026-09-08 — do not reintroduce it. */
+  const serialised = JSON.stringify({ address: { ...address }, addressLines });
+  for (const spelling of ["Ziraat", "ziraat", "karşısı", "karşısında"]) {
+    assert.ok(!serialised.includes(spelling), `leaked "${spelling}"`);
+  }
+  assert.ok(!("landmark" in address));
 });
 
 test("has no email address, so no page may offer one", () => {

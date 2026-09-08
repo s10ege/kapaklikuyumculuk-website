@@ -34,21 +34,28 @@ test.describe("JewelryStore", () => {
     expect(shop.name).toBe("Trakya Kapaklı Kuyumculuk");
     expect(shop.telephone).toBe("+902827172131");
     expect(shop.address.streetAddress).toBe(
-      "Cumhuriyet Mah., Pınar Bulvarı No: 56/A",
+      "Cumhuriyet Mah., Pınar Bulvarı No: 56/C",
     );
     expect(shop.address.postalCode).toBe("59510");
     expect(shop.address.addressLocality).toBe("Kapaklı");
     expect(shop.address.addressRegion).toBe("Tekirdağ");
   });
 
-  test("omits geo, because the coordinates are graded ❌", async ({ page }) => {
+  test("carries the pin from the shop's own listing, and links to it", async ({
+    page,
+  }) => {
     await page.goto("/");
     const shop = await jsonLd(page, "JewelryStore");
 
-    /* Sources disagree by ~150 m. Asserting a pin we know may be wrong is worse
-     * than asserting none — Google geocodes the address block instead. */
-    expect(shop.geo).toBeUndefined();
-    expect(shop.latitude).toBeUndefined();
+    /* Absent until 2026-09-08, when the coordinates stopped being ❌ — they
+     * come from the shop's Google Maps listing now, so the pin, the street
+     * number and the place ID describe one door. */
+    expect(shop.geo["@type"]).toBe("GeoCoordinates");
+    expect(shop.geo.latitude).toBe(41.326459);
+    expect(shop.geo.longitude).toBe(27.976502);
+
+    // hasMap names the place; a search URL would ask Google to guess again.
+    expect(shop.hasMap).toContain("place_id:ChIJSQxn1KkptRQRLtfCCLZCYLk");
   });
 
   test("links only accounts that are genuinely ours", async ({ page }) => {

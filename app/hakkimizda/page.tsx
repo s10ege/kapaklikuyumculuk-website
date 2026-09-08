@@ -183,10 +183,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* The landmark composes from config (hard rule 1), not a literal. */}
       <ContactBand
         heading="Uğrayın, tanışalım"
-        body={`${address.landmark.value}ndayız. Bir şey almak zorunda değilsiniz; bakmak da serbest.`}
+        body="Bir şey almak zorunda değilsiniz. Bakmak, sormak, tartıya baktırmak serbest."
       />
     </>
   );

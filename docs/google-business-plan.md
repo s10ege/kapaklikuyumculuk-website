@@ -66,7 +66,7 @@ number of reviews.
 6. **Fix NAP everywhere to one canonical form**, taken from `content/site.ts`:
    ```
    Trakya Kapaklı Kuyumculuk
-   Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+   Cumhuriyet Mah., Pınar Bulvarı No: 56/C
    59510 Kapaklı / Tekirdağ
    0282 717 21 31
    ```

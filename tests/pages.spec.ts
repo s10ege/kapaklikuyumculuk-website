@@ -184,7 +184,7 @@ test.describe("/iletisim", () => {
     const main = page.getByRole("main");
 
     await expect(
-      main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+      main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/C"),
     ).toBeVisible();
     await expect(main.getByText("0282 717 21 31").first()).toBeVisible();
     await expect(main.getByText("0282 717 55 62")).toBeVisible();
@@ -268,7 +268,7 @@ test.describe("404", () => {
     await expect(
       page
         .getByRole("main")
-        .getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+        .getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/C"),
     ).toBeVisible();
   });
 });

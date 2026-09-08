@@ -72,9 +72,6 @@ export function Footer() {
               {addressLines.map((line) => (
                 <span key={line}>{line}</span>
               ))}
-              <span className="text-ink-muted">
-                {address.landmark.value}
-              </span>
               <a
                 href={phoneHref}
                 className="inline-flex min-h-11 items-center text-xl text-gold-deep transition-colors hover:text-ink-text"

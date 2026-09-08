@@ -106,19 +106,51 @@ export const contact = {
  * Kapaklı was part of Çerkezköy until 2012, so many listings still say
  * Çerkezköy and postal code 59500. The correct modern form is below. */
 export const address = {
-  street: "Cumhuriyet Mah., Pınar Bulvarı No: 56/A",
+  /* ✅ Confirmed 2026-09-08. The door number is 56/C — this file said 56/A
+   * until then, carried over from a directory listing. It is the number the
+   * Google Business Profile will use, so it has to be right here first. */
+  street: "Cumhuriyet Mah., Pınar Bulvarı No: 56/C",
   postalCode: "59510",
   locality: "Kapaklı",
   region: "Tekirdağ",
   country: "TR",
 
-  /** 🟡 Instagram bio. Useful to a visitor finding the shop on foot. */
-  landmark: { value: "Ziraat Bankası karşısı", pending: false },
-
-  /* Coordinates are deliberately absent. docs/business-facts.md grades them ❌:
-   * sources disagree by ~150 m. The maps embed keys on the address string
-   * instead, and the JSON-LD omits `geo` rather than asserting a wrong pin. */
+  /** The whole thing, one line, in the canonical spelling. Every other form on
+   *  the site is built from this or from the fields above — never typed. */
+  get formatted(): string {
+    return `${this.street}, ${this.postalCode} ${this.locality} / ${this.region}`;
+  },
 } as const;
+
+/* "Ziraat Bankası karşısı" was here until 2026-09-08, sourced from the
+ * Instagram bio and shown under the address in the footer, on /iletisim, on
+ * /hakkimizda and on the 404.
+ *
+ * It is gone, and not because it was wrong. A landmark is a second address in
+ * everything but name, and this project exists because the shop already has
+ * two addresses circulating. It also decays without telling anyone: branches
+ * close and move, and a jeweller's address that points at a bank which is no
+ * longer there is worse than one that points at nothing. The street number is
+ * exact and the map has a pin now (see `geo` below), which is what the
+ * landmark was standing in for while the coordinates were graded ❌.
+ *
+ * Do not reintroduce it, in any spelling. */
+
+/* ✅ Confirmed 2026-09-08 from the shop's own Google Maps listing.
+ *
+ * docs/business-facts.md graded the coordinates ❌ — sources disagreed by
+ * ~150 m — and the site published none rather than assert a wrong pin. That is
+ * resolved: these come from the listing for "Trakya Kapaklı Kuyumculuk" at
+ * Pınar Blv 56/C, so the pin, the address and the place ID all describe the
+ * same door. The JSON-LD can carry `geo` and `hasMap`, the İletişim embed can
+ * drop to a coordinate pin, and directions can name a destination rather than
+ * a search string. */
+export const geo = { lat: 41.326459, lng: 27.976502 } as const;
+
+export const googlePlaceId = "ChIJSQxn1KkptRQRLtfCCLZCYLk";
+
+/** The place itself, not a search for it — what `hasMap` should point at. */
+export const googleMapsUrl = `https://www.google.com/maps/place/?q=place_id:${googlePlaceId}`;
 
 export const areaServed = ["Kapaklı", "Çerkezköy", "Tekirdağ"] as const;
 
@@ -259,8 +291,10 @@ export const phoneAltDisplay = formatTrPhone(contact.phoneAlt.value);
 
 export const instagramUrl = `https://www.instagram.com/${contact.instagram.value}/`;
 
-/** The full address on one line, for maps queries and meta descriptions. */
-export const addressOneLine = `${address.street}, ${address.postalCode} ${address.locality} / ${address.region}`;
+/** The full address on one line, for maps queries and meta descriptions.
+ *  Kept as a named export because half the site imports it; it is the getter
+ *  above and cannot drift from it. */
+export const addressOneLine: string = address.formatted;
 
 /** Address block as rendered in the footer and on İletişim. */
 export const addressLines = [

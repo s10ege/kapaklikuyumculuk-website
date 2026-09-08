@@ -19,10 +19,10 @@ Updated 2026-08-03. Turkish version for the family: **`aile-sorulari.md`**
 
 ## 🔴 Blocking — before any listing or page goes live
 
-- [ ] **Opening hours** — 09:00–20:00 (what Google shows) or 08:00–19:00 (2 sources)?
-      Ramazan/bayram variations?
+- [ ] **Ramazan/bayram hour variations?** The seasonal pattern itself is resolved
+      (see below); religious-holiday hours are not, and the site currently claims
+      nothing about them.
 - [ ] **Is 0282 717 55 62 still in use?** And which number should be the primary one?
-- [ ] **Exact door number** — 56 or 56/A?
 - [ ] **Whose Google account holds the profile?** Former partner, old developer, or a
       family member? Google will show a masked version of the email when you submit
       the ownership request — that's often enough to identify them.
@@ -64,9 +64,23 @@ Updated 2026-08-03. Turkish version for the family: **`aile-sorulari.md`**
 
 ## ✅ Resolved
 
+- ~~Exact door number — 56 or 56/A?~~ → **56/C**, confirmed by Soner 2026-09-08 and
+  published. Note the Çerkezköy TSO registry says 56/A; that entry is quoted as-is in
+  `business-facts.md` rather than corrected, because its value as evidence depends on
+  being an accurate quotation.
+- ~~Opening hours — 09:00–20:00 or 08:00–19:00?~~ → **Both were half-right.** The
+  closing time is seasonal: 09:00–19:00 May–September, 09:00–18:00 October–April,
+  Monday–Saturday, closed Sunday. The site publishes both seasons all year rather than
+  computing one, because it is statically generated.
+- ~~Coordinates disagree by ~150 m~~ → **41.326459, 27.976502**, from the shop's own
+  Google Maps listing, with place ID `ChIJSQxn1KkptRQRLtfCCLZCYLk`. The JSON-LD carries
+  `geo` and `hasMap` as of 2026-09-08.
+- ~~"Ziraat Bankası karşısı" — keep as a landmark?~~ → **Retired 2026-09-08.** A
+  landmark is a second address in everything but name, and it decays silently when the
+  branch moves.
 - ~~Two branches?~~ → **One shop.** There was a partner; the shops were divided. The
   Atatürk Mahallesi location is now the former partner's, under a different name.
-  **Your shop is Pınar Bulvarı No: 56/A.**
+  **Your shop is Pınar Bulvarı No: 56/C.**
 - ~~Which phones are ours?~~ → **0282 717 21 31** (primary) and **0282 717 55 62**.
   The 717 85 88 and 717 39 87 numbers belong to the former partner's shop and must be
   scrubbed from listings that still show them under your name.

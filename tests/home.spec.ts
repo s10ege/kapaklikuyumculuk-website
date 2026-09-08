@@ -116,7 +116,7 @@ test("contact block shows the canonical address, hours and directions", async ({
 
   const main = page.getByRole("main");
   await expect(
-    main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/A"),
+    main.getByText("Cumhuriyet Mah., Pınar Bulvarı No: 56/C"),
   ).toBeVisible();
   await expect(main.getByText("59510 Kapaklı / Tekirdağ")).toBeVisible();
   /* Both seasons, always — the page is static, so publishing only the

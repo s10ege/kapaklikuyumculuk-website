@@ -7,7 +7,6 @@ import { OpeningHours } from "@/components/OpeningHours";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ArrowRightIcon, PinIcon } from "@/components/icons";
 import {
-  address,
   addressLines,
   mapsSearchUrl,
   phoneDisplay,
@@ -226,9 +225,6 @@ export default function Home() {
                     {line}
                   </span>
                 ))}
-                <span className="mt-1 block text-sm text-muted">
-                  {address.landmark.value}
-                </span>
               </dd>
             </div>
 

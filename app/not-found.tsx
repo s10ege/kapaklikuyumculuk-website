@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowRightIcon, PinIcon } from "@/components/icons";
 import {
   addressLines,
-  address,
   mapsSearchUrl,
   phoneDisplay,
   phoneHref,
@@ -72,9 +71,6 @@ export default function NotFound() {
                 {line}
               </span>
             ))}
-            <span className="mt-1 block text-muted/80">
-              {address.landmark.value}
-            </span>
           </address>
 
           <a

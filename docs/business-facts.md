@@ -30,12 +30,13 @@ This reframes the whole cleanup: the job isn't to reconcile two branches, it's t
 |---|---|---|
 | Trade name | **Kapaklı Kuyumculuk** | ✅ |
 | Legal entity | Trakya Kapaklı Kuyumculuk Emlak İnşaat ... Sanayi Ltd. Şti. | ✅ |
-| **Address** | **Cumhuriyet Mah., Pınar Bulvarı No: 56/A, 59510 Kapaklı / Tekirdağ** | ✅ 4+ sources incl. Çerkezköy TSO |
-| Landmark | Ziraat Bankası karşısı | 🟡 Instagram bio |
+| **Address** | **Cumhuriyet Mah., Pınar Bulvarı No: 56/C, 59510 Kapaklı / Tekirdağ** | ✅ confirmed by Soner 2026-09-08 |
+| ~~Landmark~~ | ~~Ziraat Bankası karşısı~~ | **retired 2026-09-08** — see below |
 | **Primary phone** | **0282 717 21 31** | ✅ 4+ sources; used in old site title tag |
 | Second phone | 0282 717 55 62 | ✅ 3 sources — confirm still in use |
 | WhatsApp | 0554 915 77 90 | 🟡 Instagram bio only |
-| Coordinates | ~41.326394, 27.976516 | ❌ sources differ ~150 m — set the pin manually |
+| Coordinates | 41.326459, 27.976502 | ✅ the shop's own Google Maps listing, 2026-09-08 |
+| Google Place ID | `ChIJSQxn1KkptRQRLtfCCLZCYLk` | ✅ same listing |
 | Founded | 2000 | ✅ |
 | Oda Sicil No | 3037 (Çerkezköy TSO) | 🟡 authoritative registry |
 | Ticaret Sicil No | 3230 | 🟡 authoritative registry |
@@ -46,6 +47,22 @@ This reframes the whole cleanup: the job isn't to reconcile two branches, it's t
 **Note:** the Çerkezköy TSO registry places the Ltd. Şti. at Pınar Bulvarı 56/A —
 i.e. at *this* shop. That's an independent official record and the strongest
 documentary evidence available if the Google ownership request is ever disputed.
+
+⚠️ **The registry says 56/A and the door says 56/C.** Soner confirmed 56/C on
+2026-09-08 and the site publishes that. The registry line is *not* corrected here,
+because it is a quotation of an official record and its value is that it is quoted
+accurately — an ownership claim resting on a document we have edited is worth
+nothing. Expect Google to see both; the site, the profile and the signage should
+all say 56/C, and the registry entry is supporting evidence that the company is at
+this address on this street, not a competing address.
+
+**The landmark is retired.** "Ziraat Bankası karşısı" came from the Instagram bio
+and was published under the address in the footer, on `/iletisim`, on `/hakkimizda`
+and on the 404. It was removed on 2026-09-08 — not because it was wrong, but because
+a landmark is a second address in everything but name, and this file exists because
+the shop already has two circulating. It also decays without telling anyone: branches
+close and move. The exact door number and a real map pin do the job it was standing
+in for. Do not reintroduce it.
 
 ## ⛔ NOT this business — the former partner's shop
 
