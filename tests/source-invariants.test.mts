@@ -41,11 +41,71 @@ const FILES = SOURCE_DIRS.flatMap((d) => sourceFiles(d)).filter(
  * A comment explaining one of these rules necessarily quotes the value it is
  * about — the first version of this helper only stripped `//` lines and
  * `*`-prefixed ones, so the comment documenting the address fix tripped the
- * address check. */
+ * address check.
+ *
+ * The second version stripped `//` to end of line with a regex, and quietly
+ * broke every rule below. `//` appears in the middle of every URL, so
+ *
+ *     const FACEBOOK_URL = "https://www.facebook.com/537179436417060";
+ *
+ * was scanned as `const FACEBOOK_URL = "https:` and matched nothing. Found by
+ * the stage-3 SEO audit, on the one line the Facebook invariant had just been
+ * written to catch. Any inlined phone number, address or opening hour written
+ * after a URL on the same line was invisible too.
+ *
+ * So this walks the file instead of pattern-matching it, tracking whether it
+ * is inside a string, a template literal or a comment. Not a parser — it does
+ * not need to be — but it does know that `//` inside quotes is not a comment,
+ * which is the whole bug. */
 function stripComments(source: string): string {
-  return source
-    .replace(/\/\*[\s\S]*?\*\//g, (block) => block.replace(/[^\n]/g, " "))
-    .replace(/\/\/[^\n]*/g, "");
+  let out = "";
+  let i = 0;
+  let quote: string | null = null;
+
+  while (i < source.length) {
+    const c = source[i];
+    const next = source[i + 1];
+
+    if (quote) {
+      /* Inside a string: copy it through verbatim, and let a backslash carry
+         the following character with it so an escaped quote does not end it. */
+      if (c === "\\" && i + 1 < source.length) {
+        out += c + next;
+        i += 2;
+        continue;
+      }
+      if (c === quote) quote = null;
+      out += c;
+      i += 1;
+      continue;
+    }
+
+    if (c === '"' || c === "'" || c === "`") {
+      quote = c;
+      out += c;
+      i += 1;
+      continue;
+    }
+
+    if (c === "/" && next === "*") {
+      /* Blank the block, keeping newlines so line numbers survive. */
+      const end = source.indexOf("*/", i + 2);
+      const stop = end === -1 ? source.length : end + 2;
+      for (let j = i; j < stop; j += 1) out += source[j] === "\n" ? "\n" : " ";
+      i = stop;
+      continue;
+    }
+
+    if (c === "/" && next === "/") {
+      while (i < source.length && source[i] !== "\n") i += 1;
+      continue;
+    }
+
+    out += c;
+    i += 1;
+  }
+
+  return out;
 }
 
 function offenders(pattern: RegExp): string[] {
@@ -146,6 +206,46 @@ test("opening hours are never inlined outside config", () => {
    * is correcting. */
   const hits = offenders(/\b0[89]:00\b|\b(?:18|19|20):00\b/);
   assert.deepEqual(hits, [], `hours belong in lib/config.ts:\n${hits.join("\n")}`);
+});
+
+/* The helper the rules all depend on, tested directly. Every invariant above
+ * is only as good as this, and for a while it was silently worthless — a
+ * regex stripping `//` to end of line ate the second half of every URL. These
+ * are the exact shapes that got past it. */
+test("stripComments keeps `//` that is inside a string", () => {
+  const kept = [
+    'const a = "https://www.facebook.com/537179436417060";',
+    "const b = 'https://www.instagram.com/kapaklikuyumculuk';",
+    "const c = `https://wa.me/905549157790`;",
+    'const d = "https://x.test/"; const e = "0282 717 21 31";',
+  ];
+
+  for (const line of kept) {
+    assert.equal(
+      stripComments(line),
+      line,
+      `a URL inside a string must survive: ${line}`,
+    );
+  }
+});
+
+test("stripComments still removes real comments", () => {
+  assert.equal(stripComments("const a = 1; // 0282 717 21 31"), "const a = 1; ");
+  const comment = "/* 0282 717 21 31 */";
+  assert.equal(
+    stripComments(`${comment}const a = 1;`),
+    " ".repeat(comment.length) + "const a = 1;",
+  );
+
+  /* Line numbers must survive, or every offender is reported against the
+     wrong line. */
+  const block = "/* a\n b */\nconst x = 1;";
+  assert.equal(stripComments(block).split("\n").length, block.split("\n").length);
+});
+
+test("stripComments is not fooled by an escaped quote", () => {
+  const line = 'const a = "he said \\"https://x.test/\\" loudly";';
+  assert.equal(stripComments(line), line);
 });
 
 test("scanned a realistic number of files", () => {

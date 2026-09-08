@@ -28,7 +28,10 @@ satılıyor.
 Tek bir `index.html` dosyası yeterli. İçinde olması gerekenler:
 
 - Mağaza adı ve logosu
-- **Adres:** Cumhuriyet Mah., Pınar Bulvarı No: 56/A, 59510 Kapaklı / Tekirdağ
+- **Adres:** Cumhuriyet Mah., Pınar Bulvarı No: 56/C, 59510 Kapaklı / Tekirdağ
+  *(2026-09-08'de düzeltildi — burada 56/A yazıyordu. Bu dosya ne yayınlanacağını söyleyen
+  bir talimat, geçmişin kaydı değil; `holding-page/index.html` ise arşiv olduğu için
+  olduğu gibi bırakılmıştır.)*
 - **Telefon:** 0282 717 21 31 (tıklanabilir `tel:` linki)
 - Çalışma saatleri
 - Google Maps yol tarifi linki

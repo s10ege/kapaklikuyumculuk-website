@@ -346,6 +346,44 @@ for (const path of INDEXED) {
   });
 }
 
+/* Meta descriptions, measured where they actually ship.
+ *
+ * tests/copy.test.mts asserts the 120–155 window, but only over the CATEGORIES
+ * in lib/content.ts — the five static pages write theirs inline in page.tsx and
+ * were never measured by anything. The stage-3 audit found /hakkimizda sitting
+ * at 116, four characters under its own floor, having been that way since it
+ * was written.
+ *
+ * Asserted here rather than in the unit gate because several of these compose
+ * from lib/config.ts at render time; the rendered tag is the only place the
+ * real length exists. The window is Google's practical truncation range: under
+ * 120 wastes the space, over 155 gets cut mid-sentence. */
+for (const path of INDEXED) {
+  test(`${path} has a meta description in the 120–155 window`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+
+    const description = await page
+      .locator('meta[name="description"]')
+      .getAttribute("content");
+
+    expect(description, `${path} has no meta description`).toBeTruthy();
+    expect(
+      description!.length,
+      `${path} description is ${description!.length} chars: ${description}`,
+    ).toBeGreaterThanOrEqual(120);
+    expect(
+      description!.length,
+      `${path} description is ${description!.length} chars: ${description}`,
+    ).toBeLessThanOrEqual(155);
+
+    /* §3 — a description in capitals is the shouting the copy gate bans in
+       every other string the visitor reads. */
+    expect(description).not.toMatch(/[A-ZĞÜŞİÖÇ]{6,}/);
+  });
+}
+
 /* Nothing asserted og:url before 2026-09-08, which is exactly why five pages
  * shipped announcing themselves as the homepage: openGraph is inherited
  * wholesale from the layout, the layout set `url: shop.url`, and only the

@@ -57,7 +57,7 @@ Everything below lives in `lib/config.ts` and nowhere else.
 
 ```
 Trakya Kapaklı Kuyumculuk
-Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+Cumhuriyet Mah., Pınar Bulvarı No: 56/C
 59510 Kapaklı / Tekirdağ
 0282 717 21 31
 https://www.kapaklikuyumculuk.com
@@ -65,8 +65,12 @@ https://www.kapaklikuyumculuk.com
 
 - **Title case is the stored form.** Caps are a CSS `text-transform` treatment only —
   ALL-CAPS risks a Google Business Profile name policy violation.
-- Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/A` with the space,
+- Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/C` with the space,
   `Kapaklı / Tekirdağ` with spaces.
+- **The door number is `56/C`.** This file said `56/A` until 2026-09-08 — carried in from a
+  directory listing, and confirmed as 56/C by Soner at the stage-3 gate. The Çerkezköy TSO
+  registry does say 56/A and `docs/business-facts.md` quotes it unedited on purpose; that
+  is evidence, not the address.
 - Instagram is **`kuyumculukkapakli`**. **Not** `@kapaklikuyumculuk` — a different jeweller
   in Şanlıurfa.
 - **WhatsApp is not published** — removed 2026-09-08 on Soner's instruction. The shop takes
@@ -75,7 +79,9 @@ https://www.kapaklikuyumculuk.com
   it. Do not reintroduce it without asking.
 - **No email address exists** — the domain has no MX records. No contact form, ever.
 - **No prices.** They track the gold rate.
-- No `geo` in structured data — sources differ by ~150 m and a wrong pin is worse than none.
+- **`geo` and `hasMap` are in the structured data**, from the shop's own Google Maps
+  listing. This line read *no `geo`* until 2026-09-08, which was correct only while the
+  coordinates were graded ❌ and sources differed by ~150 m.
 
 ## Copy
 

@@ -18,9 +18,10 @@ import { shop } from "@/lib/config";
  * A Disallow for a route that does not exist is not harmless: it is a public
  * statement that the site has something at /studio worth hiding.
  *
- * The routes that genuinely must not be indexed — /yol-tarifi, /telefon,
- * app/dev/* — carry `robots: { index: false }` in their own metadata and are
- * absent from the sitemap, which is the mechanism that actually works. A
+ * The routes that genuinely must not be indexed — /yol-tarifi and app/dev/*,
+ * plus /telefon when 3.8 builds it — carry `robots: { index: false }` in their
+ * own metadata and are absent from the sitemap, which is the mechanism that
+ * actually works. A
  * crawler obeying robots.txt never reads the noindex; both together is the
  * belt-and-braces that silently cancels itself.
  */

@@ -30,9 +30,11 @@ import { openGraph } from "@/lib/metadata";
  * no address to send to — a form here would silently drop every message a
  * customer sent.
  *
- * The map is the keyless `output=embed` form keyed on the address string, not
- * on coordinates: docs grades the coordinates ❌ because sources disagree by
- * ~150 m, and a pin in the wrong place is worse than no pin.
+ * The map is the keyless `output=embed` form, keyed on the shop's own
+ * coordinates. This comment said the opposite until 2026-09-08 — keyed on the
+ * address string because the coordinates were graded ❌ and sources disagreed
+ * by ~150 m. They came from the shop's own Maps listing on 2026-09-08 and
+ * `mapsEmbedUrl` has been coordinate-keyed since; only the comment lagged.
  */
 
 export const metadata: Metadata = {

@@ -33,9 +33,18 @@ import { openGraph } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: pageTitle("Hakkımızda"),
+  /* 148 characters. It was 116 until 2026-09-08 — four under the 120 floor
+     §3 sets, and nothing measured it: tests/copy.test.mts checks the window
+     only over the CATEGORIES in lib/content.ts, and the five static pages
+     write theirs here. tests/seo.spec.ts measures the rendered tag now.
+
+     The sentence that closes the gap is the weighing promise rather than
+     filler, because this is the page where trust is decided and that is the
+     claim the whole page rests on. */
   description:
     `${shop.founded} yılından beri aynı adresteyiz. Kapaklı kuyumcu: altın ` +
-    "alım–satımı, ölçü ayarı, tamir ve sipariş üzerine üretim.",
+    "alım–satımı, ölçü ayarı, tamir ve sipariş üzerine üretim. " +
+    "Tartı tezgâhta, sizin önünüzde.",
   alternates: { canonical: "/hakkimizda" },
   openGraph: openGraph("/hakkimizda"),
 };

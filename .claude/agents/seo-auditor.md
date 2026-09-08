@@ -13,15 +13,23 @@ the internet agree on one business.
 
 ```
 Trakya Kapaklı Kuyumculuk
-Cumhuriyet Mah., Pınar Bulvarı No: 56/A
+Cumhuriyet Mah., Pınar Bulvarı No: 56/C
 59510 Kapaklı / Tekirdağ
 0282 717 21 31
 https://www.kapaklikuyumculuk.com
 ```
 
-Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/A` **with** the space,
+Punctuation is load-bearing: `Bulvarı` not `Blv.`, `No: 56/C` **with** the space,
 `Kapaklı / Tekirdağ` **with** spaces around the slash. A near-match is a failure, not a
 pass — report the exact diff.
+
+> **The door number is `56/C`, corrected here 2026-09-08.** This block said `56/A` until
+> then, and an audit run against it files a false NAP failure on the one field where
+> "correcting" the site would put a wrong door number back into the code and, from there,
+> onto the Google Business Profile. Soner confirmed 56/C at the stage-3 gate. The Çerkezköy
+> TSO registry does say 56/A; `docs/business-facts.md` quotes that unedited on purpose,
+> because an ownership claim resting on a document we have edited is worth nothing. The
+> registry is evidence, not the address.
 
 ## Checks
 
@@ -33,9 +41,12 @@ pass — report the exact diff.
 3. **Name variants.** `Kapaklı Kuyumcusu` and bare `Kapaklı Kuyumculuk` must not appear as
    the site's own name anywhere. `docs/` may mention them as historical data — that is
    fine; rendered pages and metadata are not.
-4. **JSON-LD.** `JewelryStore` site-wide, generated from `lib/config.ts`. **`geo` must be
-   absent** — sources differ by ~150 m and a wrong pin is worse than none. `BreadcrumbList`
-   on every page. `ItemList` of `Product` per category, with real image URLs once the
+4. **JSON-LD.** `JewelryStore` site-wide, generated from `lib/config.ts`. **`geo` and
+   `hasMap` must be present** — this said *`geo` must be absent* until 2026-09-08, which
+   was right only while the coordinates were graded ❌ and sources differed by ~150 m. They
+   now come from the shop's own Maps listing, so the pin, the door number and the place ID
+   describe the same door. `BreadcrumbList` on every page except the homepage, where
+   omitting it is standard. `ItemList` of `Product` per category, with real image URLs once the
    catalogue exists. `sameAs` carries Instagram `kuyumculukkapakli` — **not**
    `@kapaklikuyumculuk`, which is a different jeweller in Şanlıurfa.
 5. **Titles.** Pattern: `%page% - Trakya Kapaklı Kuyumculuk | 0282 717 21 31 | Kapaklı`.
