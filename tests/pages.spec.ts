@@ -159,6 +159,55 @@ test.describe("/hakkimizda", () => {
     const facts = page.locator("dl dt");
     expect(await facts.count()).toBe(2);
   });
+
+  test("names the founder and the owner under their portraits", async ({
+    page,
+  }) => {
+    await page.goto("/hakkimizda");
+
+    /* Two faces and two names — the proof behind "aynı ailenin elinde". Both
+     * come from lib/config.ts, so this also catches a caption that has been
+     * typed in by hand and can drift. */
+    const portraits = page.locator("figure figcaption");
+    await expect(portraits).toHaveCount(2);
+    await expect(portraits.nth(0)).toContainText("Nuri Eroğlu");
+    await expect(portraits.nth(0)).toContainText("Kurucu");
+    await expect(portraits.nth(1)).toContainText("Filiz Eroğlu");
+    await expect(portraits.nth(1)).toContainText("Mağaza sahibi");
+  });
+
+  for (const width of [1024, 1280, 1440]) {
+    test(`the photo and the prose end on the same line at ${width}px`, async ({
+      page,
+    }) => {
+      /* The bug this replaces: the shop photograph was taller than the prose
+       * beside it, so the cream band finished on a ragged edge. Padding cannot
+       * fix that — it can only be right at one viewport width, which is why
+       * this is asserted at three.
+       *
+       * The fix is structural: items-stretch plus h-full on the figure, so the
+       * photograph is exactly as tall as whatever is next to it. That holds
+       * when the copy changes, and this test is what says so. */
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/hakkimizda");
+      await page.evaluate(() => document.fonts.ready);
+
+      const delta = await page.evaluate(() => {
+        const figure = document.querySelector(
+          "section.bg-frame figure",
+        ) as HTMLElement;
+        const grid = figure.parentElement as HTMLElement;
+        const prose = grid.children[1] as HTMLElement;
+        return (
+          figure.getBoundingClientRect().bottom -
+          prose.getBoundingClientRect().bottom
+        );
+      });
+
+      // 1px of tolerance for sub-pixel rounding on fractional layouts.
+      expect(Math.abs(delta), `bottom edges differ by ${delta}px`).toBeLessThanOrEqual(1);
+    });
+  }
 });
 
 /* ------------------------------------------------------------------ */
