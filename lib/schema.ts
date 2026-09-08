@@ -43,11 +43,10 @@ import type { Category, Product } from "./content.ts";
  * Sunday is never emitted. A `dayOfWeek` list that omits a day means closed,
  * and an explicit Sunday entry with equal opens/closes is the other convention
  * — mixing them is how a shop ends up listed as open 00:00–00:00. */
-/* Kept in step with DEFAULT_CARD in lib/metadata.ts by tests/seo.spec.ts,
- * which asserts the schema image and the homepage og:image are the same URL.
- * Not imported from there: lib/metadata.ts pulls in next's Metadata types, and
- * this module is walked by node:test with type-stripping only. */
-const DEFAULT_CARD_PATH = "/og/default.png";
+/* The shopfront, produced by scripts/hakkimizda-photos.mjs and already used on
+ * /hakkimizda. Deliberately NOT lib/metadata.ts's OG card — see the note at
+ * `image` below for why the two should differ. */
+const SHOPFRONT = "/hakkimizda/magaza.webp";
 
 export function openingHoursSpecification(now: Date = new Date()) {
   const year = now.getFullYear();
@@ -81,12 +80,20 @@ export function jewelryStoreSchema() {
       "üretir ve altın alım–satımı yapar.",
     url: shop.url,
 
-    /* Google's local-business rich result wants an image, and had none until
-       2026-09-08 because the site had no shareable asset at all. This is the
-       same card the homepage shares — one image, one place, so the card in a
-       search result and the card in a WhatsApp message are the same picture.
-       Absolute, because structured data is read out of page context. */
-    image: `${shop.url}${DEFAULT_CARD_PATH}`,
+    /* The shopfront photograph, not the Open Graph card.
+     *
+     * It was the OG card for a few hours on 2026-09-08, on the reasoning that
+     * a search result and a shared link should show the same picture. That is
+     * right for `og:image` and wrong here: this field feeds the local pack and
+     * the knowledge panel, where Google asks for photographs of the business
+     * and discourages logos and text overlays — `logo` is the field for a
+     * lockup. The card is a lockup, a claim set in type and a stock coin.
+     *
+     * The shopfront is also the strongest same-entity signal available: the
+     * identical file can sit on the Google Business Profile in stage 4, and
+     * two identical images at one address is exactly the kind of agreement
+     * this project is trying to manufacture. */
+    image: `${shop.url}${SHOPFRONT}`,
 
     telephone: `+${contact.phone.value}`,
     foundingDate: String(shop.founded),

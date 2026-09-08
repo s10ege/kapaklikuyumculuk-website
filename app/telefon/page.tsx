@@ -8,8 +8,10 @@ import {
   phoneDisplay,
   phoneHref,
   shop,
+  telefonPath,
 } from "@/lib/config";
 import { CallForward } from "./CallForward";
+import { openGraph } from "@/lib/metadata";
 
 /* The analytics hop for the call button (TECHNICAL.md §9), and the twin of
  * /yol-tarifi.
@@ -34,6 +36,11 @@ import { CallForward } from "./CallForward";
 export const metadata: Metadata = {
   title: `Telefon - ${shop.name}`,
   robots: { index: false, follow: false },
+  /* Hand-written metadata used to mean no openGraph block of its own, which
+     meant inheriting the layout's — and the layout deliberately carries no
+     images. So this previewed blank when shared, which for a page whose whole
+     job is "call the shop" is the wrong way round. */
+  openGraph: openGraph(telefonPath),
 };
 
 export default function CallPage() {

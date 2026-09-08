@@ -29,12 +29,17 @@ test.describe("/telefon", () => {
   }) => {
     await page.goto("/telefon");
 
-    const link = page
-      .locator("#icerik")
-      .getByRole("link", { name: /0282 717 21 31/ });
+    /* Located by href rather than by accessible name. The name-based lookup
+       failed once under a full parallel run with `Received: ""` — it had
+       matched something other than the intended anchor — and a test that can
+       pick the wrong element is a test whose passes mean less than they
+       appear to. There is exactly one tel: link inside <main>. */
+    const link = page.locator('#icerik a[href^="tel:"]');
 
+    await expect(link).toHaveCount(1);
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute("href", "tel:+902827172131");
+    await expect(link).toContainText("0282 717 21 31");
   });
 
   test("the number is selectable text, not only a link target", async ({
@@ -98,9 +103,10 @@ test.describe("with JavaScript off", () => {
        if the number is in the markup. It is. */
     await page.goto("/telefon");
 
-    await expect(
-      page.locator("#icerik").getByRole("link", { name: /0282 717 21 31/ }),
-    ).toHaveAttribute("href", "tel:+902827172131");
+    await expect(page.locator('#icerik a[href^="tel:"]')).toHaveAttribute(
+      "href",
+      "tel:+902827172131",
+    );
   });
 
   test("the call button still reaches it", async ({ page }) => {

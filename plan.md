@@ -165,6 +165,17 @@ approved in writing.
 
 **What stage 4 inherits, written down so it is not rediscovered:**
 
+0. **Everything this project exists to fix is live right now, on the canonical URL.**
+   Confirmed 2026-09-08 by fetching the domain: it returns the holding page, byte-identical
+   to `holding-page/index.html`. That page publishes the retired bare name as the business
+   name, **`No: 56/A`** in the visible address *and* in its JSON-LD, a **20:00** closing
+   time, and **pırlanta** as a stock claim — in structured data, signed by us, at the URL
+   every listing points at. Stage 3 finishing changes none of it. **4.1 does**, and this is
+   the argument for not letting the deploy drift: every week it stays up is another week of
+   Google being told the wrong name, the wrong door and the wrong hours by the most
+   authoritative source available. *(`holding-page/README.md` claimed the page was no longer
+   deployed. It was wrong, and is corrected.)*
+
 1. **Lighthouse mobile is 89 on the homepage** (≥90 wanted) with LCP 3.6 s against 2.5 s.
    Measured locally without a CDN, so 4.2 re-measures — but one part is environmental and
    one is not: **the homepage LCP element is the coin `<video>`, and `design.md`'s budget

@@ -195,8 +195,11 @@ end. Proven locally here; proven live in `FINAL.md`.
   that sources differed by ~150 m and a wrong pin is worse than none — true while the
   coordinates were graded ❌, and moot once they came from the shop's own Maps listing. See
   §0 and `lib/schema.ts`. `sameAs`: Instagram + Facebook.
-- `BreadcrumbList` on every page; `ItemList` of `Product` per category, **now carrying real
-  image URLs**, which it could not before.
+- `BreadcrumbList` on **every page except the homepage**, from the same `trail` prop as the
+  visible strip, so the two cannot disagree. *(This said "every page" until 2026-09-08 and
+  the code did not, correctly: a one-item breadcrumb on a root page is standard practice and
+  Google shows nothing for it. The doc was the thing that was wrong.)* `ItemList` of
+  `Product` per category, **now carrying real image URLs**, which it could not before.
 - ✅ **OG images — built 2026-09-08.** Five 1200×630 cards: the coin and the claim as the
   site-wide default, and one per category using that category's own cover, so the card and
   the page a visitor lands on show the same piece. Committed PNGs in `public/og/`,

@@ -217,6 +217,36 @@ test("the Facebook page is never inlined outside config", () => {
   assert.deepEqual(hits, [], `Facebook belongs in lib/config.ts:\n${hits.join("\n")}`);
 });
 
+test("the correct Instagram handle is never inlined either", () => {
+  /* There was only ever a negative rule here: the Şanlıurfa lookalike was
+   * caught, the real handle was not. So `kuyumculukkapakli` could be typed
+   * into any component and nothing would fail — and the failure mode of a
+   * hardcoded handle is the same as a hardcoded phone number, just quieter.
+   *
+   * Facebook got both halves when it moved into config on 2026-09-08.
+   * Instagram did not, until the stage-3 close audit noticed the asymmetry. */
+  const hits = offenders(/kuyumculukkapakli/);
+  assert.deepEqual(hits, [], `the handle belongs in lib/config.ts:\n${hits.join("\n")}`);
+});
+
+test("the canonical URL, the coordinates and the place id stay in config", () => {
+  /* The same gap, three more facts. Each is a value the site publishes about
+   * itself, and each was catchable by nothing:
+   *
+   *   shop.url        — appears in every canonical, og:url and JSON-LD @id
+   *   geo.lat/lng     — the pin, and the reason the map stopped being keyed
+   *                     on an address string
+   *   googlePlaceId   — names the listing rather than dropping a pin
+   *
+   * The city line is here too. The address rule above matches only
+   * "Pınar Bulvarı" and "Cumhuriyet Mah", so "59510 Kapaklı / Tekirdağ" could
+   * be inlined without tripping it. */
+  const hits = offenders(
+    /kapaklikuyumculuk\.com|41\.3264|27\.9765|ChIJSQxn1KkptRQRLtfCCLZCYLk|59510/,
+  );
+  assert.deepEqual(hits, [], `these belong in lib/config.ts:\n${hits.join("\n")}`);
+});
+
 test("opening hours are never inlined outside config", () => {
   /* Seasonal, and owner-editable in phase two — one source only. Two closing
    * times now (19:00 summer, 18:00 winter), which doubles the chance of one
