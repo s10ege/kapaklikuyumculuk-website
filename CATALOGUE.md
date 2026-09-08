@@ -4,9 +4,14 @@
 > catalogue is live, the `Yakında` panels have retired themselves, and Soner has signed off
 > on the contact sheet.
 >
-> **Status: ⏳ awaiting approval** — final iteration 2026-09-08 (§7 below). Nothing in this
-> file marks the stage approved or closed; that is Soner's call in writing, and stage 3 does
-> not begin before it.
+> **Status: ✅ approved 2026-09-08 — stage 2 is closed.** Soner approved it in writing after
+> the final iteration (§7 below). The catalogue is live, every `Yakında` panel has retired
+> itself, and the contact sheet is signed off. Stage 3 ([`TECHNICAL.md`](TECHNICAL.md)) is
+> unblocked and begins at its ⛔ confirmation gate.
+>
+> Three things remain Soner's to supply and **none of them reopens this stage** — they are
+> content, not gates: `spec` (ayar · gram) per piece, the `featured` four, and the
+> contact-sheet flags. See §7.
 
 ## 1 · Photography brief
 
@@ -197,10 +202,10 @@ the moment a piece sells.
 
 ## 5 · Done when
 
-> **Status 2026-09-08 — ⏳ awaiting approval.** A final iteration ran on 2026-09-08 (§7):
-> the category restructure, the copy rewrite and its gate, seasonal hours, the canonical
-> address, the map and the Hakkımızda layout. The stage is **not** approved or closed —
-> that is Soner's call in writing, and stage 3 does not begin before it.
+> **Status 2026-09-08 — ✅ approved, stage closed.** Soner approved the stage in writing
+> after the final iteration (§7): the category restructure, the copy rewrite and its gate,
+> seasonal hours, the canonical address, the map, the Hakkımızda layout, and the removal of
+> WhatsApp. Stage 3 is unblocked.
 >
 > *(Previous status 2026-09-07 — stage 2 over, not sealed.)* Soner called the stage done and the
 > catalogue was committed: `/public/urunler/` left `.gitignore`, **60 masters, 57 products,

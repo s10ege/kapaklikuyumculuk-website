@@ -28,8 +28,8 @@ Priority order. Each stage has its own file.
 | # | File | Covers | Status |
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
-| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ⏳ **awaiting approval — final iteration 2026-09-08.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned, **WhatsApp removed — the phone is the only channel**. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. **Soner's call to close** — nothing here marks it approved |
-| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next** — prepared 2026-08-29, not opened. 3.1 is a ⛔ gate |
+| 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **approved 2026-09-08 — closed.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned, **WhatsApp removed — the phone is the only channel**. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. Approved in writing by Soner; `spec`, the `featured` four and the contact-sheet flags stay outstanding as content, not as gates |
+| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | **← next, and now unblocked** — stage 2 approved 2026-09-08. Prepared 2026-08-29, still not opened. 3.1 is a ⛔ gate: five facts, and it must be read out loud before any stage-3 code |
 | 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
 
 ## Roadmap
@@ -119,11 +119,15 @@ it.
 Two source invariants and a rendered-markup gate now enforce the absence, so it cannot creep
 back by accident.
 
-**Gate 2→3.** Crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2
-paused and the catalogue unapproved. The gate's actual concern is that *"the catalogue is
-approved before any directory or Google work starts"* — that work is stage 4, so preparing
-and running stage 3 does not breach it. What it does mean is that stage 3.3 cannot finish:
-see the note under the stage-3 table.
+**Gate 2→3. ✅ Satisfied 2026-09-08.** Stage 2 is approved and closed, so this gate is no
+longer being crossed on a technicality — it is simply open.
+
+It was crossed deliberately on 2026-08-29, on Soner's instruction, with stage 2 paused and
+the catalogue unapproved; the reasoning then was that the gate's actual concern is *"the
+catalogue is approved before any directory or Google work starts"*, that work being stage 4.
+That reasoning is moot now. The constraint it carried — that stage 3.3 could not finish
+without an approved catalogue — is lifted with it: the catalogue is in the repo, approved,
+and 3.3's per-category `ItemList` and OG cards have real product images to work from.
 
 ### Stage 3 — TECHNICAL.md
 
@@ -142,13 +146,13 @@ see the note under the stage-3 table.
 **Two things the stage-3 session should know before it starts** (recorded 2026-08-29, when
 the stage was prepared but deliberately not opened):
 
-1. **The paused catalogue blocks part of 3.3 and only 3.3.** Two items there need product
-   images that exist *in the repo*, and none do — `/public/urunler/` is gitignored: the
-   per-category `ItemList` "carrying real image URLs", and the per-category OG cards built
-   from a product image. Everything else in 3.3 — the title pattern, `JewelryStore`
-   JSON-LD, `BreadcrumbList`, the homepage OG card, the sitemap from the folders, dropping
-   the `/studio` disallow — is unaffected. So are 3.2 and 3.4 through 3.8, entirely. 3.9 can
-   be *written* but not *proven*, since proving it means publishing a product.
+1. ~~**The paused catalogue blocks part of 3.3 and only 3.3.**~~ **No longer true — resolved
+   2026-09-08.** Two items in 3.3 needed product images that exist *in the repo*, and at the
+   time none did. They do now: `/public/urunler/` came out of `.gitignore` on 2026-09-07 and
+   the stage closed approved on 2026-09-08, so the per-category `ItemList` carries real
+   image URLs already, and the per-category OG cards have 57 products to build from. Nothing
+   in stage 3 is blocked on the catalogue any more. 3.9 is still *written but not proven*
+   until something is published.
 2. **3.7 is mostly already done, uncommitted work from earlier sessions.** `.gitattributes`
    exists with `* text=auto eol=lf`; `sanity/` is gone; `catalogue/raw/`, `images/` and
    `/public/urunler/` are gitignored; all four `app/dev/*` routes guard on
