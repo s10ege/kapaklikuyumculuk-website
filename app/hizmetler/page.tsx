@@ -70,7 +70,10 @@ export default function ServicesPage() {
   return (
     <>
       <Breadcrumb
-        trail={[{ label: "Anasayfa", href: "/" }, { label: "Hizmetler" }]}
+        trail={[
+          { label: "Anasayfa", href: "/" },
+          { label: "Hizmetler", href: "/hizmetler" },
+        ]}
       />
 
       <section>

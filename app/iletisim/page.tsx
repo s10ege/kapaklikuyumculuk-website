@@ -47,7 +47,10 @@ export default function ContactPage() {
   return (
     <>
       <Breadcrumb
-        trail={[{ label: "Anasayfa", href: "/" }, { label: "İletişim" }]}
+        trail={[
+          { label: "Anasayfa", href: "/" },
+          { label: "İletişim", href: "/iletisim" },
+        ]}
       />
 
       <section>

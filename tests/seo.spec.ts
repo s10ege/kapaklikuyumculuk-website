@@ -214,11 +214,67 @@ test.describe("sitemap and robots", () => {
     expect(txt).not.toContain("Disallow: /wp-content");
     expect(txt).not.toContain("Disallow: /author");
 
-    // §10 — reserved for the phase-two Sanity Studio.
-    expect(txt).toContain("Disallow: /studio");
+    /* And nothing else is blocked either. `/studio` was disallowed here from
+     * the first commit, reserved for a Sanity Studio phase two would mount;
+     * the CMS decision was overturned, sanity/ was deleted, and the rule
+     * outlived it. Asserting the absence rather than deleting the assertion,
+     * because a Disallow for a route that does not exist is a public statement
+     * that something at /studio is worth hiding. */
+    expect(txt).not.toContain("Disallow: /studio");
+    expect(txt).not.toMatch(/Disallow:\s*\S/);
+
     expect(txt).toContain("Sitemap: https://www.kapaklikuyumculuk.com/sitemap.xml");
   });
 });
+
+/* ------------------------------------------------------------------ */
+/* BreadcrumbList on every indexed page                                */
+/* ------------------------------------------------------------------ */
+
+/* §5 says "BreadcrumbList on every page". Until 2026-09-08 only the category
+ * pages emitted one, while these five rendered the visible strip and no
+ * schema — the visitor got the trail and the crawler did not.
+ *
+ * Both halves now come out of one `trail` prop in <Breadcrumb>, so the real
+ * assertion is that they cannot disagree: every crumb name must appear in the
+ * rendered nav, and the last crumb must be the page's own canonical URL.
+ * A BreadcrumbList that does not match the visible trail is a mismatch to
+ * Google, and it fails silently — the rich result just stops appearing. */
+const TRAILS: [path: string, last: string][] = [
+  ["/urunler", "Ürünlerimiz"],
+  ["/galeri", "Galeri"],
+  ["/hizmetler", "Hizmetler"],
+  ["/hakkimizda", "Hakkımızda"],
+  ["/iletisim", "İletişim"],
+];
+
+for (const [path, last] of TRAILS) {
+  test(`${path} emits a BreadcrumbList matching its visible trail`, async ({
+    page,
+  }) => {
+    await page.goto(path);
+
+    const crumbs = await jsonLd(page, "BreadcrumbList");
+    expect(crumbs, `${path} emits no BreadcrumbList`).not.toBeNull();
+    expect(crumbs.itemListElement).toHaveLength(2);
+
+    expect(crumbs.itemListElement[0].name).toBe("Anasayfa");
+    expect(crumbs.itemListElement[0].item).toBe(
+      "https://www.kapaklikuyumculuk.com/",
+    );
+
+    expect(crumbs.itemListElement[1].name).toBe(last);
+    expect(crumbs.itemListElement[1].item).toBe(
+      `https://www.kapaklikuyumculuk.com${path}`,
+    );
+
+    /* The visible half, from the same trail. */
+    const nav = page.locator('nav[aria-label="Sayfa yolu"]');
+    await expect(nav).toContainText("Anasayfa");
+    await expect(nav).toContainText(last);
+    await expect(nav.locator('[aria-current="page"]')).toHaveText(last);
+  });
+}
 
 /* ------------------------------------------------------------------ */
 /* Retired terms never reach a visitor                                 */

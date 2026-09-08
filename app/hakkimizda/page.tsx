@@ -62,7 +62,10 @@ export default function AboutPage() {
   return (
     <>
       <Breadcrumb
-        trail={[{ label: "Anasayfa", href: "/" }, { label: "Hakkımızda" }]}
+        trail={[
+          { label: "Anasayfa", href: "/" },
+          { label: "Hakkımızda", href: "/hakkimizda" },
+        ]}
       />
 
       <section>
@@ -104,7 +107,10 @@ export default function AboutPage() {
                 src="/hakkimizda/magaza.webp"
                 alt={`${shop.name} mağazasının cephesi: tabela, tente ve vitrin.`}
                 fill
-                priority
+                /* The shopfront is above the fold on this page and is its LCP
+                   element. `preload` replaced the deprecated `priority` in
+                   Next 16 — same behaviour, clearer name. */
+                preload
                 sizes="(min-width: 1024px) 34rem, 100vw"
                 className="object-cover"
               />

@@ -2,6 +2,7 @@ import {
   address,
   areaServed,
   contact,
+  facebookUrl,
   geo,
   googleMapsUrl,
   hours,
@@ -22,8 +23,6 @@ import type { Category, Product } from "./content.ts";
  * entire website for a shop like this, and must carry the same name, address
  * and phone character-for-character.
  */
-
-const FACEBOOK_URL = "https://www.facebook.com/537179436417060";
 
 /** §10 — the seasonal hours, as schema.org sees them.
  *
@@ -110,7 +109,7 @@ export function jewelryStoreSchema() {
      * belongs to a different jeweller in Şanlıurfa, and at least one directory
      * already attributes it to this business — linking it here would confirm
      * the error to Google in our own structured data. */
-    sameAs: [instagramUrl, FACEBOOK_URL],
+    sameAs: [instagramUrl, facebookUrl],
 
     areaServed: areaServed.map((name) => ({ "@type": "City", name })),
   };

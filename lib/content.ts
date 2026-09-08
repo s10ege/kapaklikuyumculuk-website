@@ -74,7 +74,15 @@ export type Product = {
 /* The old site's title template was `%page% - Kapaklı Kuyumculuk | 0282 717 21
  * 31 | Kapaklı`, and it was indexed that way for years (docs/old-site-map.md).
  * A phone number in the title tag is unusual, but it earned its place here and
- * is worth keeping. Built from config so the number cannot drift. */
+ * is worth keeping. Built from config so the number cannot drift.
+ *
+ * The homepage does NOT use this suffix — app/layout.tsx ends its title
+ * `| Kapaklı Kuyumcu`, not `| Kapaklı`. That looked like drift when it was
+ * found in the stage-3 audit, and it is not: `kapaklı kuyumcu` is verbatim the
+ * first of the three local targets in TECHNICAL.md §5, and the homepage is the
+ * page that competes for it. Interior pages already carry their own subject in
+ * the `%page%` slot and do not need it. Checked and kept 2026-09-08 —
+ * deliberate, not a typo, and not to be "unified" by a later tidy-up. */
 const TITLE_SUFFIX = `${shop.name} | ${phoneDisplay} | Kapaklı`;
 
 export function pageTitle(name: string): string {

@@ -8,7 +8,7 @@ import { EmptyState } from "@/components/EmptyState";
 import { JsonLd } from "@/components/JsonLd";
 import { ProductGallery } from "@/components/ProductGallery";
 import { getCategories, getCategory, getCategorySlugs, getProducts } from "@/lib/content";
-import { breadcrumbSchema, categoryItemListSchema } from "@/lib/schema";
+import { categoryItemListSchema } from "@/lib/schema";
 
 /* The category template (§6.2) — the piece that has to look right with three
  * products, forty, or none. Built before the homepage for exactly that reason.
@@ -57,13 +57,10 @@ export default async function CategoryPage({
 
   return (
     <>
-      <JsonLd
-        data={breadcrumbSchema([
-          { name: "Anasayfa", url: "/" },
-          { name: "Ürünlerimiz", url: "/urunler" },
-          { name: category.name, url: `/urunler/${category.slug}` },
-        ])}
-      />
+      {/* The BreadcrumbList comes out of <Breadcrumb> below, from the same
+          trail the visitor reads. It was declared separately here until
+          2026-09-08, which let the two drift in principle and duplicated the
+          trail in practice. */}
       {/* Null while the category is empty — an ItemList claiming to list
           products that do not exist is worse than none (§10). */}
       {itemList && <JsonLd data={itemList} />}
@@ -72,7 +69,7 @@ export default async function CategoryPage({
         trail={[
           { label: "Anasayfa", href: "/" },
           { label: "Ürünlerimiz", href: "/urunler" },
-          { label: category.name },
+          { label: category.name, href: `/urunler/${category.slug}` },
         ]}
       />
 

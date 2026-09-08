@@ -91,7 +91,7 @@ export default function PlaceholdersPage() {
             src={PLACEHOLDER.hero}
             alt="Vitrin görseli yakında"
             fill
-            priority
+            preload
             sizes="(min-width: 1024px) 64rem, 100vw"
             className="object-cover"
           />

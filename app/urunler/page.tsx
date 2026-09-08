@@ -27,7 +27,10 @@ export default function ProductsPage() {
   return (
     <>
       <Breadcrumb
-        trail={[{ label: "Anasayfa", href: "/" }, { label: "Ürünlerimiz" }]}
+        trail={[
+          { label: "Anasayfa", href: "/" },
+          { label: "Ürünlerimiz", href: "/urunler" },
+        ]}
       />
 
       <section>

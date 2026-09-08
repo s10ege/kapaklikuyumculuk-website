@@ -33,7 +33,10 @@ export default function GalleryPage() {
   return (
     <>
       <Breadcrumb
-        trail={[{ label: "Anasayfa", href: "/" }, { label: "Galeri" }]}
+        trail={[
+          { label: "Anasayfa", href: "/" },
+          { label: "Galeri", href: "/galeri" },
+        ]}
       />
 
       <section>

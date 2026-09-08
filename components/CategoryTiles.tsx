@@ -42,8 +42,21 @@ export function CategoryTiles({ categories }: { categories: Category[] }) {
               fill
               /* On /urunler the first tile is the LCP element, and Next warns
                  about it. Eager-loading the first row only — lazy-loading an
-                 above-the-fold image delays the paint it is measured by. */
-              priority={i === 0}
+                 above-the-fold image delays the paint it is measured by.
+                 This was `priority={i === 0}`, deprecated in Next 16. The
+                 straight rename is `preload`, but the local docs
+                 (03-api-reference/02-components/image.md) say not to preload
+                 when several images could be the LCP element depending on
+                 viewport — and these tiles are 2x2 on a phone, 1x4 on a
+                 desktop. They also say `loading="eager"` is what most cases
+                 want instead.
+
+                 Which is what the sentence above always described. `priority`
+                 additionally injects a <link rel="preload"> in the head, which
+                 is why Next kept warning "add loading='eager'" on /urunler
+                 even with the prop set — the tile was preloaded and still
+                 lazy-negotiated. One word, and the warning goes with it. */
+              loading={i === 0 ? "eager" : "lazy"}
               sizes="(min-width: 1024px) 25vw, 50vw"
               className="object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
             />

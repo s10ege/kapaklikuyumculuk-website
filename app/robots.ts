@@ -10,15 +10,25 @@ import { shop } from "@/lib/config";
  * like it is working. So there is no Disallow for /urun/, /urunler/,
  * /wp-content/ or /author/, however tempting they look.
  *
- * /studio is disallowed ahead of phase two, when the Sanity Studio mounts
- * there (§11). It is listed now so it can never be indexed even briefly.
+ * There is no Disallow at all, in fact. `/studio` was disallowed here from the
+ * first commit, reserved for a Sanity Studio that phase two would mount —
+ * listed early so it could never be indexed even briefly. That decision was
+ * overturned (plan.md, Decisions overturned: "No CMS at all"), `sanity/` was
+ * deleted, and the rule outlived the thing it was protecting by about a month.
+ * A Disallow for a route that does not exist is not harmless: it is a public
+ * statement that the site has something at /studio worth hiding.
+ *
+ * The routes that genuinely must not be indexed — /yol-tarifi, /telefon,
+ * app/dev/* — carry `robots: { index: false }` in their own metadata and are
+ * absent from the sitemap, which is the mechanism that actually works. A
+ * crawler obeying robots.txt never reads the noindex; both together is the
+ * belt-and-braces that silently cancels itself.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/studio"],
     },
     sitemap: `${shop.url}/sitemap.xml`,
     host: shop.url,

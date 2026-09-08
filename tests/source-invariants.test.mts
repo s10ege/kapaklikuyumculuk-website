@@ -122,6 +122,22 @@ test("the Şanlıurfa lookalike Instagram handle is never linked", () => {
   assert.deepEqual(hits, [], `wrong shop's account:\n${hits.join("\n")}`);
 });
 
+test("the Facebook page is never inlined outside config", () => {
+  /* Added 2026-09-08, when `FACEBOOK_URL` moved out of lib/schema.ts. It was
+   * the last business fact living outside config, and therefore the last one
+   * these tests could not see.
+   *
+   * It matters more than its size suggests because of where it is used:
+   * `sameAs` is the site telling Google which accounts genuinely belong to
+   * this shop. docs/index-cleanup-plan.md Step 4 records a directory already
+   * attributing a different jeweller's Instagram to this business — naming the
+   * wrong account here would confirm that error in our own structured data,
+   * signed by us. Both the id and any facebook.com URL are caught, since a
+   * vanity-URL guess would be the likely way a wrong one arrives. */
+  const hits = offenders(/facebook\.com|537179436417060/);
+  assert.deepEqual(hits, [], `Facebook belongs in lib/config.ts:\n${hits.join("\n")}`);
+});
+
 test("opening hours are never inlined outside config", () => {
   /* Seasonal, and owner-editable in phase two — one source only. Two closing
    * times now (19:00 summer, 18:00 winter), which doubles the chance of one

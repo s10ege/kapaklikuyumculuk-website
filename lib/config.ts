@@ -95,6 +95,18 @@ export const contact = {
    *  Never inline this string anywhere else. */
   instagram: { value: "kuyumculukkapakli", pending: false } satisfies Fact<string>,
 
+  /** ✅ facebook.com/537179436417060. The numeric page id, not a vanity name —
+   *  the page has never had one, and an id cannot be squatted or mistyped into
+   *  someone else's page the way `@kapaklikuyumculuk` already has been.
+   *
+   *  Lived as a bare `FACEBOOK_URL` const in lib/schema.ts until 2026-09-08:
+   *  the last business fact outside this file, and so the last thing
+   *  tests/source-invariants.test.mts could not protect. It goes into `sameAs`,
+   *  which is the site telling Google which accounts are genuinely this shop —
+   *  the one field where naming somebody else's account confirms the error in
+   *  our own structured data. */
+  facebook: { value: "537179436417060", pending: false } satisfies Fact<string>,
+
   /** ✅ Verified by DNS lookup: the domain has no MX records, so no email
    *  address exists. The İletişim page therefore has no form and no mailto. */
   email: { value: null, pending: false } satisfies Fact<null>,
@@ -296,6 +308,7 @@ export const phoneHref = telHref(contact.phone.value);
 export const phoneAltDisplay = formatTrPhone(contact.phoneAlt.value);
 
 export const instagramUrl = `https://www.instagram.com/${contact.instagram.value}/`;
+export const facebookUrl = `https://www.facebook.com/${contact.facebook.value}`;
 
 /** The full address on one line, for maps queries and meta descriptions.
  *  Kept as a named export because half the site imports it; it is the getter
