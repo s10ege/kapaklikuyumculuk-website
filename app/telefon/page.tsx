@@ -78,10 +78,15 @@ export default function CallPage() {
           <li className="py-3">{hours.closed}</li>
         </ul>
 
+        {/* min-h-11 — this link measured 20px tall until 2026-09-08, on both
+            hop pages, well under the 44px §7 requires. It survived because
+            chrome.spec.ts only ever measured the header, the footer and the
+            FAB, and never looked inside a page. /telefon inherited it by being
+            written from this file's pattern. */}
         <p className="mt-8 text-sm text-muted">
           <Link
             href="/iletisim"
-            className="underline underline-offset-4 hover:text-gold-soft"
+            className="inline-flex min-h-11 items-center underline underline-offset-4 hover:text-gold-soft"
           >
             İletişim sayfasına dön
           </Link>

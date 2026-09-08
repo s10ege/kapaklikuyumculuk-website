@@ -68,6 +68,61 @@ test("prefers-reduced-motion keeps the coin on its still frame", async ({
   await expect(video).toHaveJSProperty("currentTime", 0);
 });
 
+test("saveData keeps the coin on its still frame too", async ({ browser }) => {
+  /* The third branch of HeroCoin's `reduced` check, and the only one nothing
+   * tested until 2026-09-08. Playwright's emulateMedia covers reduced-motion
+   * and can be given `prefers-reduced-data`, but it cannot fake
+   * `navigator.connection.saveData` — which is the flag that actually fires
+   * for a visitor on a Turkish mobile data plan with Data Saver on, i.e. the
+   * exact person design.md's reduced-data rule was written for.
+   *
+   * So it is stubbed before any script runs. Asserting the observable
+   * outcome — the video never plays — rather than the branch being taken. */
+  const context = await browser.newContext();
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, "connection", {
+      configurable: true,
+      value: { saveData: true },
+    });
+  });
+
+  const page = await context.newPage();
+  await page.goto("/");
+
+  const video = page.locator("video");
+  await expect(video).toBeVisible();
+
+  await page.waitForTimeout(1200);
+  await expect(video).toHaveJSProperty("paused", true);
+  await expect(video).toHaveJSProperty("currentTime", 0);
+
+  /* preload="none" plus never calling play() is what keeps the 434 KB off a
+     metered connection entirely. If this ever regresses, the visitor pays for
+     a video they will not see move. */
+  await expect(video).toHaveAttribute("preload", "none");
+
+  await context.close();
+});
+
+/* NOT TESTED HERE, and the reason is worth writing down rather than
+ * rediscovering: `prefers-reduced-data`.
+ *
+ * HeroCoin checks three things — prefers-reduced-motion, prefers-reduced-data,
+ * and navigator.connection.saveData. Only two of them can be exercised in this
+ * harness. Chrome parses `(prefers-reduced-data)` as a valid media feature
+ * (`matchMedia(...).media` is not "not all"), but the query never matches:
+ * `page.emulateMedia({ reducedData: "reduce" })` runs without error and leaves
+ * `matches` false, because Chrome never shipped a user-facing setting behind
+ * it. A test asserting that branch would fail for a reason that has nothing to
+ * do with this site.
+ *
+ * That is not a gap in coverage so much as a gap in the feature: on Chrome,
+ * the flag that actually fires for a visitor with Data Saver on is
+ * `saveData`, which is why HeroCoin reads it and why the test above is the one
+ * that means something. The media query is there for engines that do implement
+ * it. Confirming it on a real Android with Data Saver enabled belongs to 4.2.
+ */
+
 test("without a motion preference, the coin starts turning after the on-load still", async ({
   page,
 }) => {
