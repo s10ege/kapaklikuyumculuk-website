@@ -555,12 +555,13 @@ To remove a product: delete the image, commit, push.
   paragraph says so: the repo half is enforced by `tests/source-invariants.test.mts`, and the
   directories are manual work `FINAL.md` owns. Stage 3 cannot satisfy this line and should
   not pretend to.
-- All **five** gate items confirmed. *(Six until 2026-09-08; the WhatsApp item went with the
+- ✅ All **five** gate items confirmed. *(Six until 2026-09-08; the WhatsApp item went with the
   channel. Every `pending` flag in `lib/config.ts` is already `false` — there is nothing left
   to flip.)*
-- Copy gate green — `tests/copy.test.mts`, not a filler check. See §3.
-- Redirect suite green locally against a **production build**; reclaimed paths return 200.
-- OG images present for the homepage and all **four** categories. *(Five until the 2026-09-08
+- ✅ Copy gate green — `tests/copy.test.mts`, not a filler check. See §3.
+- ✅ Redirect suite green against a **production build** — all 26 rules, one hop to 200; the
+  five reclaimed paths return 200. Three coverage gaps closed, including the host rule.
+- ✅ OG images present for the homepage and all **four** categories. *(Five until the 2026-09-08
   restructure retired `pirlanta`.)*
 - ❌ **Lighthouse mobile ≥90 / a11y 100 — accessibility yes, performance no.** Measured
   locally: `/` **89**, `/urunler/yuzuk` 93; accessibility **100** on both. LCP 3.6 s and
