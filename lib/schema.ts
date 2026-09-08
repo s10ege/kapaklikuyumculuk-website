@@ -43,6 +43,12 @@ import type { Category, Product } from "./content.ts";
  * Sunday is never emitted. A `dayOfWeek` list that omits a day means closed,
  * and an explicit Sunday entry with equal opens/closes is the other convention
  * — mixing them is how a shop ends up listed as open 00:00–00:00. */
+/* Kept in step with DEFAULT_CARD in lib/metadata.ts by tests/seo.spec.ts,
+ * which asserts the schema image and the homepage og:image are the same URL.
+ * Not imported from there: lib/metadata.ts pulls in next's Metadata types, and
+ * this module is walked by node:test with type-stripping only. */
+const DEFAULT_CARD_PATH = "/og/default.png";
+
 export function openingHoursSpecification(now: Date = new Date()) {
   const year = now.getFullYear();
 
@@ -74,6 +80,14 @@ export function jewelryStoreSchema() {
       "bilezik, küpe, yüzük ve özel tasarım takı satar, sipariş üzerine " +
       "üretir ve altın alım–satımı yapar.",
     url: shop.url,
+
+    /* Google's local-business rich result wants an image, and had none until
+       2026-09-08 because the site had no shareable asset at all. This is the
+       same card the homepage shares — one image, one place, so the card in a
+       search result and the card in a WhatsApp message are the same picture.
+       Absolute, because structured data is read out of page context. */
+    image: `${shop.url}${DEFAULT_CARD_PATH}`,
+
     telephone: `+${contact.phone.value}`,
     foundingDate: String(shop.founded),
     priceRange: "₺₺",

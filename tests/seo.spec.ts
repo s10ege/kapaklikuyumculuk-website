@@ -424,6 +424,32 @@ test("/yol-tarifi is noindex and names no canonical", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 });
 
+/* The JewelryStore image and the homepage og:image must be the same URL.
+ * They are declared in two modules — lib/schema.ts cannot import
+ * lib/metadata.ts, which pulls in next's Metadata types while schema.ts is
+ * walked by node:test with type-stripping only — so nothing but this stops
+ * them drifting. A search result and a shared link showing different pictures
+ * of the same shop is exactly the inconsistency this project is about. */
+test("the JewelryStore image is the card the homepage shares", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/");
+
+  const shopSchema = await jsonLd(page, "JewelryStore");
+  expect(shopSchema.image, "JewelryStore emits no image").toBeTruthy();
+
+  const og = await page
+    .locator('meta[property="og:image"]')
+    .first()
+    .getAttribute("content");
+
+  expect(new URL(shopSchema.image).pathname).toBe(new URL(og!).pathname);
+
+  const response = await request.get(new URL(shopSchema.image).pathname);
+  expect(response.status(), "the schema image does not resolve").toBe(200);
+});
+
 test("each category overrides the site-wide card with its own", async ({
   page,
 }) => {

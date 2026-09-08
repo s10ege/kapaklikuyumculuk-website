@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { shop } from "@/lib/config";
+import { COPY } from "@/lib/copy";
+
 /* Token proof sheet — originally the verification artefact for iteration 2,
  * rebuilt for the espresso system in iteration 1.2 of design.md.
  *
@@ -108,7 +111,7 @@ export default function TokensPage() {
 
         <Section title="Display — Ibarra Real Nova, yalnız ≥32px (D8)">
           <div className="flex flex-col gap-4">
-            <p className="display-lg">Trakya Kapaklı Kuyumculuk</p>
+            <p className="display-lg">{shop.name}</p>
             <p className="display-md">Özel Tasarım Takılar</p>
             <p className="display-sm">Küpe Modelleri</p>
             <p className="display-sm text-gold-soft">
@@ -125,11 +128,13 @@ export default function TokensPage() {
           <div className="flex max-w-2xl flex-col gap-4">
             <p>{PANGRAM}</p>
             <p className="text-gold-soft">{GLYPHS}</p>
-            <p className="text-muted">
-              Kapaklı Kuyumculuk 2000 yılında Kapaklı ilçesinin merkezinde
-              kurulmuş olup ilçenin ilk kuyumcusudur. Geniş ürün yelpazesiyle,
-              güler yüzlü ve dürüst personeliyle hizmet vermektedir.
-            </p>
+            {/* Real copy, not a specimen written for this page. It was the
+                old site's blurb until 2026-09-08 — which meant this file
+                inlined the retired bare name and the "ilk kuyumcusu" claim,
+                and was the only reason a shipped-source name invariant could
+                not exist. A paragraph from lib/copy.ts also shows the body
+                face at the length and voice it actually carries. */}
+            <p className="text-muted">{COPY.hakkimizda.paragraphs[0]}</p>
             <p className="text-label uppercase text-muted">
               Etiket · 11px · 0.18em
             </p>

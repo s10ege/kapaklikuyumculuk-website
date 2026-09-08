@@ -182,6 +182,25 @@ test("the Şanlıurfa lookalike Instagram handle is never linked", () => {
   assert.deepEqual(hits, [], `wrong shop's account:\n${hits.join("\n")}`);
 });
 
+test("the shop's name is never inlined outside config", () => {
+  /* Hard rule 2, and until 2026-09-08 the only fact in the canonical block
+   * with no invariant behind it — the phone, the address and the hours all had
+   * one; the name, which is the entire subject of this project, did not.
+   *
+   * It matters most on the day the name changes. docs/index-cleanup-plan.md's
+   * whole thesis is that the shop's name currently resolves to three variants,
+   * and plan.md Risk 1 is that publishing a fourth is worse than publishing
+   * none. A hardcoded name in one component is how the site ends up being the
+   * thing that adds the fourth.
+   *
+   * Both the canonical string and the retired bare `Kapaklı Kuyumculuk` are
+   * caught. The retired one is also covered at source level by
+   * scripts/retired-terms.mjs, but that gate allowlists whole directories;
+   * this one does not. */
+  const hits = offenders(/Trakya Kapaklı Kuyumculuk|Kapaklı Kuyumculuk/);
+  assert.deepEqual(hits, [], `the name belongs in lib/config.ts:\n${hits.join("\n")}`);
+});
+
 test("the Facebook page is never inlined outside config", () => {
   /* Added 2026-09-08, when `FACEBOOK_URL` moved out of lib/schema.ts. It was
    * the last business fact living outside config, and therefore the last one
