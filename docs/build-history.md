@@ -9,7 +9,7 @@
 > `vercel.json` as the redirect map · the canonical name `Kapaklı Kuyumculuk` · and — most
 > importantly — the Search Console removal list below, which includes `/urunler/`.
 > **Never request removal of the `/urunler/` prefix**; it is now the live catalogue and
-> removing it would hide all five category pages for ~6 months.
+> removing it would hide all four category pages for ~6 months.
 
 ---
 
@@ -443,7 +443,12 @@ cannot be run from here.
       URLs are indexed as `http://www.`, and only a domain property covers every
       host and scheme variant. Picking the wrong one is a silent half-fix.
 - [ ] Submit `sitemap.xml`, then URL Inspection → Request indexing on the homepage.
-- [ ] Removals → *Remove all URLs with this prefix* for `/urun/`, `/urunler/`,
+- [ ] ⛔ **DO NOT FOLLOW THIS LINE — it lists `/urunler/`.** Kept as written because this
+      file is a record, but marked inline as well as under the banner at the top, because
+      the banner is 430 lines away and this is the one string in the repo that can hide the
+      whole catalogue for six months. The live instruction is in `FINAL.md` and
+      `docs/index-cleanup-plan.md`: **`/urun/`, `/wp-content/`, `/author/` only.**
+      Removals → *Remove all URLs with this prefix* for `/urun/`, `/urunler/`,
       `/wp-content/` and `/author/`. This hides them within hours. It is
       temporary (~6 months); the permanent fix is the 301/404 working underneath.
 - [ ] Bing Webmaster Tools, then Yandex Webmaster — Yandex matters more than Bing

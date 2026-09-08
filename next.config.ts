@@ -180,9 +180,18 @@ const nextConfig: NextConfig = {
    * analytics script and _next/image, and its failure mode is a silently blank
    * map on a page that otherwise looks perfect. It gets its own pass.
    *
-   * Applied to every path including the redirect sources: a 308 carries these
-   * too, and a header that stops at the edge of the "real" pages is a header
-   * with a hole in it.
+   * Applied to `/:path*`, which is every page — but NOT to redirect responses.
+   * This comment claimed the opposite when it was written ("a 308 carries
+   * these too"), and it was wrong: `headers()` runs after the redirect has
+   * already short-circuited, so a 308 arrives carrying only `location`. Caught
+   * by tests/headers.spec.ts, which pins the absence, and confirmed again by
+   * the 3.4 redirect verification.
+   *
+   * It matters more here than on most sites: 26 of this domain's URLs ARE
+   * redirects, and they are what an old inbound link hits first — so a
+   * returning visitor's very first response carries no HSTS. The cost is one
+   * hop, since the destination is same-origin and does carry it. Whether
+   * Vercel's own routing layer adds them is FINAL.md 4.2's to check live.
    */
   async headers() {
     return [

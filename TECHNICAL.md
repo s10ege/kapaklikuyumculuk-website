@@ -170,7 +170,16 @@ paths, seven of the rules being wildcards proven with a representative path.
   `/urunler/tek-tas-modelleri` became redirect sources on 2026-09-08 when the categories
   were restructured, so any rule still aimed at either one is a two-hop chain.
 - The deliberate 404s stay 404: `/wp-admin*`, `/wp-login.php*`, `/wp-content/*`,
-  `/author/*`, `/category/*`, `/?p=*`, `/anasayfa2`, `/slide-types/*`.
+  `/author/*`, `/category/*`. **`/?p=*` is the exception and returns 200**, not 404 — a
+  query string is not a route in Next, so no rule can make it one. Four such URLs are in
+  `docs/old-urls.txt`. The mitigation is real rather than hopeful: the response carries
+  `<link rel="canonical">` pointing at the homepage, so Google folds them in rather than
+  indexing duplicates. This bullet claimed a mechanism that does not exist until 2026-09-08.
+  **Corrected the same day:** `/anasayfa2` and
+  `/slide-types/*` were in this list and are not 404s — both are redirect rules to `/`
+  (`next.config.ts`, in the "no successor" group). Listing them here contradicted the file
+  they were supposed to describe, and would have had a stage-4 operator "fixing" two working
+  redirects into 404s, throwing away whatever link equity they carry.
 - **`robots.txt` must not block the old paths.** A blocked URL is never crawled, so Google
   never sees the 301 and never drops it.
 
@@ -267,6 +276,38 @@ render width.
 findings logged here · Lighthouse **mobile** performance ≥90 and accessibility 100 on the
 homepage and one category, run in a real browser · LCP ≤2.5s on throttled 4G with the coin
 in place.
+
+> **First Lighthouse numbers, 2026-09-08 — local, and short of the targets.** Run against
+> `next build && next start`, mobile form factor, simulated throttling. Not the deploy
+> number: no CDN, no edge caching, and the run is a simulation rather than a device.
+>
+> | | perf | a11y | best-practices | SEO | LCP | CLS |
+> |---|---|---|---|---|---|---|
+> | `/` | **89** | 100 | 96 | 100 | **3.6 s** | 0 |
+> | `/urunler/yuzuk` | 93 | 100 | 96 | 100 | **3.2 s** | 0 |
+>
+> Accessibility is 100 on both, which is the half §6 asks for outright. Performance is
+> **below** the ≥90 target on the homepage and LCP is well over 2.5 s on both. Recorded as
+> failing rather than explained away — 4.2 re-runs it on the deployed site, and if it still
+> misses there, it is a real problem and not a measurement artefact.
+>
+> **Two things the run found that are not environmental:**
+>
+> 1. **On the homepage the LCP element is the coin `<video>`, not the H1.** `design.md`'s
+>    performance budget says "LCP stays the H1, not the coin" — so this is a stated budget
+>    being missed, and it would be missed on any hardware. 85–87% of LCP is *render delay*,
+>    not network: `Load Delay` and `Load Time` are both 0 ms, so nothing is waiting on a
+>    download. Fixing it means touching the hero, which the frontend freeze puts out of scope
+>    for stage 3. Flagged for the 4.2 findings pass.
+> 2. **`best-practices` 96 and the console errors are local-only.**
+>    `/_vercel/insights/script.js` 404s under a local `next start` because that path is
+>    served by Vercel's platform, not by Next, and the browser then refuses the `text/plain`
+>    response. Neither exists on a deployment. Do not chase this one.
+>
+> Reproduce with `npx lighthouse@12 http://localhost:3200/ --only-categories=performance,accessibility,best-practices,seo`
+> against `npx next start -p 3200`. **Do not pass `--preset=desktop`** — the first run here
+> did, alongside `--form-factor=mobile`, and desktop won: it reported perf 100 and LCP 0.7 s,
+> which is a different measurement wearing the right label.
 
 ## 7 · Accessibility on a dark ground
 

@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+
 import { test, expect } from "@playwright/test";
 
 /* Gate for iteration 13 of plan.md — the highest-risk artefact in the project.
@@ -67,6 +69,12 @@ const REDIRECTS: [from: string, to: string][] = [
   ["/kurumsal", "/hakkimizda"],
   ["/misyonvizyon", "/hakkimizda"],
   ["/markalar-2", "/hakkimizda"],
+  /* Both forms. The bare path is its own rule in next.config.ts and had no
+     test until 2026-09-08 — the wildcard sibling below was covering for it,
+     which is not the same thing: a rule can be deleted while its neighbour
+     keeps the suite green. Found by diffing every `source:` in the config
+     against the paths asserted here; it was the only gap in all 25. */
+  ["/calistigimiz-firmalar", "/hakkimizda"],
   ["/calistigimiz-firmalar/altin-firmalari", "/hakkimizda"],
   ["/fotograf-galerisi", "/galeri"],
   ["/fotograf-galerisi/kapakli-kuyumculuk-merkez", "/galeri"],
@@ -95,6 +103,111 @@ for (const [from, to] of REDIRECTS) {
     expect(response.headers()["location"]).toBe(to);
   });
 }
+
+/* ------------------------------------------------------------------ */
+/* The host rule — the preview host must never be indexed              */
+/* ------------------------------------------------------------------ */
+
+/* Rule 1 in next.config.ts, and the only one that matches on a header rather
+ * than a path: any request arriving with a `*.vercel.app` Host is sent to the
+ * canonical domain. It exists so a preview deployment cannot be indexed as a
+ * duplicate of the whole site — which is the same entity-confusion problem
+ * this project exists to fix, self-inflicted.
+ *
+ * It had no assertion until 2026-09-08. The coverage check below deliberately
+ * excludes it (it has no path to exercise), so nothing anywhere would have
+ * gone red if the rule were deleted. Found by the 3.4 verification. */
+test("a *.vercel.app host is sent to the canonical domain", async ({
+  request,
+}) => {
+  const response = await request.get("/urunler/yuzuk", {
+    headers: { Host: "kapaklikuyumculuk.vercel.app" },
+    maxRedirects: 0,
+  });
+
+  expect(response.status()).toBe(308);
+  expect(response.headers()["location"]).toBe(
+    "https://www.kapaklikuyumculuk.com/urunler/yuzuk",
+  );
+});
+
+test("a branch preview host is caught by the same rule", async ({ request }) => {
+  /* The pattern is `.*\.vercel\.app`, so branch previews match too — which is
+     the acknowledged trade recorded in next.config.ts: preview deployments are
+     sent to production rather than being browsable. */
+  const response = await request.get("/", {
+    headers: { Host: "kapaklikuyumculuk-git-stage3.vercel.app" },
+    maxRedirects: 0,
+  });
+
+  expect(response.status()).toBe(308);
+  expect(response.headers()["location"]).toContain(
+    "https://www.kapaklikuyumculuk.com",
+  );
+});
+
+test("the real host is not caught by it, and does not loop", async ({
+  request,
+}) => {
+  /* The control. A host rule that matched its own destination would redirect
+     the live site to itself forever, and it would look exactly like the site
+     being down. */
+  const response = await request.get("/urunler/yuzuk", {
+    headers: { Host: "www.kapaklikuyumculuk.com" },
+    maxRedirects: 0,
+  });
+
+  expect(response.status()).toBe(200);
+});
+
+/* ------------------------------------------------------------------ */
+/* Every rule in the config is actually exercised                      */
+/* ------------------------------------------------------------------ */
+
+/* The gap this closes is the one that hid /calistigimiz-firmalar: a rule can
+ * be added to next.config.ts and simply never tested, and nothing goes red.
+ * The suite looks comprehensive either way — 58 passing tests is 58 passing
+ * tests whether or not they cover the rule somebody added last week.
+ *
+ * Reads the config as text rather than importing it: next.config.ts is a TS
+ * module with a NextConfig type and this file runs in Playwright, so parsing
+ * the source is both simpler and closer to what a reviewer would check by eye.
+ */
+test("every redirect rule in next.config.ts has a test above", async () => {
+  const config = await readFile("next.config.ts", "utf8");
+
+  /* Only the redirects() block. next.config.ts also has a headers() rule with
+     a `source`, which is not a redirect and must not be counted as one. */
+  const block = config.slice(config.indexOf("async redirects()"));
+  const sources = [...block.matchAll(/source:\s*"([^"]+)"/g)].map((m) => m[1]!);
+
+  /* RETIRED.pirlanta and RETIRED.tekTas are referenced by identifier, so they
+     do not appear as string literals in the block. Named here so the count is
+     honest rather than quietly short by two. */
+  const byIdentifier = ["/urunler/pirlanta", "/urunler/tek-tas-modelleri"];
+
+  /* The host-level rule matches on a `has` host condition, not on a path, so
+     it cannot be covered by a path assertion. It is not unasserted, though —
+     the three tests directly above cover it. Excluding it here without those
+     would leave the rule with no test at all, which is exactly what the 3.4
+     verification found. */
+  const paths = [...sources.filter((s) => s !== "/:path*"), ...byIdentifier];
+
+  const covered = (rule: string) =>
+    REDIRECTS.some(([from]) =>
+      rule.endsWith("/:path*")
+        ? from.startsWith(`${rule.slice(0, -"/:path*".length)}/`)
+        : from === rule,
+    );
+
+  const untested = paths.filter((rule) => !covered(rule));
+  expect(untested, `redirect rules with no test: ${untested.join(", ")}`).toEqual(
+    [],
+  );
+
+  /* And the count itself, so a rule vanishing is as loud as one arriving. */
+  expect(paths.length, "expected 25 path-level redirect rules").toBe(25);
+});
 
 /* ------------------------------------------------------------------ */
 /* No chains: one hop, then a 200                                      */
