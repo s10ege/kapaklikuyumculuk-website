@@ -18,6 +18,14 @@ import type { NextConfig } from "next";
    than being in the file the spec named. Nothing is lost: the map is still one
    declarative list in version control.
 
+   A root vercel.json DOES exist as of 2026-09-09, and carries exactly one key:
+   the framework preset. The live project had served static HTML its whole life
+   and was set to "Other", under which a Next build succeeds and serves nothing
+   useful. That file is not an invitation. Redirects must never migrate into
+   it — moving even one would put it beyond the reach of the suite below, and
+   this map's failure mode is a site that looks perfectly fine while being
+   wrong.
+
    THE RULE THAT MATTERS MOST
    §4's insight is that a live page at an already-indexed address is worth far
    more than a 301. So /urunler, /urunler/ozel-tasarim-takilar, /galeri,

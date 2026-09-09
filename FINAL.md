@@ -71,6 +71,77 @@ The sequence matters more than any individual step.
 - The coin loop on a real phone on mobile data, not wifi.
 - Turkish glyphs at 390px, no mid-word fallback.
 
+## 4.2 — Live verification, measured 2026-09-09
+
+The site went live at 15:0x on 2026-09-09 by merging to `main`; production is
+`holdingscree-kk`, which already held both domains, so nothing about DNS or the domain
+attachment moved. Measured against the live domain, not inferred.
+
+### What the domain publishes now
+
+| | Holding page, until today | Live now |
+|---|---|---|
+| Business name | the retired bare name | **Trakya Kapaklı Kuyumculuk** |
+| `streetAddress` in JSON-LD | `No: 56/A` | **`Cumhuriyet Mah., Pınar Bulvarı No: 56/C`** |
+| Closing time | `20:00` | **`18:00` winter / `19:00` summer**, three specs |
+| `pırlanta` as a stock claim | present | **0 occurrences in rendered markup** |
+| Former partner's two numbers | — | **0 occurrences** |
+
+`JewelryStore` carries `geo` (41.326459, 27.976502), `hasMap`, `image` and the telephone;
+`/urunler/yuzuk` adds `ItemList` (15 items) and `BreadcrumbList` (3). All valid JSON.
+
+### The three things only a live deployment could settle
+
+1. **Security headers on 308 responses — ✅ resolved, and the good way.** Vercel's routing
+   layer applies all five *plus* the CSP to redirects. `headers()` in `next.config.ts` does
+   not, which is what `next dev` shows and what `TECHNICAL.md` §10 recorded as a real cost:
+   26 of this domain's URLs are redirects, so a returning visitor's first response would
+   carry no HSTS. In production it does. `tests/headers.spec.ts` now asserts **both** halves
+   — present live, absent locally — so neither can rot unnoticed.
+
+2. **The analytics beacon vs `connect-src 'self'` — ❌ not proven, and the CSP is not why.**
+   The client side is correct: the script loads from Vercel's randomised path
+   (`/ad9940f2e35c761b/script.js`, not `/_vercel/insights/…` — an ad-blocker evasion that
+   makes the obvious test look like a failure), `window.va` is defined, and a pageview is
+   queued. **No CSP violation is raised and no request is blocked.** But the queue never
+   drains, no beacon is sent, and the Web Analytics API answers `404 Web Analytics not
+   found` for the project. The feature is not provisioned. **Outstanding: enable Web
+   Analytics in the dashboard, then re-run.** Until then `/telefon` and `/yol-tarifi` count
+   nothing, which is the only reason those two pages exist.
+
+3. **Lighthouse mobile — ✅ the target is met; ❌ the design gate still is not.**
+   **97 / 100** against a ≥90 target, on the real CDN. FCP 0.9 s, **LCP 2.6 s**, TBT 50 ms,
+   **CLS 0**, Speed Index 1.8 s. Stage 3 measured 89 locally with LCP 3.6 s and said the gap
+   was partly environmental; it was, almost entirely. What is *not* environmental is
+   unchanged: **the LCP element is still the coin `<video>`**, where `design.md`:129 says it
+   should be the H1, and LCP is 2.6 s against a 2.5 s target. Recorded as unmet rather than
+   reworded. No hero surgery was done for it — at 97 with CLS 0 the risk of regressing
+   outweighs the gain, and `components/HeroCoin.tsx`:54-60 records that the obvious fix
+   tripled slow-network desktop LCP.
+
+### Redirects live: 60 passed, 4 failed
+
+Every path rule lands correctly, all reclaimed paths return 200, and **the apex still 308s
+to `www`** — asserted now rather than assumed, since that redirect is a Vercel domain
+setting rather than code.
+
+The four failures share one cause and none is a redirect fault: **Vercel's WAF blocks
+WordPress paths at the edge** (`x-vercel-mitigated: deny`), returning a plain-text 403
+before Next can serve the branded Turkish 404. `/wp-admin` and `/wp-login.php` being swatted
+at the edge is arguably a bonus. **`/wp-content/uploads/*` is not** — 111 archived image
+URLs are indexed under it, and §4 rule 3 wants a 404 *so Google drops them*. A 403 is
+dropped too, but more slowly and less definitively. **Outstanding decision:** allow
+`/wp-content/*` through the firewall so the 404 serves.
+
+### Also found
+
+**The repo had no git identity configured.** Every commit since stage 1 is authored
+`kapaklikuyumculuk@Kapakls-MacBook-Pro.local`, a hostname-derived address on no account.
+Vercel refuses to build commits it cannot attribute and returned `BLOCKED` before starting —
+this would have stopped the launch whatever was pushed, and surfaced only because this was
+the repo's first deployment. Fixed by setting the repo-local identity; history was not
+rewritten. **Any future commit from a machine without it set will block production.**
+
 ## Search Console
 
 - **Domain property, not URL-prefix.** The old URLs are indexed as `http://www.`, and only a

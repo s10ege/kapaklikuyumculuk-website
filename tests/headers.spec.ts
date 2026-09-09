@@ -33,28 +33,26 @@ for (const [key, expected] of EXPECTED) {
   });
 }
 
-test("redirect responses carry no custom headers — recorded, not desired", async ({
+test("redirect responses: bare locally, carrying headers on Vercel", async ({
   request,
 }) => {
-  /* This test asserts a limitation, which is unusual, so: why.
+  /* `headers()` in next.config.ts does not apply to redirect responses — the
+   * redirect short-circuits before the header layer, so a 308 from a local
+   * server arrives with none of the five. That mattered more here than on most
+   * sites: 26 of this domain's URLs ARE redirects, and they are what an old
+   * inbound link hits first, so the first response a returning visitor got
+   * would carry no HSTS.
    *
-   * `headers()` in next.config.ts does not apply to redirect responses. The
-   * redirect short-circuits before the header layer, so a 308 arrives with
-   * none of the five. That matters more here than on most sites — 26 of this
-   * domain's URLs ARE redirects, and they are what an old inbound link hits
-   * first, so the very first response a returning visitor gets carries no
-   * HSTS.
+   * THE ANSWER, measured against the live domain on 2026-09-09 (FINAL.md 4.2,
+   * which this test was written to hand the question to): **Vercel's routing
+   * layer applies them itself.** A 308 in production carries all five plus the
+   * CSP. So the limitation is local-only and costs a returning visitor
+   * nothing.
    *
-   * The practical cost is one response: the destination is the same origin and
-   * does carry HSTS, so the browser learns it a hop later. Not worth working
-   * around, and there is no clean way to in next.config.ts anyway.
-   *
-   * Pinned so the behaviour is known rather than assumed, and so this test
-   * FAILS if it ever changes — at which point the comment is wrong and the
-   * assertion above it should become the ordinary one. Measured against
-   * `next dev`; Vercel's routing layer may well apply headers to redirects
-   * itself, which is a question for FINAL.md 4.2 against the live domain and
-   * not something to guess at from here. */
+   * Both halves are asserted rather than the inconvenient one being dropped:
+   * against a live host the headers must be PRESENT, and locally they must
+   * still be ABSENT — so if Next ever starts applying them, the local branch
+   * goes red and this comment gets revisited instead of quietly rotting. */
   /* /kurumsal, deliberately. The first version of this test used one of the
      retired category paths as its 308 source — which works, and which put this
      file outside the scripts/retired-terms.mjs allowlist and broke
@@ -66,10 +64,20 @@ test("redirect responses carry no custom headers — recorded, not desired", asy
   const response = await request.get("/kurumsal", { maxRedirects: 0 });
 
   expect(response.status()).toBe(308);
-  expect(
-    response.headers()["x-content-type-options"],
-    "redirects now carry headers — update the comment above and this assertion",
-  ).toBeUndefined();
+
+  if (process.env.E2E_BASE_URL) {
+    expect(
+      response.headers()["x-content-type-options"],
+      "Vercel stopped applying headers to redirects — a returning visitor's " +
+        "first response now carries no HSTS",
+    ).toBe("nosniff");
+    expect(response.headers()["strict-transport-security"]).toBeTruthy();
+  } else {
+    expect(
+      response.headers()["x-content-type-options"],
+      "Next now applies headers to redirects — the comment above is out of date",
+    ).toBeUndefined();
+  }
 });
 
 test("nothing here blocks the analytics referrer §9 depends on", async ({
@@ -154,12 +162,18 @@ test.describe("the page CSP", () => {
        describing an environment it is not running in. */
     const csp = (await request.get("/")).headers()["content-security-policy"];
 
-    /* E2E_TARGET, not NODE_ENV. NODE_ENV in the *test* process says nothing
-       about the server the test is talking to — it was unset here, so this
-       read as "dev" and demanded 'unsafe-eval' from a production build. The
-       production project caught it on its first run, which is a fair summary
-       of why the project exists. */
-    const dev = process.env.E2E_TARGET !== "prod";
+    /* Infer from the server being talked to, never from the test process.
+       NODE_ENV was the first version of this mistake: unset here, it read as
+       "dev" and demanded 'unsafe-eval' from a production build.
+
+       E2E_TARGET fixed that and then repeated it one level up. Pointing the
+       suite at the live domain with E2E_BASE_URL alone leaves E2E_TARGET
+       unset, so this read "dev" again and demanded 'unsafe-eval' from
+       production — found on 2026-09-09, the first time this ran against the
+       real deployment. An external base URL is by definition not `next dev`,
+       so it settles the question on its own. */
+    const dev =
+      !process.env.E2E_BASE_URL && process.env.E2E_TARGET !== "prod";
 
     if (dev) {
       expect(csp).toContain("'unsafe-eval'");
