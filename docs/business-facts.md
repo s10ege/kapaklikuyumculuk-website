@@ -103,7 +103,7 @@ ranking problem.
 | Item | State | Conf. |
 |---|---|---|
 | Website | **LIVE since 2026-09-09.** The real site is deployed at the canonical domain. *(Was dark from ~27 July 2026; see `domain-facts.md`.)* | ✅ |
-| Google Business Profile | **`ChIJSQxn1KkptRQRLtfCCLZCYLk` — "Trakya kuyumculuk", Pınar Blv 56/C, 4,1★ / 15 reviews, category Kuyumcu, website already set, appears claimed.** Phone on the profile is `0554 915 77 90` — the **retired WhatsApp number**, and the one field that is wrong. | ✅ |
+| Google Business Profile | **`ChIJSQxn1KkptRQRLtfCCLZCYLk` — "Trakya kuyumculuk", Pınar Blv 56/C, 4,1★ / 15 reviews, category Kuyumcu, website already set, appears claimed.** Phone on the profile is `0554 915 77 90` — the retired WhatsApp number. **Soner's decision 2026-09-09: it stays on the profile.** Do not "correct" it. It remains forbidden in repo source. | ✅ |
 | ⛔ NOT our profile | `ChIJHUgV0gQmtRQRsb2D_txDS2Q` is **"Vural Kuyumculuk", Atatürk Mah., Hürriyet Cd., Çerkezköy** — a different business at the former partner's address. Recorded here as ours until 2026-09-09, when both IDs were resolved in a browser. **Never request ownership of it.** | ✅ |
 | Instagram | **@kuyumculukkapakli** — matches address and phones | ✅ |
 | Instagram (wrong) | ⚠️ @kapaklikuyumculuk is a **different jeweller in Şanlıurfa**. Never link it. | ✅ |

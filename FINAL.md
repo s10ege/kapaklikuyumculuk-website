@@ -119,6 +119,29 @@ attachment moved. Measured against the live domain, not inferred.
    outweighs the gain, and `components/HeroCoin.tsx`:54-60 records that the obvious fix
    tripled slow-network desktop LCP.
 
+### Vercel's firewall, found by tripping it
+
+Sweeping the 79 archived paths from `docs/old-urls.txt` against production fired ~160
+requests in two minutes from one IP. Vercel answered with `x-vercel-mitigated: challenge`
+and then blocked that IP outright — every path, including `/`, `/robots.txt` and
+`/favicon.ico`, returned 403 for roughly ten minutes.
+
+**This is not a site fault and it was nearly written up as one.** The tell was `/urunler`
+returning 403 having returned 200 twenty minutes earlier. Confirmed by fetching the live
+site through Vercel's own infrastructure while the local IP was blocked: `status 200`, real
+markup, all four category links. The 403s were the test client, not the site.
+
+Two things worth keeping:
+
+- **The archived-URL sweep is unfinished.** 42 of 79 paths were measured before the block:
+  **29 redirected, 8 live pages, 5 deliberate 404s, 0 surprises.** The remaining 37 are
+  unmeasured. This was always a belt-and-braces check — the 25 redirect *rules* are proven
+  by the live suite — so it is a gap in coverage, not a known defect. Re-run it slowly, or
+  from CI rather than a workstation.
+- **Rapid crawling gets challenged.** Verified search-engine bots are allowlisted by Vercel
+  and Googlebot crawls far more gently than this did, so indexing is not expected to be
+  affected. Worth knowing before anyone points a bulk link-checker at the domain.
+
 ### Redirects live: 60 passed, 4 failed
 
 Every path rule lands correctly, all reclaimed paths return 200, and **the apex still 308s
@@ -178,7 +201,7 @@ from Google Images over 4–12 weeks.
 > | Address | Pınar Blv **56/C** | ✅ already correct |
 > | Website | `kapaklikuyumculuk.com` | ✅ already set — and **live** as of today |
 > | Name | "Trakya kuyumculuk" | → `Trakya Kapaklı Kuyumculuk` |
-> | Phone | `0554 915 77 90` | ⚠️ the **retired WhatsApp number** → `0282 717 21 31` |
+> | Phone | `0554 915 77 90` | **Left as-is — Soner's decision, 2026-09-09.** It is the retired WhatsApp number and differs from the landline the site publishes, so GBP and the site disagree on this one field. Recorded so a later session does not "fix" it. The repo never contained it and `source-invariants` still forbids it there. |
 > | Ownership | no claim prompt shown — appears already claimed | confirm who holds it |
 >
 > **So 4.4 may not be an ownership dispute at all.** The claiming flow below still applies
