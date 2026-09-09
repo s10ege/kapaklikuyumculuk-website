@@ -38,6 +38,20 @@ const baseURL = EXTERNAL ?? LOCAL;
  * lightbox on /urunler/yuzuk, so the controls are not unproven in production. */
 const PROD_IGNORE = ["**/lightbox.spec.ts"];
 
+/* Vercel's deployment protection puts preview deployments behind SSO, so an
+   automated run cannot reach one without this header. The secret comes from
+   the project's "Protection Bypass for Automation" setting and lives only in
+   a gitignored .env.local — never committed, never in CI. Unset, the header
+   is absent and nothing changes, which is the case for every local run and
+   for the live domain (production deployments are not protected). */
+const BYPASS = process.env.E2E_BYPASS_SECRET;
+/* Spread rather than assigned, so an unset secret leaves the key absent
+   altogether. Passing `extraHTTPHeaders: undefined` is not the same thing to
+   Playwright and is not worth finding out the hard way twice. */
+const bypassHeader = BYPASS
+  ? { extraHTTPHeaders: { "x-vercel-protection-bypass": BYPASS } }
+  : {};
+
 const webServer = EXTERNAL
   ? undefined
   : {
@@ -62,7 +76,7 @@ export default defineConfig({
    * the dev server, not of the pages. */
   workers: 2,
   reporter: process.env.CI ? "github" : "list",
-  use: { baseURL, channel: "chrome" },
+  use: { baseURL, channel: "chrome", ...bypassHeader },
 
   projects: [
     { name: "dev", use: { baseURL } },
