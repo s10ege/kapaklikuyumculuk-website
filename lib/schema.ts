@@ -48,6 +48,13 @@ import type { Category, Product } from "./content.ts";
  * `image` below for why the two should differ. */
 const SHOPFRONT = "/hakkimizda/magaza.webp";
 
+/* The badge, generated from app/icon.svg by `npm run icons`.
+ *
+ * Deliberately a raster and not the SVG itself: the icon Google reads from the
+ * <head> can be a vector, but this URL is consumed by the structured-data
+ * pipeline, where PNG is the format with no caveats. */
+const LOGO = "/brand/logo-512.png";
+
 export function openingHoursSpecification(now: Date = new Date()) {
   const year = now.getFullYear();
 
@@ -94,6 +101,17 @@ export function jewelryStoreSchema() {
      * two identical images at one address is exactly the kind of agreement
      * this project is trying to manufacture. */
     image: `${shop.url}${SHOPFRONT}`,
+
+    /* The mark, and NOT the same field as `image` above — that distinction is
+     * the whole reason the note on `image` is as long as it is. `image` is a
+     * photograph of the premises, for the local pack; `logo` is the badge, for
+     * the knowledge panel. Collapsing them is the tidy-looking change that gets
+     * one of the two wrong, so tests/seo.spec.ts asserts they differ.
+     *
+     * Absent until 2026-09-09. The site went live publishing no logo at all,
+     * and app/favicon.ico was still the Next.js starter triangle — D20 had been
+     * written in stage 1 and never carried out. */
+    logo: `${shop.url}${LOGO}`,
 
     telephone: `+${contact.phone.value}`,
     foundingDate: String(shop.founded),

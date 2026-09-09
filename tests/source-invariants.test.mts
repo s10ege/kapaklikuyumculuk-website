@@ -1,5 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
@@ -303,4 +304,53 @@ test("scanned a realistic number of files", () => {
     FILES.length >= 20,
     `only ${FILES.length} source files scanned — the walker is probably broken`,
   );
+});
+
+/* ------------------------------------------------------------------ */
+/* The favicon is ours                                                 */
+/* ------------------------------------------------------------------ */
+
+/* D20 — "the favicon keeps the original logo tile — gold KK on near-black" —
+ * was written in stage 1 and then not carried out for the whole project. The
+ * site went live on 2026-09-09 serving Next.js's starter favicon: a black
+ * circle with a white triangle, at the URL every Google result would draw its
+ * icon from. Nothing caught it, because nothing looked.
+ *
+ * This pins the hash of the WRONG file rather than the right one. Asserting the
+ * correct bytes would mean editing this test every time `npm run icons` runs,
+ * which is the kind of test people delete. Asserting the starter is gone costs
+ * nothing to keep and catches the one regression that actually happened —
+ * somebody scaffolding a fresh app/ and restoring the default.
+ *
+ * It proves the file is not Next's, not that it is ours; the committed PNG in
+ * the diff is the real review. */
+const NEXTJS_STARTER_FAVICON =
+  "2b8ad2d33455a8f736fc3a8ebf8f0bdea8848ad4c0db48a2833bd0f9cd775932";
+
+test("the favicon is not the Next.js starter", () => {
+  const bytes = readFileSync("app/favicon.ico");
+  const digest = createHash("sha256").update(bytes).digest("hex");
+
+  assert.notEqual(
+    digest,
+    NEXTJS_STARTER_FAVICON,
+    "app/favicon.ico is the Next.js starter triangle again — run `npm run icons`",
+  );
+});
+
+test("every brand icon the head and the schema point at exists", () => {
+  /* app/icon.svg is the artwork; the other three are generated from it by
+     scripts/icons.mjs and committed. A missing one is a silently broken <link>
+     or a JSON-LD logo that 404s. */
+  for (const file of [
+    "app/icon.svg",
+    "app/favicon.ico",
+    "app/apple-icon.png",
+    "public/brand/logo-512.png",
+  ]) {
+    assert.ok(
+      statSync(file).size > 0,
+      `${file} is missing or empty — run \`npm run icons\``,
+    );
+  }
 });

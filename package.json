@@ -19,6 +19,7 @@
     "verify": "node scripts/verify.mjs",
     "shots": "node scripts/shots.mjs",
     "og": "node scripts/og.mjs",
+    "icons": "node scripts/icons.mjs",
     "catalogue": "node scripts/catalogue.mjs",
     "about-photos": "node scripts/hakkimizda-photos.mjs",
     "gate:terms": "node scripts/retired-terms.mjs"

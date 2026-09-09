@@ -50,7 +50,7 @@ dark vitrin. Done badly it looks pasted on. Every decision below follows from th
 | D17 | The mobile menu panel is **cream**, reading as the header expanding. |
 | D18 | Focus rings are **gold**, verified visible on both espresso and cream. |
 | D19 | **The homepage is coin-first and deliberately sparse.** Öne Çıkanlar shows at most four products, then a `Tüm Ürünler →` button. Homepage Hakkımızda compresses to two sentences and a link; Hizmetler to two compact panels of one line each. Full copy lives on its own page. |
-| D20 | The favicon keeps the original logo tile — gold KK on near-black — the one place it works unchanged. |
+| D20 | The favicon keeps the original logo tile — gold KK on near-black — the one place it works unchanged. *Carried out 2026-09-09, and not before: the site went live on the canonical URL still serving Next.js's starter favicon, a black circle with a white triangle. This decision had stood unimplemented since stage 1 and no test looked at it. The vector original that `Lockup.tsx` recorded as missing turned up and is now `app/icon.svg`; `npm run icons` rasterises the favicon, the Apple touch icon and the knowledge-panel logo from it. The badge's gold gradient runs brighter than the `gold` tokens and its ground is `#171310` rather than `#17120E` — accepted as a logo exemption on the same reasoning D8 gives for the monogram, and reviewed rather than overlooked.* |
 
 ## Palette
 

@@ -514,6 +514,84 @@ test("the JewelryStore image is a photograph, not the share card", async ({
   }
 });
 
+/* ------------------------------------------------------------------ */
+/* The brand icons                                                     */
+/* ------------------------------------------------------------------ */
+
+/* The favicon is the icon Google draws beside the blue link, and until
+ * 2026-09-09 it was Next.js's starter file — a black circle with a white
+ * triangle — served live on the canonical URL. design.md D20 had specified the
+ * shop's own tile since stage 1; it was simply never done, and no test looked.
+ *
+ * These assert the links exist AND resolve. A <link rel="icon"> pointing at a
+ * 404 renders exactly like no icon at all, which is the failure mode that hides
+ * best. */
+test("the head points at brand icons, and every one of them resolves", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/");
+
+  const hrefs = await page
+    .locator('link[rel~="icon"], link[rel="apple-touch-icon"]')
+    .evaluateAll((links) =>
+      links.map((l) => (l as HTMLLinkElement).getAttribute("href") ?? ""),
+    );
+
+  expect(hrefs.length, "the page declares no icon at all").toBeGreaterThan(0);
+
+  for (const href of hrefs) {
+    const response = await request.get(href);
+    expect(response.status(), `${href} does not resolve`).toBe(200);
+    expect(
+      response.headers()["content-type"],
+      `${href} is not served as an image`,
+    ).toMatch(/^image\//);
+  }
+});
+
+/* Separately from the <link> tags, because browsers and crawlers probe this
+   path directly whether it is declared or not. Leaving the starter file here
+   while declaring the right one elsewhere would let Google pick the triangle. */
+test("the bare /favicon.ico is ours, not the starter", async ({ request }) => {
+  const response = await request.get("/favicon.ico");
+
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toMatch(/^image\//);
+
+  /* The Next.js starter is exactly 25931 bytes. Checking the length rather than
+     the hash so this keeps working when the artwork is regenerated. */
+  const body = await response.body();
+  expect(body.length, "this is the Next.js starter favicon").not.toBe(25931);
+});
+
+/* The mirror of "the JewelryStore image is a photograph, not the share card"
+ * above, and it exists for the same reason: `image` and `logo` are different
+ * fields answering different questions, and the tidy-looking change is to make
+ * them the same URL. `image` feeds the local pack, where Google wants a
+ * photograph of the premises; `logo` feeds the knowledge panel, where it wants
+ * the mark. */
+test("the JewelryStore logo is the mark, and not the shopfront photo", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/");
+
+  const shopSchema = await jsonLd(page, "JewelryStore");
+  expect(shopSchema.logo, "JewelryStore emits no logo").toBeTruthy();
+
+  const logoPath = new URL(shopSchema.logo).pathname;
+  const imagePath = new URL(shopSchema.image).pathname;
+
+  expect(
+    logoPath,
+    "the logo is the shopfront photograph — see lib/schema.ts for why these differ",
+  ).not.toBe(imagePath);
+
+  const response = await request.get(logoPath);
+  expect(response.status(), `${logoPath} does not resolve`).toBe(200);
+});
+
 test("each category overrides the site-wide card with its own", async ({
   page,
 }) => {
