@@ -30,9 +30,14 @@ import type { Page } from "@playwright/test";
  * these measurements need.
  *
  * Only for tests that need the page to sit still. Tests asserting the handoff
- * HAPPENS — tests/directions.spec.ts — must not use this: they catch the
- * outbound URL with `route.abort()` instead, which is the right tool when the
- * navigation is the thing under test.
+ * HAPPENS must not use this: they catch the outbound URL with `route.abort()`
+ * instead, which is the right tool when the navigation is the thing under test.
+ *
+ * That distinction is per test, not per file. This note used to exclude all of
+ * tests/directions.spec.ts, which was too broad: its "stays out of the index"
+ * test asserts a meta tag rather than the handoff, so it needs the page to sit
+ * still and now uses this helper. Until 2026-09-09 it passed by winning the
+ * race, and an unrelated playwright.config change was enough to make it lose.
  */
 /* The two DIRECTIONS destinations only — deliberately not `maps.google.com`
  * wholesale. The /iletisim embed lives at maps.google.com/maps?…output=embed,

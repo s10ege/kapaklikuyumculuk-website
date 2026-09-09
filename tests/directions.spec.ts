@@ -1,5 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
+import { stayOnHopPage } from "./hop-pages";
+
 /* "Yol Tarifi Al" — the chooser, the analytics hop, and the no-JS fallback.
  *
  * The behaviour is deliberately different per platform, which makes it exactly
@@ -72,6 +74,14 @@ test.describe("on a non-Apple platform", () => {
 
   test("asks nothing — no chooser appears", async ({ page }) => {
     await catchOutbound(page);
+    /* This test asserts the URL is still the hop page, so the page has to sit
+       still — `route.abort()` alone lets the handoff commit and the tab lands
+       on `chrome-error://chromewebdata/`, which is what it did on 2026-09-09.
+       Registered second on purpose: Playwright matches the most recent route
+       first, so the 204 takes the /maps/dir handoff while catchOutbound above
+       still aborts the /iletisim embed — keeping the iframe in the state
+       pressDirections was written against. */
+    await stayOnHopPage(page);
     await page.goto("/iletisim");
     await pressDirections(page);
 
@@ -185,6 +195,12 @@ test.describe("/yol-tarifi", () => {
   });
 
   test("stays out of the index", async ({ page }) => {
+    /* This one asserts a meta tag, not the handoff, so it needs the page to
+       sit still — `waitUntil: "commit"` alone only wins the race against
+       DirectionsForward by luck. It had been winning it; a playwright.config
+       change unrelated to this route was enough to make it start losing on
+       2026-09-09. The seventh instance of the class hop-pages.ts describes. */
+    await stayOnHopPage(page);
     await page.goto("/yol-tarifi", { waitUntil: "commit" });
 
     const robots = await page

@@ -29,8 +29,8 @@ Priority order. Each stage has its own file.
 |---|---|---|---|
 | 1 | [`design.md`](design.md) | Ata Lirası hero animation, dark palette, full design approval | ✅ **approved in writing 2026-08-29** |
 | 2 | [`CATALOGUE.md`](CATALOGUE.md) | Photography brief, image pipeline, product content | ✅ **approved 2026-09-08 — closed.** Categories 5 → 4 (`pirlanta` retired, `tek-tas-modelleri` → `yuzuk`), every page rewritten in the shop's voice with a build gate behind it, two-season hours, the canonical address at 56/C with real coordinates, a pin-only map and a platform-aware Yol Tarifi, Hakkımızda columns aligned, **WhatsApp removed — the phone is the only channel**. 57 products, four categories. Screenshots in `screenshots/final-tweaks/`. Approved in writing by Soner; `spec`, the `featured` four and the contact-sheet flags stay outstanding as content, not as gates |
-| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | ✅ **complete 2026-09-08 — awaiting Soner's written approval.** Ran as 14 PRs. The ⛔ gate passed with all five facts confirmed. Two things are deliberately not done and are named as such: **Öne Çıkanlar does not render** (no `featured` set — the frontend was frozen for this stage) and **Lighthouse mobile performance is 89 against a ≥90 target**. Four extra items taken in beyond scope: security headers, CSP, production-build e2e, CI |
-| 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | blocked on 3 |
+| 3 | [`TECHNICAL.md`](TECHNICAL.md) | Brand name, SEO, mobile, remaining technical work | ✅ **complete 2026-09-08 · approved 2026-09-09.** Ran as 14 PRs. The ⛔ gate passed with all five facts confirmed. Two things are deliberately not done and are named as such: **Öne Çıkanlar does not render** (no `featured` set — the frontend was frozen for this stage) and **Lighthouse mobile performance is 89 against a ≥90 target**. Four extra items taken in beyond scope: security headers, CSP, production-build e2e, CI |
+| 4 | [`FINAL.md`](FINAL.md) | Google Business Profile, map and review widgets, deploy | ◐ **open 2026-09-09, scoped to 4.1–4.3.** 4.4 onwards needs a further approval |
 
 ## Roadmap
 
@@ -160,8 +160,15 @@ the stage was prepared but deliberately not opened):
    `NODE_ENV === "production"` and call `notFound()`. Treat 3.7 as verify-and-tidy, not
    build.
 
-**Gate 3→4.** Nothing is deployed and nothing on Google is touched until stage 3 is
-approved in writing.
+**Gate 3→4. ✅ Satisfied 2026-09-09.** Stage 3 approved in writing by Soner, who opened
+stage 4 in the same instruction: *"bypass permisions until 4.3, stop there and continue after
+my approval"*. Quoted rather than paraphrased, because working agreement 1 says approval is
+never inferred — and this one carries its own limit.
+
+**The approval is scoped.** It covers 4.1 (deploy), 4.2 (verify live) and 4.3 (Search
+Console, Bing, Yandex). It does **not** cover 4.4 onwards — the GBP ownership request,
+profile corrections, directory cleanup, reviews and the 30-day re-verification all wait for a
+second approval. Nothing on the Google Business Profile is touched before then.
 
 **What stage 4 inherits, written down so it is not rediscovered:**
 

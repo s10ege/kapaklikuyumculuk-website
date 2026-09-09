@@ -270,16 +270,36 @@ const nextConfig: NextConfig = {
   },
 
   async redirects() {
+    /* §4 rule 5 — the preview host must never be indexed as a duplicate of
+       the real domain.
+
+       Gated on VERCEL_ENV so a *preview* deployment serves the site directly
+       instead of bouncing to production. Unconditional, this rule makes a
+       freshly created project impossible to verify anywhere: its own
+       *.vercel.app URL redirects to whatever is already serving the canonical
+       domain — which, until the cutover, is the holding page. FINAL.md's
+       "deploy to Vercel, domain not yet pointed, verify on the .vercel.app
+       URL" cannot be carried out while this rule applies to previews.
+
+       The rule's purpose survives the exemption, because Vercel already
+       protects a preview deployment twice over: it sits behind deployment
+       protection (SSO), and it is served with `x-robots-tag: noindex`. Both
+       verified against the existing holding-page project on 2026-09-09.
+
+       Production keeps the rule always. VERCEL_ENV is "production" there, so
+       the production *.vercel.app alias — which is public and indexable, and
+       is the one this rule was written for — still 308s to the canonical
+       domain. Local builds and CI keep it too, since VERCEL_ENV is unset, so
+       tests/redirects.spec.ts asserts it exactly as it did before. */
+    const hostRule = {
+      source: "/:path*",
+      has: [{ type: "host" as const, value: ".*\\.vercel\\.app" }],
+      destination: "https://www.kapaklikuyumculuk.com/:path*",
+      permanent: true,
+    };
+
     return [
-      /* §4 rule 5 — the preview host must never be indexed as a duplicate of
-         the real domain. Note this also sends Vercel preview deployments to
-         production, which is the trade the holding page already made. */
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: ".*\\.vercel\\.app" }],
-        destination: "https://www.kapaklikuyumculuk.com/:path*",
-        permanent: true,
-      },
+      ...(process.env.VERCEL_ENV === "preview" ? [] : [hostRule]),
 
       /* ---- Old product URLs → the category that replaced them -------------
          §4's table covers three of these. docs/old-urls.txt shows four more

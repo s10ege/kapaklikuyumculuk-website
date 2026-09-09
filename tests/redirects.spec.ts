@@ -117,9 +117,20 @@ for (const [from, to] of REDIRECTS) {
  * It had no assertion until 2026-09-08. The coverage check below deliberately
  * excludes it (it has no path to exercise), so nothing anywhere would have
  * gone red if the rule were deleted. Found by the 3.4 verification. */
+/* These two spoof a Host header, which only reaches Next when the request goes
+   to a local server. Against a live deployment the Host is what routes the
+   request at the edge — and over TLS the SNI name has already chosen the
+   deployment before any header we set is read — so a spoofed Host is either
+   ignored or lands on no deployment at all. Running them live would assert
+   Vercel's router rather than this repo's rule. The live equivalents are the
+   two tests further down, which use real hosts. */
+const LIVE = Boolean(process.env.E2E_BASE_URL);
+
 test("a *.vercel.app host is sent to the canonical domain", async ({
   request,
 }) => {
+  test.skip(LIVE, "a spoofed Host does not survive a real edge");
+
   const response = await request.get("/urunler/yuzuk", {
     headers: { Host: "kapaklikuyumculuk.vercel.app" },
     maxRedirects: 0,
@@ -132,6 +143,8 @@ test("a *.vercel.app host is sent to the canonical domain", async ({
 });
 
 test("a branch preview host is caught by the same rule", async ({ request }) => {
+  test.skip(LIVE, "a spoofed Host does not survive a real edge");
+
   /* The pattern is `.*\.vercel\.app`, so branch previews match too — which is
      the acknowledged trade recorded in next.config.ts: preview deployments are
      sent to production rather than being browsable. */
@@ -158,6 +171,49 @@ test("the real host is not caught by it, and does not loop", async ({
   });
 
   expect(response.status()).toBe(200);
+});
+
+/* ------------------------------------------------------------------ */
+/* Live-only — the two things no local run can prove                   */
+/* ------------------------------------------------------------------ */
+
+/* The host rule on real Vercel routing. The production *.vercel.app alias is
+   public and indexable — it is the host the rule was written for — so this is
+   what the three spoofed-Host tests above are standing in for locally. */
+test("the production alias is sent to the canonical domain", async ({
+  request,
+}) => {
+  const alias = process.env.E2E_VERCEL_ALIAS;
+  test.skip(!alias, "set E2E_VERCEL_ALIAS to the production *.vercel.app host");
+
+  const response = await request.get(`https://${alias}/urunler/yuzuk`, {
+    maxRedirects: 0,
+  });
+
+  expect(response.status()).toBe(308);
+  expect(response.headers()["location"]).toBe(
+    "https://www.kapaklikuyumculuk.com/urunler/yuzuk",
+  );
+});
+
+/* The apex → www redirect: the only rule in this file's remit that does NOT
+   live in next.config.ts. It is a Vercel domain setting, re-created by hand
+   every time the domain is attached to a project — which makes it the one
+   redirect nothing in this repo would notice the loss of. Losing it gives the
+   domain two canonical hosts serving identical content: the duplicate-entity
+   problem this project exists to fix, self-inflicted. Written 2026-09-09,
+   before the cutover that can drop it. */
+test("the apex is sent to www", async ({ request }) => {
+  test.skip(!LIVE, "needs a live host — set E2E_BASE_URL");
+
+  const response = await request.get("https://kapaklikuyumculuk.com/", {
+    maxRedirects: 0,
+  });
+
+  expect(response.status()).toBe(308);
+  expect(response.headers()["location"]).toBe(
+    "https://www.kapaklikuyumculuk.com/",
+  );
 });
 
 /* ------------------------------------------------------------------ */
