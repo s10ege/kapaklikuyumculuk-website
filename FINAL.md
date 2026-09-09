@@ -165,6 +165,39 @@ this would have stopped the launch whatever was pushed, and surfaced only becaus
 the repo's first deployment. Fixed by setting the repo-local identity; history was not
 rewritten. **Any future commit from a machine without it set will block production.**
 
+### The favicon was the Next.js starter, found 2026-09-09
+
+Soner: *"when the website is searched in Google, the logo does not show."* It was not a
+Google problem. `app/favicon.ico` was still the file `create-next-app` writes — a black
+circle with a white triangle — and it shipped to the canonical URL in 4.1 along with
+everything else:
+
+```
+<link rel="icon" href="/favicon.ico?favicon.3fpu2ql9ns1a0.ico" sizes="256x256" type="image/x-icon"/>
+```
+
+`design.md` D20 has specified the shop's own tile since stage 1. It was never carried out,
+and nothing in 286 tests looked at it. The site also published **no `logo` at all** in its
+JSON-LD — `jewelryStoreSchema()` had `image`, the shopfront photograph, and nothing else.
+
+Fixed by importing the vector original — which `components/Lockup.tsx` had recorded as
+non-existent, and which Soner had — as `app/icon.svg`, and generating the favicon (16·32·48),
+the Apple touch icon and a 512px knowledge-panel logo from it with `npm run icons`.
+
+**This will not show up quickly.** Google refreshes favicons on its own schedule after
+re-crawling the homepage, and the site is a day old. Days to weeks is normal, and the delay
+is not evidence of anything still being wrong.
+
+Two details worth keeping:
+
+- **The Apple touch icon is rendered square** while every other size keeps the rounded
+  badge. iOS masks the icon with its own squircle, so supplying a pre-rounded one rounds it
+  twice and leaves dark notches at the corners.
+- **The corner radius is on `<rect>` only.** The two `<ellipse>` elements that draw the
+  double oval carry an `rx` too, meaning something entirely different; a blanket replace
+  turns the ovals into circles. `scripts/icons.mjs` scopes the match to rects and asserts it
+  found exactly three.
+
 ## Search Console
 
 - **Domain property, not URL-prefix.** The old URLs are indexed as `http://www.`, and only a

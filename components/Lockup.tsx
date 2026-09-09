@@ -8,10 +8,19 @@ import { shop } from "@/lib/config";
  * on the left with TRAKYA KAPAKLI letter-spaced beside it and KUYUMCULUK in
  * small caps beneath.
  *
- * There is no vector original (§14 item 5), so the oval is redrawn here rather
- * than traced from the PNG — at header sizes a trace of a low-res tile would
- * show. If an SVG/AI/PDF original turns up, replace OvalMark's paths and
- * nothing else.
+ * This was written when there was no vector original (§14 item 5), so the oval
+ * is redrawn here rather than traced from the PNG — at header sizes a trace of
+ * a low-res tile would show.
+ *
+ * A vector original DID turn up, on 2026-09-09, and it is now app/icon.svg.
+ * The note this replaces said to swap OvalMark's paths for it and change
+ * nothing else. That was deliberately NOT done, because the two are not the
+ * same drawing: the badge is a slanted, stroked -KK- with flanking dashes in a
+ * metallic gold gradient on charcoal, sized to fill a rounded tile; this is an
+ * upright KK set in the display face, in flat gold-deep, on cream, beside a
+ * wordmark. Dropping one into the other changes the header and the footer on
+ * every page and needs Soner's eye and a design review — worth doing, and its
+ * own piece of work rather than a side effect of fixing the favicon.
  *
  * The wordmark is real text, not part of the SVG: it stays selectable, it
  * scales with the user's font settings, and screen readers get it for free.

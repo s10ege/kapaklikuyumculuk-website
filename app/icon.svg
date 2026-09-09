@@ -1,0 +1,61 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Warm charcoal background, slightly lighter at the top -->
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b2723"/>
+      <stop offset="1" stop-color="#171310"/>
+    </linearGradient>
+    <!-- Soft center glow so the gold reads warm, not flat -->
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.65">
+      <stop offset="0" stop-color="#4a3f2a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#4a3f2a" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Metallic gold. userSpaceOnUse: axis-aligned strokes (K stems, dashes) have a
+         zero-area bounding box, and objectBoundingBox gradients cannot paint those. -->
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse"
+                    x1="0" y1="-130" x2="45" y2="130">
+      <stop offset="0" stop-color="#f9e7a0"/>
+      <stop offset="0.45" stop-color="#e3bf62"/>
+      <stop offset="1" stop-color="#a97b22"/>
+    </linearGradient>
+    <linearGradient id="goldRing" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4dd92"/>
+      <stop offset="0.5" stop-color="#d9b04e"/>
+      <stop offset="1" stop-color="#96690f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Badge base -->
+  <rect x="0" y="0" width="1024" height="1024" rx="212" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1024" height="1024" rx="212" fill="url(#glow)"/>
+  <!-- Hairline inner edge to lift the badge off dark taskbars -->
+  <rect x="10" y="10" width="1004" height="1004" rx="204" fill="none"
+        stroke="#f4dd92" stroke-opacity="0.14" stroke-width="4"/>
+
+  <!-- Double oval, like the shop badge -->
+  <ellipse cx="512" cy="512" rx="398" ry="272" fill="none"
+           stroke="url(#goldRing)" stroke-width="26"/>
+  <ellipse cx="512" cy="512" rx="352" ry="228" fill="none"
+           stroke="url(#goldRing)" stroke-width="9" stroke-opacity="0.85"/>
+
+  <!-- -KK- monogram, slanted like the original -->
+  <g transform="translate(512 512) skewX(-12)" stroke="url(#gold)"
+     stroke-width="58" stroke-linecap="round" fill="none">
+    <!-- left dash -->
+    <line x1="-296" y1="0" x2="-238" y2="0"/>
+    <!-- K 1 -->
+    <g transform="translate(-160 0)">
+      <line x1="0" y1="-118" x2="0" y2="118"/>
+      <line x1="8" y1="-6" x2="118" y2="-118"/>
+      <line x1="8" y1="6" x2="118" y2="118"/>
+    </g>
+    <!-- K 2 -->
+    <g transform="translate(60 0)">
+      <line x1="0" y1="-118" x2="0" y2="118"/>
+      <line x1="8" y1="-6" x2="118" y2="-118"/>
+      <line x1="8" y1="6" x2="118" y2="118"/>
+    </g>
+    <!-- right dash -->
+    <line x1="238" y1="0" x2="296" y2="0"/>
+  </g>
+</svg>
