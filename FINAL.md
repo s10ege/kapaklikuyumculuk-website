@@ -158,8 +158,42 @@ from Google Images over 4–12 weeks.
 
 ## Google Business Profile
 
-The profile exists at Place ID `ChIJHUgV0gQmtRQRsb2D_txDS2Q`, is claimed by an unknown
-party, and carries 1 review at 2.3★.
+> ### ⛔ Corrected 2026-09-09 — this section named the wrong business
+>
+> Everything below was written against Place ID `ChIJHUgV0gQmtRQRsb2D_txDS2Q`. Both IDs in
+> `docs/business-facts.md` were resolved in a browser on 2026-09-09, and that one is
+> **"Vural Kuyumculuk", Atatürk Mah., Hürriyet Cd., Çerkezköy — a different business at the
+> former partner's address.** Submitting an ownership request for it would have burned a
+> 3–7 day cycle claiming somebody else's legitimate listing, and `index-cleanup-plan.md`
+> Step 5 is explicit: never touch his own listings under his own name.
+>
+> **The shop's profile is `ChIJSQxn1KkptRQRLtfCCLZCYLk`** — "Trakya kuyumculuk",
+> Cumhuriyet, Pınar Blv 56/C, 59510 Kapaklı. And it is in far better shape than this file
+> assumed:
+>
+> | Field | Live value | Action |
+> |---|---|---|
+> | Rating | **4,1★ across 15 reviews** | none — the 2.3★/1 review was Vural's |
+> | Category | `Kuyumcu` | ✅ already correct |
+> | Address | Pınar Blv **56/C** | ✅ already correct |
+> | Website | `kapaklikuyumculuk.com` | ✅ already set — and **live** as of today |
+> | Name | "Trakya kuyumculuk" | → `Trakya Kapaklı Kuyumculuk` |
+> | Phone | `0554 915 77 90` | ⚠️ the **retired WhatsApp number** → `0282 717 21 31` |
+> | Ownership | no claim prompt shown — appears already claimed | confirm who holds it |
+>
+> **So 4.4 may not be an ownership dispute at all.** The claiming flow below still applies
+> if the profile turns out to be held by someone unreachable, but the first action is simply
+> to find out whether Soner or the family already has access. The reply-to-the-2.3★-review
+> task is void: that review belongs to another business.
+>
+> **And the reviews gate in § Reviews is already met** — 4,1 across 15 clears the "~4.0+
+> across 10+" bar that deferred the widget to phase two.
+
+*The original text follows, and is retained because the claiming procedure it describes is
+still correct for a profile that genuinely needs claiming.*
+
+The profile it was written about is at Place ID `ChIJHUgV0gQmtRQRsb2D_txDS2Q`, is claimed by
+an unknown party, and carried 1 review at 2.3★.
 
 **Follow `docs/google-profile-claiming.md` exactly.** The instinctive route — create a new
 profile, report the old one — is the one path that reliably makes things worse: Google
