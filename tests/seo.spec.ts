@@ -472,7 +472,12 @@ test("/yol-tarifi is noindex and names no canonical", async ({ page }) => {
     "content",
     /noindex/,
   );
-  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  /* `count()`, not `toHaveCount(0)`. Once the page hydrates it starts the
+     forward, and the 204 leaves that navigation pending forever as far as
+     Playwright is concerned; absence assertions wait for it to finish and
+     time out. The canonical would be in the prerendered HTML, so a single
+     read is enough. */
+  expect(await page.locator('link[rel="canonical"]').count()).toBe(0);
 });
 
 /* This test used to assert the JewelryStore image and the homepage og:image
