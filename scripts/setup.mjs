@@ -24,7 +24,7 @@ const ARGS = new Set(process.argv.slice(2));
 const QUICK = ARGS.has("--quick");
 const NO_BROWSERS = QUICK || ARGS.has("--no-browsers");
 
-const MIN_NODE = [20, 9]; // Next 16 + React 19
+const NODE_MAJOR = 24; // Match .nvmrc and the Vercel runtime.
 const results = [];
 
 // Colour only when we are attached to a terminal that wants it.
@@ -58,14 +58,14 @@ function run(cmd, args) {
 
 step("Checking Node");
 {
-  const [major, minor] = process.versions.node.split(".").map(Number);
-  const ok = major > MIN_NODE[0] || (major === MIN_NODE[0] && minor >= MIN_NODE[1]);
-  console.log(`  node ${process.version} (need >= ${MIN_NODE.join(".")})`);
+  const major = Number(process.versions.node.split(".")[0]);
+  const ok = major === NODE_MAJOR;
+  console.log(`  node ${process.version} (need ${NODE_MAJOR}.x)`);
   if (!ok) {
-    console.error(c.red("\n  Node is too old for Next 16.\n"));
-    console.error("  Windows:  install nvm-windows, then:  nvm install 22 && nvm use 22");
+    console.error(c.red("\n  This project requires Node 24.x.\n"));
+    console.error("  Windows:  install nvm-windows, then:  nvm install 24 && nvm use 24");
     console.error("  macOS/Linux with nvm:                 nvm install && nvm use");
-    console.error("  Or download 22 LTS from https://nodejs.org\n");
+    console.error("  Or download 24 LTS from https://nodejs.org\n");
     console.error("  The version this project expects is in .nvmrc.\n");
     process.exit(1);
   }

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20.9.0"
+    "node": "24.x"
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
@@ -26,22 +26,22 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "next": "16.3.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "^1.64.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.1",
-    "sharp": "^0.35.3",
+    "eslint-config-next": "16.4.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
-    "three": "^0.185.1",
-    "typescript": "^5"
+    "three": "^0.186.1",
+    "typescript": "^6.0.3"
   }
 }
