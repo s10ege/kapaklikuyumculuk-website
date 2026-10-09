@@ -30,7 +30,7 @@ Safe to re-run; every step is idempotent. The same thing is available in Claude 
 
 ## Failure modes worth knowing
 
-- **Node too old.** Next 16 needs ≥ 20.9. `.nvmrc` pins 22. On Windows use nvm-windows.
+- **Wrong Node version.** Use the version in `.nvmrc`. On Windows use nvm-windows.
 - **No registry access.** The script pings npm before running `npm ci`, because `npm ci`
   deletes `node_modules` first and a failed offline run leaves the clone unusable. If the
   preflight stops you, you are in a sandboxed or proxied shell — run it in a normal
